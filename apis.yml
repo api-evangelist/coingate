@@ -39,7 +39,7 @@ apis:
       - type: Documentation
         url: https://developer.coingate.com/docs/api-overview
       - type: OpenAPI
-        url: https://developer.coingate.com/llms.txt
+        url: openapi/openapi.json
       - type: Authentication
         url: https://developer.coingate.com/reference/api-authentication
       - type: Environments

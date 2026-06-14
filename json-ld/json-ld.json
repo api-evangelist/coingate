@@ -1,0 +1,77 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "coingate": "https://coingate.com/",
+    "api": "https://developer.coingate.com/"
+  },
+  "@type": "Organization",
+  "@id": "https://coingate.com",
+  "name": "CoinGate",
+  "description": "CoinGate is a cryptocurrency payment gateway providing REST APIs for creating and managing payment orders, processing crypto-to-fiat conversions, automating payouts, managing merchant ledger accounts, and accessing billing and reporting data.",
+  "url": "https://coingate.com",
+  "logo": "https://coingate.com/images/coingate-logo.png",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "email": "support@coingate.com",
+    "url": "https://coingate.com/contact",
+    "contactType": "customer support"
+  },
+  "sameAs": [
+    "https://github.com/coingate"
+  ],
+  "termsOfService": "https://coingate.com/terms",
+  "privacyPolicy": "https://coingate.com/privacy",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "CoinGate API Services",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "name": "CoinGate Payment Gateway API",
+        "description": "REST API for accepting cryptocurrency payments, managing orders, processing refunds, handling payouts, performing currency conversions, and accessing merchant ledger and billing data.",
+        "url": "https://developer.coingate.com/",
+        "category": "Payment Processing API"
+      }
+    ]
+  },
+  "mainEntity": {
+    "@type": "WebAPI",
+    "@id": "https://api.coingate.com/api/v2",
+    "name": "CoinGate Payment Gateway API",
+    "description": "REST API for accepting 70+ cryptocurrencies, managing payment orders, processing refunds, handling payouts, and performing crypto-to-fiat conversions.",
+    "url": "https://developer.coingate.com/",
+    "documentation": "https://developer.coingate.com/docs/api-overview",
+    "termsOfService": "https://coingate.com/terms",
+    "version": "v2",
+    "provider": {
+      "@type": "Organization",
+      "name": "CoinGate",
+      "url": "https://coingate.com"
+    },
+    "availableChannel": [
+      {
+        "@type": "ServiceChannel",
+        "name": "Production API",
+        "serviceUrl": "https://api.coingate.com/api/v2"
+      },
+      {
+        "@type": "ServiceChannel",
+        "name": "Sandbox API",
+        "serviceUrl": "https://api-sandbox.coingate.com/api/v2"
+      }
+    ],
+    "featureList": [
+      "Accept 70+ cryptocurrencies",
+      "Crypto-to-fiat settlement",
+      "Payment order management",
+      "Refund processing",
+      "Automated payouts (Send Requests)",
+      "Currency conversions",
+      "Ledger account management",
+      "Billing and reporting",
+      "Payment channels",
+      "Beneficiary management",
+      "Sandbox/test environment"
+    ]
+  }
+}
