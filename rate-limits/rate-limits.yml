@@ -1,0 +1,39 @@
+rateLimits:
+  description: CoinGate enforces API rate limits and quotas to ensure platform stability
+    and fair usage across all merchants. Specific numeric limits are documented in
+    the API Limits and Quotas section of the developer portal. Sandbox environments
+    may have separate, more restrictive limits than production.
+  documentationUrl: https://developer.coingate.com/reference/api-overview
+  environments:
+    - name: Production
+      baseUrl: https://api.coingate.com/v2
+      notes: Live environment for real transactions on mainnet blockchain.
+    - name: Sandbox
+      baseUrl: https://api-sandbox.coingate.com/v2
+      portalUrl: https://sandbox.coingate.com
+      notes: Test environment with separate API credentials. Credentials from production
+        do not work in sandbox.
+  authentication:
+    type: Bearer Token
+    headerName: Authorization
+    headerFormat: 'Token <api_token>'
+    notes: API tokens are generated from the merchant dashboard. Public endpoints
+      (exchange rates, currencies, ping, IP addresses, platforms, supported countries)
+      do not require authentication.
+  publicEndpoints:
+    description: The following endpoints are publicly accessible without an API token.
+    endpoints:
+      - GET /v2/rates
+      - GET /v2/rates/merchant/{from}/{to}
+      - GET /v2/rates/trader/{kind}/{from}/{to}
+      - GET /v2/currencies
+      - GET /v2/ping
+      - GET /v2/ip-addresses
+      - GET /v2/platforms
+      - GET /v2/countries
+  notes:
+    - Rate limit details are available in the CoinGate developer portal under API
+      Limits and Quotas.
+    - Exceeding rate limits will result in HTTP 429 Too Many Requests responses.
+    - Contact support@coingate.com or use the Enterprise plan for higher rate limit
+      thresholds.

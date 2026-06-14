@@ -1,0 +1,107 @@
+name: CoinGate
+description: CoinGate is a cryptocurrency payment gateway providing REST APIs for
+  creating and managing payment orders, processing crypto-to-fiat conversions, automating
+  payouts, managing merchant ledger accounts, and accessing billing and reporting
+  data. Merchants can accept 70+ cryptocurrencies and settle in fiat or crypto, with
+  integrations available via hosted checkout, plugins, and direct API.
+image: https://coingate.com/images/coingate-logo.png
+tags:
+  - Cryptocurrency
+  - Payments
+  - Payment Gateway
+  - Crypto
+  - Fintech
+  - Bitcoin
+  - Ethereum
+  - Merchant Services
+created: '2026-06-13'
+modified: '2026-06-13'
+url: https://raw.githubusercontent.com/api-evangelist/coingate/refs/heads/main/apis.yml
+specificationVersion: '0.19'
+apis:
+  - name: CoinGate Payment Gateway API
+    description: REST API for accepting cryptocurrency payments, managing orders,
+      processing refunds, handling payouts, performing currency conversions, and
+      accessing merchant ledger and billing data. Supports both production and sandbox
+      environments.
+    image: https://coingate.com/images/coingate-logo.png
+    humanURL: https://developer.coingate.com/
+    baseURL: https://api.coingate.com/v2
+    tags:
+      - Cryptocurrency
+      - Payments
+      - Orders
+      - Payouts
+      - Conversions
+      - Billing
+      - Ledger
+    properties:
+      - type: Documentation
+        url: https://developer.coingate.com/docs/api-overview
+      - type: OpenAPI
+        url: https://developer.coingate.com/llms.txt
+      - type: Authentication
+        url: https://developer.coingate.com/reference/api-authentication
+      - type: Environments
+        url: https://developer.coingate.com/reference/environments
+      - type: Callbacks
+        url: https://developer.coingate.com/reference/api-callbacks
+      - type: Changelog
+        url: https://developer.coingate.com/changelog
+      - type: Plans
+        url: plans/plans.yml
+      - type: RateLimits
+        url: rate-limits/rate-limits.yml
+      - type: FinOps
+        url: finops/finops.yml
+    contact:
+      - FN: CoinGate Support
+        url: https://coingate.com/contact
+        email: support@coingate.com
+    x-sandbox-url: https://api-sandbox.coingate.com/v2
+    x-sandbox-portal: https://sandbox.coingate.com
+common:
+  - type: Website
+    url: https://coingate.com
+  - type: Developer Portal
+    url: https://developer.coingate.com
+  - type: API Reference
+    url: https://developer.coingate.com/reference/cryptocurrency-payment-api
+  - type: Documentation
+    url: https://developer.coingate.com/docs/api-overview
+  - type: Pricing
+    url: https://coingate.com/pricing
+  - type: Blog
+    url: https://coingate.com/blog
+  - type: GitHub
+    url: https://github.com/coingate
+  - type: SDK
+    url: https://github.com/coingate/coingate-python
+    name: Python SDK
+  - type: SDK
+    url: https://github.com/coingate/coingate-php
+    name: PHP SDK
+  - type: SDK
+    url: https://github.com/coingate/coingate-node
+    name: Node.js SDK
+  - type: SDK
+    url: https://github.com/coingate/coingate-ruby
+    name: Ruby SDK
+  - type: SignUp
+    url: https://coingate.com/register
+  - type: Login
+    url: https://coingate.com/login
+  - type: TermsOfService
+    url: https://coingate.com/terms
+  - type: PrivacyPolicy
+    url: https://coingate.com/privacy
+  - type: StatusPage
+    url: https://status.coingate.com
+  - type: Support
+    url: https://coingate.com/contact
+  - type: HelpCenter
+    url: https://support.coingate.com
+maintainers:
+  - FN: API Evangelist
+    url: https://apievangelist.com
+    email: info@apievangelist.com

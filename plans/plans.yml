@@ -1,0 +1,101 @@
+plans:
+  - name: Standard
+    description: Self-service merchant plan for growing businesses and startups accepting
+      cryptocurrency payments. No monthly fees; pay per transaction.
+    url: https://coingate.com/pricing
+    features:
+      - Accept 70+ cryptocurrencies
+      - Global payments from 180+ countries
+      - Instant fiat conversion (volatility protection)
+      - Crypto payouts
+      - Refund processing
+      - Financial reporting and reconciliation
+      - Checkout integration
+      - Billing and invoicing tools
+      - Standard technical support via email
+      - Self-service dashboard
+      - Standard checkout branding
+      - Community documentation access
+      - Weekly automatic settlements
+    pricing:
+      - type: transaction
+        name: Payment Processing
+        amount: 1
+        unit: percent
+        notes: 1% per transaction
+      - type: payout
+        name: Crypto Payouts
+        amount: 0.50
+        unit: EUR
+        additionalPercent: 0.5
+        notes: 0.50 EUR + 0.5% per payout
+      - type: payout_with_conversion
+        name: Payouts with Conversion
+        amount: 0.50
+        unit: EUR
+        additionalPercent: 1.5
+        notes: 0.50 EUR + 1.5% per payout with conversion
+      - type: withdrawal_crypto
+        name: Crypto Withdrawals
+        amount: 0
+        unit: EUR
+        notes: Free
+      - type: withdrawal_sepa
+        name: SEPA Withdrawals
+        amount: 0
+        unit: EUR
+        notes: Free
+      - type: withdrawal_swift
+        name: SWIFT Withdrawals
+        amount: 0.5
+        unit: percent
+        minimum: 50
+        minimumUnit: EUR
+        notes: 0.50% (minimum 50 EUR)
+      - type: exchange
+        name: Currency Exchange
+        amount: 1
+        unit: percent
+        notes: 1% per exchange
+      - type: refund
+        name: Refunds
+        amount: 0.25
+        unit: EUR
+        additionalPercent: 0.1
+        notes: 0.25 EUR + 0.1% per refund
+      - type: deposit
+        name: Deposits
+        amount: 0
+        unit: EUR
+        notes: Free
+
+  - name: Enterprise
+    description: Custom merchant plan for established businesses with high transaction
+      volumes. Includes dedicated support, account management, and custom rates.
+    url: https://coingate.com/pricing
+    contact: true
+    contactUrl: https://coingate.com/contact
+    features:
+      - Everything in Standard plan
+      - Custom volume-based transaction rates
+      - Dedicated account manager
+      - Dedicated technical support
+      - Custom checkout branding
+      - Direct developer support access
+      - Weekly or on-request settlements
+      - Custom payout rates
+      - Custom exchange rates
+      - Custom refund rates
+    pricing:
+      - type: transaction
+        name: Payment Processing
+        amount: custom
+        notes: Custom rates based on volume
+      - type: payout
+        name: Crypto Payouts
+        amount: custom
+        notes: Custom/lower rates based on volume
+      - type: exchange
+        name: Currency Exchange
+        amount: custom
+        notes: Custom/lower rates based on volume

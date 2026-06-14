@@ -1,0 +1,77 @@
+finops:
+  description: Financial operations guidance for teams integrating the CoinGate
+    Payment Gateway API, covering cost structure, settlement mechanics, currency
+    conversion, and cost optimization strategies.
+  pricingUrl: https://coingate.com/pricing
+  costDrivers:
+    - name: Payment Processing Fee
+      description: Applied to every successful payment order processed through CoinGate.
+      standard: 1% per transaction
+      enterprise: Custom volume-based rate
+    - name: Crypto Payout Fee
+      description: Applied when sending funds from your CoinGate balance to an external
+        cryptocurrency address.
+      standard: 0.50 EUR + 0.5% per payout
+      enterprise: Custom/lower rate
+    - name: Payout with Conversion Fee
+      description: Applied when sending funds with an automatic currency conversion
+        (e.g., BTC to EUR payout).
+      standard: 0.50 EUR + 1.5% per payout
+      enterprise: Custom/lower rate
+    - name: Currency Exchange Fee
+      description: Applied when converting between currencies within your CoinGate
+        ledger account.
+      standard: 1% per exchange
+      enterprise: Custom/lower rate
+    - name: Refund Fee
+      description: Applied when processing a refund for a completed payment order.
+      standard: 0.25 EUR + 0.1% per refund
+      enterprise: Custom/lower rate
+    - name: SWIFT Withdrawal Fee
+      description: Applied when withdrawing funds via SWIFT international wire transfer.
+      standard: 0.50% (minimum 50 EUR)
+      enterprise: Custom/lower rate
+    - name: SEPA Withdrawal Fee
+      description: Applied for EUR bank transfers within the SEPA zone.
+      standard: Free
+      enterprise: Free
+    - name: Crypto Withdrawal Fee
+      description: Applied when withdrawing cryptocurrency to an external wallet.
+      standard: Free
+      enterprise: Free
+    - name: Deposits
+      description: Receiving funds into your CoinGate account.
+      standard: Free
+      enterprise: Free
+  settlements:
+    description: CoinGate handles automatic settlement of merchant balances to fiat
+      or cryptocurrency on a scheduled basis.
+    standard: Weekly automatic settlement
+    enterprise: Weekly or on-request settlement
+    supportedFiatCurrencies:
+      - EUR
+      - USD
+      - GBP
+    settlementMethods:
+      - SEPA bank transfer (EUR, free)
+      - SWIFT wire transfer (0.50% fee, minimum 50 EUR)
+      - Cryptocurrency withdrawal (free)
+  costOptimization:
+    - tip: Upgrade to Enterprise for volume discounts if monthly transaction volume
+        is high enough to justify negotiated custom rates.
+      threshold: Evaluate when monthly processing volume exceeds 50,000 EUR
+    - tip: Use SEPA withdrawals instead of SWIFT to avoid the 0.50% withdrawal fee
+        (minimum 50 EUR).
+    - tip: Minimize currency conversion steps by settling in a single target currency
+        to avoid the 1% exchange fee on each conversion.
+    - tip: Batch payouts where possible to reduce the fixed 0.50 EUR per-payout component.
+    - tip: Use the public Exchange Rates API (unauthenticated) for rate lookups to
+        avoid consuming authenticated API quota unnecessarily.
+    - tip: Leverage the Sandbox environment at no cost for development and testing
+        to avoid incurring fees on test transactions.
+  billing:
+    description: Fees are deducted from your CoinGate merchant balance automatically.
+      There are no monthly subscription fees for Standard accounts. Enterprise pricing
+      is negotiated per-contract.
+    invoicingUrl: https://developer.coingate.com/reference/cryptocurrency-payment-api
+    selfServiceDashboard: https://coingate.com/login
