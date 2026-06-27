@@ -2,13 +2,20 @@
   "repo": "coingate",
   "feeds": [
     {
-      "source": "https://coingate.com/pricing",
+      "source": "https://coingate.com/feed",
       "feed_url": "https://coingate.com/feed",
       "title": "",
       "saved": 3,
+      "method": "feed"
+    },
+    {
+      "source": "https://coingate.com/pricing",
+      "feed_url": "https://coingate.com/feed",
+      "title": "",
+      "saved": 0,
       "method": "discovered"
     }
   ],
-  "post_count": 3,
-  "fetched": "2026-06-14T20:42:17Z"
+  "post_count": 8,
+  "fetched": "2026-06-27T12:03:07Z"
 }

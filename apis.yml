@@ -46,7 +46,7 @@ apis:
         url: https://developer.coingate.com/reference/environments
       - type: Callbacks
         url: https://developer.coingate.com/reference/api-callbacks
-      - type: Changelog
+      - type: ChangeLog
         url: https://developer.coingate.com/changelog
       - type: Plans
         url: plans/plans.yml
@@ -63,9 +63,9 @@ apis:
 common:
   - type: Website
     url: https://coingate.com
-  - type: Developer Portal
+  - type: DeveloperPortal
     url: https://developer.coingate.com
-  - type: API Reference
+  - type: APIReference
     url: https://developer.coingate.com/reference/cryptocurrency-payment-api
   - type: Documentation
     url: https://developer.coingate.com/docs/api-overview
@@ -75,19 +75,19 @@ common:
     url: https://coingate.com/blog
   - type: GitHub
     url: https://github.com/coingate
-  - type: SDK
+  - type: SDKs
     url: https://github.com/coingate/coingate-python
     name: Python SDK
-  - type: SDK
+  - type: SDKs
     url: https://github.com/coingate/coingate-php
     name: PHP SDK
-  - type: SDK
+  - type: SDKs
     url: https://github.com/coingate/coingate-node
     name: Node.js SDK
-  - type: SDK
+  - type: SDKs
     url: https://github.com/coingate/coingate-ruby
     name: Ruby SDK
-  - type: SignUp
+  - type: Signup
     url: https://coingate.com/register
   - type: Login
     url: https://coingate.com/login
