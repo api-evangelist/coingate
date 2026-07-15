@@ -61,6 +61,8 @@ apis:
     x-sandbox-url: https://api-sandbox.coingate.com/v2
     x-sandbox-portal: https://sandbox.coingate.com
 common:
+  - type: AgenticAccess
+    url: agentic-access/coingate-agentic-access.yml
   - type: VulnerabilityDisclosure
     url: security/coingate-vulnerability-disclosure.yml
   - type: DomainSecurity
