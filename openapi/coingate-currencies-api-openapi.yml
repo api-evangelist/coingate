@@ -1,0 +1,120 @@
+openapi: 3.1.0
+info:
+  title: CoinGate Payment Gateway Conversions Currencies API
+  description: REST API for accepting cryptocurrency payments, managing orders, processing refunds, handling payouts, performing currency conversions, and accessing merchant ledger and billing data. Supports both production and sandbox environments.
+  version: '2'
+  contact:
+    name: CoinGate Support
+    url: https://coingate.com/contact
+    email: support@coingate.com
+  termsOfService: https://coingate.com/terms
+  x-logo:
+    url: https://coingate.com/images/coingate-logo.png
+servers:
+- url: https://api.coingate.com/api/v2
+  description: Production
+- url: https://api-sandbox.coingate.com/api/v2
+  description: Sandbox
+security:
+- bearerAuth: []
+tags:
+- name: Currencies
+  description: Retrieve supported currencies and platforms
+paths:
+  /currencies:
+    get:
+      summary: Get Currencies
+      description: Retrieves all supported currencies with optional filtering.
+      operationId: currencies
+      tags:
+      - Currencies
+      security: []
+      parameters:
+      - name: native
+        in: query
+        schema:
+          type: boolean
+      - name: enabled
+        in: query
+        schema:
+          type: boolean
+      - name: merchant_pay
+        in: query
+        schema:
+          type: boolean
+      - name: merchant_receive
+        in: query
+        schema:
+          type: boolean
+      - name: kind
+        in: query
+        description: 'Filter by currency type. Accepted values: crypto, fiat'
+        schema:
+          type: string
+          enum:
+          - crypto
+          - fiat
+      - name: symbol
+        in: query
+        description: Search by currency symbol, e.g. BTC
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of currencies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    title:
+                      type: string
+                    kind:
+                      type: string
+                      enum:
+                      - crypto
+                      - fiat
+                    symbol:
+                      type: string
+                    native:
+                      type: boolean
+                    disabled:
+                      type: boolean
+                    disabled_message:
+                      type: string
+                      nullable: true
+                    merchant:
+                      type: object
+                      properties:
+                        price:
+                          type: boolean
+                        pay:
+                          type: boolean
+                        receive:
+                          type: boolean
+                    platforms:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          id_name:
+                            type: string
+                          title:
+                            type: string
+                          enabled:
+                            type: boolean
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API Token authentication. Obtain your API token from the CoinGate merchant dashboard.
+externalDocs:
+  description: CoinGate Developer Documentation
+  url: https://developer.coingate.com/docs/api-overview
