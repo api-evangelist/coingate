@@ -4,6 +4,19 @@ description: CoinGate is a cryptocurrency payment gateway providing REST APIs fo
   payouts, managing merchant ledger accounts, and accessing billing and reporting
   data. Merchants can accept 70+ cryptocurrencies and settle in fiat or crypto, with
   integrations available via hosted checkout, plugins, and direct API.
+accessModel:
+  pricing: paid
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Paid · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 image: https://coingate.com/images/coingate-logo.png
 tags:
   - Cryptocurrency
@@ -19,47 +32,136 @@ modified: '2026-06-13'
 url: https://raw.githubusercontent.com/api-evangelist/coingate/refs/heads/main/apis.yml
 specificationVersion: '0.19'
 apis:
-  - name: CoinGate Payment Gateway API
-    description: REST API for accepting cryptocurrency payments, managing orders,
-      processing refunds, handling payouts, performing currency conversions, and
-      accessing merchant ledger and billing data. Supports both production and sandbox
-      environments.
-    image: https://coingate.com/images/coingate-logo.png
-    humanURL: https://developer.coingate.com/
-    baseURL: https://api.coingate.com/v2
-    tags:
-      - Cryptocurrency
-      - Payments
-      - Orders
-      - Payouts
-      - Conversions
-      - Billing
-      - Ledger
-    properties:
-      - type: Documentation
-        url: https://developer.coingate.com/docs/api-overview
-      - type: OpenAPI
-        url: openapi/openapi.json
-      - type: Authentication
-        url: https://developer.coingate.com/reference/api-authentication
-      - type: Environments
-        url: https://developer.coingate.com/reference/environments
-      - type: Callbacks
-        url: https://developer.coingate.com/reference/api-callbacks
-      - type: ChangeLog
-        url: https://developer.coingate.com/changelog
-      - type: Plans
-        url: plans/plans.yml
-      - type: RateLimits
-        url: rate-limits/rate-limits.yml
-      - type: FinOps
-        url: finops/finops.yml
-    contact:
-      - FN: CoinGate Support
-        url: https://coingate.com/contact
-        email: support@coingate.com
-    x-sandbox-url: https://api-sandbox.coingate.com/v2
-    x-sandbox-portal: https://sandbox.coingate.com
+- aid: coingate:coingate-conversions-api
+  name: CoinGate Conversions API
+  description: Convert between currencies in ledger accounts
+  humanURL: https://developer.coingate.com/
+  baseURL: https://api.coingate.com/v2
+  tags:
+  - Conversions
+  properties:
+  - type: OpenAPI
+    url: openapi/coingate-conversions-api-openapi.yml
+  - type: Documentation
+    url: https://developer.coingate.com/docs/api-overview
+  - type: Authentication
+    url: https://developer.coingate.com/reference/api-authentication
+  - type: Environments
+    url: https://developer.coingate.com/reference/environments
+  - type: Callbacks
+    url: https://developer.coingate.com/reference/api-callbacks
+  - type: ChangeLog
+    url: https://developer.coingate.com/changelog
+  - type: Plans
+    url: plans/plans.yml
+  - type: RateLimits
+    url: rate-limits/rate-limits.yml
+  - type: FinOps
+    url: finops/finops.yml
+- aid: coingate:coingate-currencies-api
+  name: CoinGate Currencies API
+  description: Retrieve supported currencies and platforms
+  humanURL: https://developer.coingate.com/
+  baseURL: https://api.coingate.com/v2
+  tags:
+  - Currencies
+  properties:
+  - type: OpenAPI
+    url: openapi/coingate-currencies-api-openapi.yml
+  - type: Documentation
+    url: https://developer.coingate.com/docs/api-overview
+  - type: Authentication
+    url: https://developer.coingate.com/reference/api-authentication
+  - type: Environments
+    url: https://developer.coingate.com/reference/environments
+  - type: Callbacks
+    url: https://developer.coingate.com/reference/api-callbacks
+  - type: ChangeLog
+    url: https://developer.coingate.com/changelog
+  - type: Plans
+    url: plans/plans.yml
+  - type: RateLimits
+    url: rate-limits/rate-limits.yml
+  - type: FinOps
+    url: finops/finops.yml
+- aid: coingate:coingate-orders-api
+  name: CoinGate Orders API
+  description: Create and manage payment orders
+  humanURL: https://developer.coingate.com/
+  baseURL: https://api.coingate.com/v2
+  tags:
+  - Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/coingate-orders-api-openapi.yml
+  - type: Documentation
+    url: https://developer.coingate.com/docs/api-overview
+  - type: Authentication
+    url: https://developer.coingate.com/reference/api-authentication
+  - type: Environments
+    url: https://developer.coingate.com/reference/environments
+  - type: Callbacks
+    url: https://developer.coingate.com/reference/api-callbacks
+  - type: ChangeLog
+    url: https://developer.coingate.com/changelog
+  - type: Plans
+    url: plans/plans.yml
+  - type: RateLimits
+    url: rate-limits/rate-limits.yml
+  - type: FinOps
+    url: finops/finops.yml
+- aid: coingate:coingate-refunds-api
+  name: CoinGate Refunds API
+  description: Process order refunds
+  humanURL: https://developer.coingate.com/
+  baseURL: https://api.coingate.com/v2
+  tags:
+  - Refunds
+  properties:
+  - type: OpenAPI
+    url: openapi/coingate-refunds-api-openapi.yml
+  - type: Documentation
+    url: https://developer.coingate.com/docs/api-overview
+  - type: Authentication
+    url: https://developer.coingate.com/reference/api-authentication
+  - type: Environments
+    url: https://developer.coingate.com/reference/environments
+  - type: Callbacks
+    url: https://developer.coingate.com/reference/api-callbacks
+  - type: ChangeLog
+    url: https://developer.coingate.com/changelog
+  - type: Plans
+    url: plans/plans.yml
+  - type: RateLimits
+    url: rate-limits/rate-limits.yml
+  - type: FinOps
+    url: finops/finops.yml
+- aid: coingate:coingate-send-requests-api
+  name: CoinGate Send Requests API
+  description: Send cryptocurrency payouts to beneficiaries
+  humanURL: https://developer.coingate.com/
+  baseURL: https://api.coingate.com/v2
+  tags:
+  - Send Requests
+  properties:
+  - type: OpenAPI
+    url: openapi/coingate-send-requests-api-openapi.yml
+  - type: Documentation
+    url: https://developer.coingate.com/docs/api-overview
+  - type: Authentication
+    url: https://developer.coingate.com/reference/api-authentication
+  - type: Environments
+    url: https://developer.coingate.com/reference/environments
+  - type: Callbacks
+    url: https://developer.coingate.com/reference/api-callbacks
+  - type: ChangeLog
+    url: https://developer.coingate.com/changelog
+  - type: Plans
+    url: plans/plans.yml
+  - type: RateLimits
+    url: rate-limits/rate-limits.yml
+  - type: FinOps
+    url: finops/finops.yml
 common:
   - type: AgenticAccess
     url: agentic-access/coingate-agentic-access.yml
