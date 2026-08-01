@@ -1,0 +1,22 @@
+{
+  "provider": "coingate",
+  "sources": [
+    "coingate-conversions-api-openapi.yml",
+    "coingate-currencies-api-openapi.yml",
+    "coingate-orders-api-openapi.yml",
+    "coingate-refunds-api-openapi.yml",
+    "coingate-send-requests-api-openapi.yml"
+  ],
+  "outputs": [
+    "coingate-conversions-api-openapi.yml",
+    "coingate-currencies-api-openapi.yml",
+    "coingate-orders-api-openapi.yml",
+    "coingate-refunds-api-openapi.yml",
+    "coingate-send-requests-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
