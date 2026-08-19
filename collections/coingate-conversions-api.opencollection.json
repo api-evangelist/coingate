@@ -1,0 +1,75 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CoinGate Payment Gateway Conversions API",
+    "version": "2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Conversions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Conversions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.coingate.com/api/v2/ledger/conversions",
+            "params": [
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Retrieve a paginated list of currency conversions."
+        },
+        {
+          "info": {
+            "name": "Create Conversion",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.coingate.com/api/v2/ledger/conversions",
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "ledger_account_id",
+                  "value": ""
+                },
+                {
+                  "name": "quote_currency_id",
+                  "value": ""
+                },
+                {
+                  "name": "base_amount",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Create a currency conversion between ledger accounts."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

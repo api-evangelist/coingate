@@ -1,0 +1,88 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CoinGate Payment Gateway Conversions Refunds API",
+    "version": "2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Refunds",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create Order Refund",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.coingate.com/api/v2/orders/:order_id/refunds",
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the order to be refunded"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "amount",
+                  "value": ""
+                },
+                {
+                  "name": "address",
+                  "value": ""
+                },
+                {
+                  "name": "address_memo",
+                  "value": ""
+                },
+                {
+                  "name": "currency_id",
+                  "value": ""
+                },
+                {
+                  "name": "platform_id",
+                  "value": ""
+                },
+                {
+                  "name": "reason",
+                  "value": ""
+                },
+                {
+                  "name": "email",
+                  "value": ""
+                },
+                {
+                  "name": "ledger_account_id",
+                  "value": ""
+                },
+                {
+                  "name": "callback_url",
+                  "value": ""
+                },
+                {
+                  "name": "skip_user_address_confirmation",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Create a refund for a specific order."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

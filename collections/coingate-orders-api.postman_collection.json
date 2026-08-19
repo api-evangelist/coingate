@@ -1,0 +1,570 @@
+{
+  "item": [
+    {
+      "id": "bb484a2f-9c47-40c4-9783-4abffcb85656",
+      "name": "Orders",
+      "description": {
+        "content": "Create and manage payment orders",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "e8b89702-ef11-419c-88a0-4d6c73a7bd03",
+          "name": "Create Order",
+          "request": {
+            "name": "Create Order",
+            "description": {
+              "content": "Create an order at CoinGate and redirect the shopper to the invoice (payment_url).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "orders"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price_amount\": \"<double>\",\n  \"price_currency\": \"<string>\",\n  \"title\": \"<string>\",\n  \"description\": \"<string>\",\n  \"order_id\": \"<string>\",\n  \"receive_currency\": \"<string>\",\n  \"callback_url\": \"<string>\",\n  \"cancel_url\": \"<string>\",\n  \"success_url\": \"<string>\",\n  \"token\": \"<string>\",\n  \"shopper\": {\n    \"type\": \"<string>\",\n    \"ip_address\": \"<string>\",\n    \"email\": \"<email>\",\n    \"first_name\": \"<string>\",\n    \"last_name\": \"<string>\",\n    \"date_of_birth\": \"<date>\",\n    \"residence_address\": \"<string>\",\n    \"residence_postal_code\": \"<string>\",\n    \"residence_city\": \"<string>\",\n    \"residence_country\": \"<string>\",\n    \"company_details\": {\n      \"name\": \"<string>\",\n      \"code\": \"<string>\",\n      \"incorporation_date\": \"<date>\",\n      \"incorporation_country\": \"<string>\",\n      \"address\": \"<string>\",\n      \"postal_code\": \"<string>\",\n      \"city\": \"<string>\",\n      \"country\": \"<string>\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a2d189b2-e253-430e-8d76-603b55168552",
+              "name": "Order created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "orders"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"price_amount\": \"<double>\",\n  \"price_currency\": \"<string>\",\n  \"title\": \"<string>\",\n  \"description\": \"<string>\",\n  \"order_id\": \"<string>\",\n  \"receive_currency\": \"<string>\",\n  \"callback_url\": \"<string>\",\n  \"cancel_url\": \"<string>\",\n  \"success_url\": \"<string>\",\n  \"token\": \"<string>\",\n  \"shopper\": {\n    \"type\": \"business\",\n    \"ip_address\": \"string\",\n    \"email\": \"wEwL3AIHzgF-CW@NDZIfcSCZ.baw\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\",\n    \"date_of_birth\": \"1994-04-29\",\n    \"residence_address\": \"string\",\n    \"residence_postal_code\": \"string\",\n    \"residence_city\": \"string\",\n    \"residence_country\": \"string\",\n    \"company_details\": {\n      \"name\": \"string\",\n      \"code\": \"string\",\n      \"incorporation_date\": \"1998-02-08\",\n      \"incorporation_country\": \"string\",\n      \"address\": \"string\",\n      \"postal_code\": \"string\",\n      \"city\": \"string\",\n      \"country\": \"string\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1866,\n  \"status\": \"string\",\n  \"title\": \"string\",\n  \"do_not_convert\": true,\n  \"orderable_type\": \"string\",\n  \"orderable_id\": 6144,\n  \"price_currency\": \"string\",\n  \"price_amount\": \"string\",\n  \"pay_currency\": \"string\",\n  \"pay_amount\": \"string\",\n  \"lightning_network\": false,\n  \"receive_currency\": \"string\",\n  \"receive_amount\": \"string\",\n  \"created_at\": \"2007-02-27T02:26:21.509Z\",\n  \"expire_at\": \"2019-03-27T02:46:14.530Z\",\n  \"paid_at\": \"1959-04-19T20:33:23.789Z\",\n  \"payment_address\": \"string\",\n  \"payment_gateway\": \"string\",\n  \"order_id\": \"string\",\n  \"payment_url\": \"string\",\n  \"payment_request_uri\": \"string\",\n  \"underpaid_amount\": \"string\",\n  \"overpaid_amount\": \"string\",\n  \"is_refundable\": true,\n  \"conversion_rate\": \"string\",\n  \"token\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aa5da9f4-0d6e-4793-8bb7-47fffa2f0969",
+              "name": "Validation error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "orders"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"price_amount\": \"<double>\",\n  \"price_currency\": \"<string>\",\n  \"title\": \"<string>\",\n  \"description\": \"<string>\",\n  \"order_id\": \"<string>\",\n  \"receive_currency\": \"<string>\",\n  \"callback_url\": \"<string>\",\n  \"cancel_url\": \"<string>\",\n  \"success_url\": \"<string>\",\n  \"token\": \"<string>\",\n  \"shopper\": {\n    \"type\": \"business\",\n    \"ip_address\": \"string\",\n    \"email\": \"wEwL3AIHzgF-CW@NDZIfcSCZ.baw\",\n    \"first_name\": \"string\",\n    \"last_name\": \"string\",\n    \"date_of_birth\": \"1994-04-29\",\n    \"residence_address\": \"string\",\n    \"residence_postal_code\": \"string\",\n    \"residence_city\": \"string\",\n    \"residence_country\": \"string\",\n    \"company_details\": {\n      \"name\": \"string\",\n      \"code\": \"string\",\n      \"incorporation_date\": \"1998-02-08\",\n      \"incorporation_country\": \"string\",\n      \"address\": \"string\",\n      \"postal_code\": \"string\",\n      \"city\": \"string\",\n      \"country\": \"string\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"reason\": \"string\",\n  \"errors\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "08b20891-5066-4b7b-bc24-f49e28fb4840",
+          "name": "List Orders",
+          "request": {
+            "name": "List Orders",
+            "description": {
+              "content": "Retrieve information of all placed orders.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "orders"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "100",
+                  "description": "How many orders per page. Max: 100. Default: 100."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort",
+                  "value": "created_at_desc",
+                  "description": "Sort orders by field. Available: created_at_asc, created_at_desc."
+                },
+                {
+                  "disabled": false,
+                  "key": "created_at[from]",
+                  "value": "<date>",
+                  "description": "Filter by order creation time (from). Example: 2018-09-01"
+                },
+                {
+                  "disabled": false,
+                  "key": "created_at[to]",
+                  "value": "<date>",
+                  "description": "Filter by order creation time (to). Example: 2018-09-30"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter by order status."
+                },
+                {
+                  "disabled": false,
+                  "key": "paid_at[from]",
+                  "value": "<date>",
+                  "description": "Filter by order paid time (from). Example: 2018-09-01"
+                },
+                {
+                  "disabled": false,
+                  "key": "paid_at[to]",
+                  "value": "<date>",
+                  "description": "Filter by order paid time (to). Example: 2018-09-30"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "907727f8-06d7-4953-b6a0-3639b0b47d85",
+              "name": "List of orders",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "orders"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "per_page",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "created_at_desc"
+                    },
+                    {
+                      "key": "created_at[from]",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "created_at[to]",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "paid_at[from]",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "paid_at[to]",
+                      "value": "<date>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"current_page\": 1327,\n  \"per_page\": 5054,\n  \"total_orders\": 3749,\n  \"total_pages\": 4466,\n  \"orders\": [\n    {\n      \"id\": 9538,\n      \"status\": \"string\",\n      \"title\": \"string\",\n      \"do_not_convert\": false,\n      \"orderable_type\": \"string\",\n      \"orderable_id\": 6176,\n      \"price_currency\": \"string\",\n      \"price_amount\": \"string\",\n      \"pay_currency\": \"string\",\n      \"pay_amount\": \"string\",\n      \"lightning_network\": true,\n      \"receive_currency\": \"string\",\n      \"receive_amount\": \"string\",\n      \"created_at\": \"1967-09-20T08:07:20.264Z\",\n      \"expire_at\": \"1954-06-03T16:31:31.924Z\",\n      \"paid_at\": \"1981-05-29T09:25:48.791Z\",\n      \"payment_address\": \"string\",\n      \"payment_gateway\": \"string\",\n      \"order_id\": \"string\",\n      \"payment_url\": \"string\",\n      \"payment_request_uri\": \"string\",\n      \"underpaid_amount\": \"string\",\n      \"overpaid_amount\": \"string\",\n      \"is_refundable\": false,\n      \"conversion_rate\": \"string\",\n      \"token\": \"string\"\n    },\n    {\n      \"id\": 5553,\n      \"status\": \"string\",\n      \"title\": \"string\",\n      \"do_not_convert\": false,\n      \"orderable_type\": \"string\",\n      \"orderable_id\": 7243,\n      \"price_currency\": \"string\",\n      \"price_amount\": \"string\",\n      \"pay_currency\": \"string\",\n      \"pay_amount\": \"string\",\n      \"lightning_network\": true,\n      \"receive_currency\": \"string\",\n      \"receive_amount\": \"string\",\n      \"created_at\": \"2016-03-13T00:49:37.208Z\",\n      \"expire_at\": \"1972-07-26T17:41:18.990Z\",\n      \"paid_at\": \"1959-09-22T07:37:48.252Z\",\n      \"payment_address\": \"string\",\n      \"payment_gateway\": \"string\",\n      \"order_id\": \"string\",\n      \"payment_url\": \"string\",\n      \"payment_request_uri\": \"string\",\n      \"underpaid_amount\": \"string\",\n      \"overpaid_amount\": \"string\",\n      \"is_refundable\": false,\n      \"conversion_rate\": \"string\",\n      \"token\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e6c3a23c-b8f2-42c3-b85b-2ed303337477",
+              "name": "Bad request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "orders"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "per_page",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "created_at_desc"
+                    },
+                    {
+                      "key": "created_at[from]",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "created_at[to]",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "paid_at[from]",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "paid_at[to]",
+                      "value": "<date>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ad8ab160-00e1-4880-9354-9ceee285af4e",
+          "name": "Get Order",
+          "request": {
+            "name": "Get Order",
+            "description": {
+              "content": "Retrieve information about a specific order by its CoinGate ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "orders",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) CoinGate Order ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d9870c9c-1152-4789-82d0-27ed016033b4",
+              "name": "Order details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "orders",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) CoinGate Order ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1866,\n  \"status\": \"string\",\n  \"title\": \"string\",\n  \"do_not_convert\": true,\n  \"orderable_type\": \"string\",\n  \"orderable_id\": 6144,\n  \"price_currency\": \"string\",\n  \"price_amount\": \"string\",\n  \"pay_currency\": \"string\",\n  \"pay_amount\": \"string\",\n  \"lightning_network\": false,\n  \"receive_currency\": \"string\",\n  \"receive_amount\": \"string\",\n  \"created_at\": \"2007-02-27T02:26:21.509Z\",\n  \"expire_at\": \"2019-03-27T02:46:14.530Z\",\n  \"paid_at\": \"1959-04-19T20:33:23.789Z\",\n  \"payment_address\": \"string\",\n  \"payment_gateway\": \"string\",\n  \"order_id\": \"string\",\n  \"payment_url\": \"string\",\n  \"payment_request_uri\": \"string\",\n  \"underpaid_amount\": \"string\",\n  \"overpaid_amount\": \"string\",\n  \"is_refundable\": true,\n  \"conversion_rate\": \"string\",\n  \"token\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d33294a5-2070-4315-9cbc-d3afe1bc70b4",
+              "name": "Order not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "orders",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) CoinGate Order ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"reason\": \"string\",\n  \"errors\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.coingate.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "bb880ae1-2feb-4677-bd9c-5635190df366",
+    "name": "CoinGate Payment Gateway Conversions Orders API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for accepting cryptocurrency payments, managing orders, processing refunds, handling payouts, performing currency conversions, and accessing merchant ledger and billing data. Supports both production and sandbox environments.\n\nContact Support:\n Name: CoinGate Support\n Email: support@coingate.com",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CoinGate Payment Gateway Conversions Orders API",
+    "version": "2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Orders",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.coingate.com/api/v2/orders",
+            "params": [
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "How many orders per page. Max: 100. Default: 100."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Sort orders by field. Available: created_at_asc, created_at_desc."
+              },
+              {
+                "name": "created_at[from]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by order creation time (from). Example: 2018-09-01"
+              },
+              {
+                "name": "created_at[to]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by order creation time (to). Example: 2018-09-30"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by order status."
+              },
+              {
+                "name": "paid_at[from]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by order paid time (from). Example: 2018-09-01"
+              },
+              {
+                "name": "paid_at[to]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by order paid time (to). Example: 2018-09-30"
+              }
+            ]
+          },
+          "docs": "Retrieve information of all placed orders."
+        },
+        {
+          "info": {
+            "name": "Create Order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.coingate.com/api/v2/orders",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create an order at CoinGate and redirect the shopper to the invoice (payment_url)."
+        },
+        {
+          "info": {
+            "name": "Get Order",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.coingate.com/api/v2/orders/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "CoinGate Order ID"
+              }
+            ]
+          },
+          "docs": "Retrieve information about a specific order by its CoinGate ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

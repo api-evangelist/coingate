@@ -1,0 +1,177 @@
+{
+  "item": [
+    {
+      "id": "aedbd92d-1b2d-420a-899d-e2f1408e7186",
+      "name": "Currencies",
+      "description": {
+        "content": "Retrieve supported currencies and platforms",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b54b24da-e019-4df6-bfee-b374740630d8",
+          "name": "Get Currencies",
+          "request": {
+            "name": "Get Currencies",
+            "description": {
+              "content": "Retrieves all supported currencies with optional filtering.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "currencies"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "native",
+                  "value": "<boolean>"
+                },
+                {
+                  "disabled": false,
+                  "key": "enabled",
+                  "value": "<boolean>"
+                },
+                {
+                  "disabled": false,
+                  "key": "merchant_pay",
+                  "value": "<boolean>"
+                },
+                {
+                  "disabled": false,
+                  "key": "merchant_receive",
+                  "value": "<boolean>"
+                },
+                {
+                  "disabled": false,
+                  "key": "kind",
+                  "value": "<string>",
+                  "description": "Filter by currency type. Accepted values: crypto, fiat"
+                },
+                {
+                  "disabled": false,
+                  "key": "symbol",
+                  "value": "<string>",
+                  "description": "Search by currency symbol, e.g. BTC"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "973244d3-727e-45ce-82a8-5110dd96531e",
+              "name": "List of currencies",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "currencies"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "native",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "enabled",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "merchant_pay",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "merchant_receive",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "kind",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "symbol",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 4602,\n    \"title\": \"string\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"string\",\n    \"native\": true,\n    \"disabled\": false,\n    \"disabled_message\": \"string\",\n    \"merchant\": {\n      \"price\": false,\n      \"pay\": false,\n      \"receive\": true\n    },\n    \"platforms\": [\n      {\n        \"id\": 6973,\n        \"id_name\": \"string\",\n        \"title\": \"string\",\n        \"enabled\": true\n      },\n      {\n        \"id\": 9284,\n        \"id_name\": \"string\",\n        \"title\": \"string\",\n        \"enabled\": false\n      }\n    ]\n  },\n  {\n    \"id\": 5358,\n    \"title\": \"string\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"string\",\n    \"native\": false,\n    \"disabled\": true,\n    \"disabled_message\": \"string\",\n    \"merchant\": {\n      \"price\": false,\n      \"pay\": true,\n      \"receive\": false\n    },\n    \"platforms\": [\n      {\n        \"id\": 7881,\n        \"id_name\": \"string\",\n        \"title\": \"string\",\n        \"enabled\": true\n      },\n      {\n        \"id\": 3369,\n        \"id_name\": \"string\",\n        \"title\": \"string\",\n        \"enabled\": false\n      }\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.coingate.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "c1c88d7b-7c8c-484b-b2e0-f371462289d1",
+    "name": "CoinGate Payment Gateway Conversions Currencies API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for accepting cryptocurrency payments, managing orders, processing refunds, handling payouts, performing currency conversions, and accessing merchant ledger and billing data. Supports both production and sandbox environments.\n\nContact Support:\n Name: CoinGate Support\n Email: support@coingate.com",
+      "type": "text/plain"
+    }
+  }
+}

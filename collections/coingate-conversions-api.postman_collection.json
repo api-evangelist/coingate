@@ -1,0 +1,354 @@
+{
+  "item": [
+    {
+      "id": "1e7c6f4a-2065-4e7b-8fea-1c20feb2f9f1",
+      "name": "Conversions",
+      "description": {
+        "content": "Convert between currencies in ledger accounts",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "92afdd4f-82bd-4a83-b82b-1c547105c077",
+          "name": "Create Conversion",
+          "request": {
+            "name": "Create Conversion",
+            "description": {
+              "content": "Create a currency conversion between ledger accounts.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "ledger",
+                "conversions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "disabled": false,
+                  "key": "ledger_account_id",
+                  "value": "<string>",
+                  "description": "(Required) ID of the ledger account to convert from"
+                },
+                {
+                  "disabled": false,
+                  "key": "quote_currency_id",
+                  "value": "<integer>",
+                  "description": "(Required) ID of the target currency to convert to"
+                },
+                {
+                  "disabled": false,
+                  "key": "base_amount",
+                  "value": "<string>",
+                  "description": "(Required) Amount to convert in the source ledger account currency"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "6158ab39-ac44-4c75-80d8-36f0586f1fbe",
+              "name": "Conversion created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "ledger",
+                    "conversions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ID of the ledger account to convert from",
+                        "type": "text/plain"
+                      },
+                      "key": "ledger_account_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ID of the target currency to convert to",
+                        "type": "text/plain"
+                      },
+                      "key": "quote_currency_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Amount to convert in the source ledger account currency",
+                        "type": "text/plain"
+                      },
+                      "key": "base_amount",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"status\": \"string\",\n  \"base_amount\": \"string\",\n  \"quote_amount\": \"string\",\n  \"base_ledger_account\": {\n    \"id\": \"string\",\n    \"balance\": \"string\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 7651,\n      \"title\": \"string\",\n      \"kind\": \"fiat\",\n      \"symbol\": \"string\"\n    }\n  },\n  \"quote_ledger_account\": {\n    \"id\": \"string\",\n    \"balance\": \"string\",\n    \"status\": \"inactive\",\n    \"currency\": {\n      \"id\": 2569,\n      \"title\": \"string\",\n      \"kind\": \"crypto\",\n      \"symbol\": \"string\"\n    }\n  },\n  \"fees\": {},\n  \"actions_required\": {},\n  \"created_at\": \"1993-11-16T04:29:27.141Z\",\n  \"expires_at\": \"1983-04-20T01:48:05.797Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3d516411-1ae0-4690-8588-a60253c05606",
+              "name": "Validation error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "ledger",
+                    "conversions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ID of the ledger account to convert from",
+                        "type": "text/plain"
+                      },
+                      "key": "ledger_account_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ID of the target currency to convert to",
+                        "type": "text/plain"
+                      },
+                      "key": "quote_currency_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Amount to convert in the source ledger account currency",
+                        "type": "text/plain"
+                      },
+                      "key": "base_amount",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"reason\": \"string\",\n  \"errors\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "619e7bec-bf12-44bd-b218-44728e0c8a3e",
+          "name": "List Conversions",
+          "request": {
+            "name": "List Conversions",
+            "description": {
+              "content": "Retrieve a paginated list of currency conversions.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "ledger",
+                "conversions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "100"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8a8d07cb-dcbd-4e31-a773-113307de0753",
+              "name": "List of conversions",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "ledger",
+                    "conversions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "per_page",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"current_page\": 4625,\n  \"per_page\": 3242,\n  \"total_records\": 982,\n  \"total_pages\": 9773,\n  \"exchange_transactions\": [\n    {\n      \"id\": \"string\",\n      \"status\": \"string\",\n      \"base_amount\": \"string\",\n      \"quote_amount\": \"string\",\n      \"fees\": {},\n      \"created_at\": \"2019-12-06T21:32:52.814Z\",\n      \"expires_at\": \"1977-07-29T10:08:06.548Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"status\": \"string\",\n      \"base_amount\": \"string\",\n      \"quote_amount\": \"string\",\n      \"fees\": {},\n      \"created_at\": \"1977-12-16T05:06:25.170Z\",\n      \"expires_at\": \"1984-10-19T09:04:43.312Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.coingate.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "4d586e2b-d96a-4d74-9426-69ecda45d683",
+    "name": "CoinGate Payment Gateway Conversions API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for accepting cryptocurrency payments, managing orders, processing refunds, handling payouts, performing currency conversions, and accessing merchant ledger and billing data. Supports both production and sandbox environments.\n\nContact Support:\n Name: CoinGate Support\n Email: support@coingate.com",
+      "type": "text/plain"
+    }
+  }
+}

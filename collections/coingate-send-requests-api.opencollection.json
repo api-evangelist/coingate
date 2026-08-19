@@ -1,0 +1,111 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CoinGate Payment Gateway Conversions Send Requests API",
+    "version": "2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Send Requests",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Send Requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.coingate.com/api/v2/send_requests",
+            "params": [
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Records per page"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Current page number"
+              }
+            ]
+          },
+          "docs": "Retrieve a paginated list of all send requests."
+        },
+        {
+          "info": {
+            "name": "Create Send Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.coingate.com/api/v2/send_requests",
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "ledger_account_id",
+                  "value": ""
+                },
+                {
+                  "name": "beneficiary_payout_setting_id",
+                  "value": ""
+                },
+                {
+                  "name": "amount",
+                  "value": ""
+                },
+                {
+                  "name": "amount_currency_id",
+                  "value": ""
+                },
+                {
+                  "name": "purpose",
+                  "value": ""
+                },
+                {
+                  "name": "callback_url",
+                  "value": ""
+                },
+                {
+                  "name": "external_id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Create a payout send request to transfer crypto to a beneficiary."
+        },
+        {
+          "info": {
+            "name": "Get Send Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.coingate.com/api/v2/send_requests/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve details of a specific send request."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

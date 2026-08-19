@@ -1,0 +1,69 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CoinGate Payment Gateway Conversions Currencies API",
+    "version": "2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Currencies",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Currencies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.coingate.com/api/v2/currencies",
+            "params": [
+              {
+                "name": "native",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "enabled",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "merchant_pay",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "merchant_receive",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "kind",
+                "value": "",
+                "type": "query",
+                "description": "Filter by currency type. Accepted values: crypto, fiat"
+              },
+              {
+                "name": "symbol",
+                "value": "",
+                "type": "query",
+                "description": "Search by currency symbol, e.g. BTC"
+              }
+            ]
+          },
+          "docs": "Retrieves all supported currencies with optional filtering."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

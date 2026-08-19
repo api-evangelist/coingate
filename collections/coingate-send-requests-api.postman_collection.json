@@ -1,0 +1,595 @@
+{
+  "item": [
+    {
+      "id": "ec9f319b-be2a-403c-abd4-ad8dae605f35",
+      "name": "Send Requests",
+      "description": {
+        "content": "Send cryptocurrency payouts to beneficiaries",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "bfd2738e-48ce-407f-85cb-9019893ac060",
+          "name": "Create Send Request",
+          "request": {
+            "name": "Create Send Request",
+            "description": {
+              "content": "Create a payout send request to transfer crypto to a beneficiary.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "send_requests"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "disabled": false,
+                  "key": "ledger_account_id",
+                  "value": "<string>",
+                  "description": "(Required) Ledger account ID (see /ledger/accounts)"
+                },
+                {
+                  "disabled": false,
+                  "key": "beneficiary_payout_setting_id",
+                  "value": "<integer>",
+                  "description": "(Required) Beneficiary payout setting ID (see /beneficiaries)"
+                },
+                {
+                  "disabled": false,
+                  "key": "amount",
+                  "value": "<string>",
+                  "description": "(Required) Amount to send"
+                },
+                {
+                  "disabled": false,
+                  "key": "amount_currency_id",
+                  "value": "<integer>",
+                  "description": "(Required) Currency ID for the amount (see /currencies)"
+                },
+                {
+                  "disabled": false,
+                  "key": "purpose",
+                  "value": "<string>",
+                  "description": "(Required) Purpose of the send request"
+                },
+                {
+                  "disabled": false,
+                  "key": "callback_url",
+                  "value": "<string>",
+                  "description": "URL for automated send request status change notifications"
+                },
+                {
+                  "disabled": false,
+                  "key": "external_id",
+                  "value": "<string>",
+                  "description": "Merchant internal reference ID (must be unique, max 50 chars)"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1fd691d6-57bd-4807-86c5-c5de02764c66",
+              "name": "Send request created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "send_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Ledger account ID (see /ledger/accounts)",
+                        "type": "text/plain"
+                      },
+                      "key": "ledger_account_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Beneficiary payout setting ID (see /beneficiaries)",
+                        "type": "text/plain"
+                      },
+                      "key": "beneficiary_payout_setting_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Amount to send",
+                        "type": "text/plain"
+                      },
+                      "key": "amount",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Currency ID for the amount (see /currencies)",
+                        "type": "text/plain"
+                      },
+                      "key": "amount_currency_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Purpose of the send request",
+                        "type": "text/plain"
+                      },
+                      "key": "purpose",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "URL for automated send request status change notifications",
+                        "type": "text/plain"
+                      },
+                      "key": "callback_url",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "Merchant internal reference ID (must be unique, max 50 chars)",
+                        "type": "text/plain"
+                      },
+                      "key": "external_id",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 7443,\n  \"status\": \"string\",\n  \"purpose\": \"string\",\n  \"callback_url\": \"string\",\n  \"created_at\": \"1948-08-23T02:22:39.554Z\",\n  \"external_id\": \"string\",\n  \"ledger_account\": {\n    \"id\": \"string\",\n    \"balance\": \"string\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 1117,\n      \"title\": \"string\",\n      \"kind\": \"fiat\",\n      \"symbol\": \"string\"\n    }\n  },\n  \"input_amount\": \"string\",\n  \"input_currency\": {\n    \"id\": 7225,\n    \"title\": \"string\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"string\"\n  },\n  \"sending_amount\": \"string\",\n  \"sending_currency\": {\n    \"id\": 8392,\n    \"title\": \"string\",\n    \"kind\": \"fiat\",\n    \"symbol\": \"string\"\n  },\n  \"input_to_sending_rate\": \"string\",\n  \"sending_to_balance_debit_rate\": \"string\",\n  \"balance_debit_amount\": \"string\",\n  \"balance_debit_currency\": {\n    \"id\": 1325,\n    \"title\": \"string\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"string\"\n  },\n  \"fees\": {},\n  \"actions_required\": {\n    \"confirm\": \"string\",\n    \"cancel\": \"string\"\n  },\n  \"requires_2fa_confirmation\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8818bc79-ba51-47de-8a1d-ccb0662169b9",
+              "name": "Validation error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "send_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Ledger account ID (see /ledger/accounts)",
+                        "type": "text/plain"
+                      },
+                      "key": "ledger_account_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Beneficiary payout setting ID (see /beneficiaries)",
+                        "type": "text/plain"
+                      },
+                      "key": "beneficiary_payout_setting_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Amount to send",
+                        "type": "text/plain"
+                      },
+                      "key": "amount",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Currency ID for the amount (see /currencies)",
+                        "type": "text/plain"
+                      },
+                      "key": "amount_currency_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Purpose of the send request",
+                        "type": "text/plain"
+                      },
+                      "key": "purpose",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "URL for automated send request status change notifications",
+                        "type": "text/plain"
+                      },
+                      "key": "callback_url",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "Merchant internal reference ID (must be unique, max 50 chars)",
+                        "type": "text/plain"
+                      },
+                      "key": "external_id",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"reason\": \"string\",\n  \"errors\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f4b25686-8ea4-43c9-8363-a3c9b4f9d8a4",
+          "name": "List Send Requests",
+          "request": {
+            "name": "List Send Requests",
+            "description": {
+              "content": "Retrieve a paginated list of all send requests.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "send_requests"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "100",
+                  "description": "Records per page"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Current page number"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b83dc096-e236-4534-8c03-94d3d9a6d6c1",
+              "name": "List of send requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "send_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "per_page",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"current_page\": 4684,\n  \"per_page\": 6172,\n  \"total_records\": 376,\n  \"total_pages\": 7258,\n  \"send_requests\": [\n    {\n      \"id\": 126,\n      \"status\": \"string\",\n      \"purpose\": \"string\",\n      \"callback_url\": \"string\",\n      \"created_at\": \"1990-11-19T19:30:20.871Z\",\n      \"external_id\": \"string\",\n      \"ledger_account\": {\n        \"id\": \"string\",\n        \"balance\": \"string\",\n        \"status\": \"active\",\n        \"currency\": {\n          \"id\": 2705,\n          \"title\": \"string\",\n          \"kind\": \"fiat\",\n          \"symbol\": \"string\"\n        }\n      },\n      \"input_amount\": \"string\",\n      \"input_currency\": {\n        \"id\": 7650,\n        \"title\": \"string\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"string\"\n      },\n      \"sending_amount\": \"string\",\n      \"sending_currency\": {\n        \"id\": 1984,\n        \"title\": \"string\",\n        \"kind\": \"fiat\",\n        \"symbol\": \"string\"\n      },\n      \"input_to_sending_rate\": \"string\",\n      \"sending_to_balance_debit_rate\": \"string\",\n      \"balance_debit_amount\": \"string\",\n      \"balance_debit_currency\": {\n        \"id\": 6630,\n        \"title\": \"string\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"string\"\n      },\n      \"fees\": {},\n      \"actions_required\": {\n        \"confirm\": \"string\",\n        \"cancel\": \"string\"\n      },\n      \"requires_2fa_confirmation\": false\n    },\n    {\n      \"id\": 6368,\n      \"status\": \"string\",\n      \"purpose\": \"string\",\n      \"callback_url\": \"string\",\n      \"created_at\": \"2006-08-19T06:46:15.044Z\",\n      \"external_id\": \"string\",\n      \"ledger_account\": {\n        \"id\": \"string\",\n        \"balance\": \"string\",\n        \"status\": \"inactive\",\n        \"currency\": {\n          \"id\": 5277,\n          \"title\": \"string\",\n          \"kind\": \"crypto\",\n          \"symbol\": \"string\"\n        }\n      },\n      \"input_amount\": \"string\",\n      \"input_currency\": {\n        \"id\": 7991,\n        \"title\": \"string\",\n        \"kind\": \"fiat\",\n        \"symbol\": \"string\"\n      },\n      \"sending_amount\": \"string\",\n      \"sending_currency\": {\n        \"id\": 7017,\n        \"title\": \"string\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"string\"\n      },\n      \"input_to_sending_rate\": \"string\",\n      \"sending_to_balance_debit_rate\": \"string\",\n      \"balance_debit_amount\": \"string\",\n      \"balance_debit_currency\": {\n        \"id\": 6427,\n        \"title\": \"string\",\n        \"kind\": \"fiat\",\n        \"symbol\": \"string\"\n      },\n      \"fees\": {},\n      \"actions_required\": {\n        \"confirm\": \"string\",\n        \"cancel\": \"string\"\n      },\n      \"requires_2fa_confirmation\": true\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "42c45340-663a-463e-b73d-f4de84d034d3",
+          "name": "Get Send Request",
+          "request": {
+            "name": "Get Send Request",
+            "description": {
+              "content": "Retrieve details of a specific send request.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "send_requests",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "7227f3ac-d1c3-4d3d-8f32-57bf3d17c992",
+              "name": "Send request details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "send_requests",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 7443,\n  \"status\": \"string\",\n  \"purpose\": \"string\",\n  \"callback_url\": \"string\",\n  \"created_at\": \"1948-08-23T02:22:39.554Z\",\n  \"external_id\": \"string\",\n  \"ledger_account\": {\n    \"id\": \"string\",\n    \"balance\": \"string\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 1117,\n      \"title\": \"string\",\n      \"kind\": \"fiat\",\n      \"symbol\": \"string\"\n    }\n  },\n  \"input_amount\": \"string\",\n  \"input_currency\": {\n    \"id\": 7225,\n    \"title\": \"string\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"string\"\n  },\n  \"sending_amount\": \"string\",\n  \"sending_currency\": {\n    \"id\": 8392,\n    \"title\": \"string\",\n    \"kind\": \"fiat\",\n    \"symbol\": \"string\"\n  },\n  \"input_to_sending_rate\": \"string\",\n  \"sending_to_balance_debit_rate\": \"string\",\n  \"balance_debit_amount\": \"string\",\n  \"balance_debit_currency\": {\n    \"id\": 1325,\n    \"title\": \"string\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"string\"\n  },\n  \"fees\": {},\n  \"actions_required\": {\n    \"confirm\": \"string\",\n    \"cancel\": \"string\"\n  },\n  \"requires_2fa_confirmation\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "559a7b8b-03be-491f-bdc8-ebc1cf0944da",
+              "name": "Send request not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "send_requests",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"reason\": \"string\",\n  \"errors\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.coingate.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "09f0f9ff-8696-4841-b770-14926f935d37",
+    "name": "CoinGate Payment Gateway Conversions Send Requests API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for accepting cryptocurrency payments, managing orders, processing refunds, handling payouts, performing currency conversions, and accessing merchant ledger and billing data. Supports both production and sandbox environments.\n\nContact Support:\n Name: CoinGate Support\n Email: support@coingate.com",
+      "type": "text/plain"
+    }
+  }
+}

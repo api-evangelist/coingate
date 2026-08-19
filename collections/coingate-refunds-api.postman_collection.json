@@ -1,0 +1,440 @@
+{
+  "item": [
+    {
+      "id": "91861d02-2e12-46c0-9aeb-92037871570e",
+      "name": "Refunds",
+      "description": {
+        "content": "Process order refunds",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f8cde9c8-e813-46a6-b1ae-170ae2119eb0",
+          "name": "Create Order Refund",
+          "request": {
+            "name": "Create Order Refund",
+            "description": {
+              "content": "Create a refund for a specific order.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "orders",
+                ":order_id",
+                "refunds"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "order_id",
+                  "description": "(Required) ID of the order to be refunded"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "disabled": false,
+                  "key": "amount",
+                  "value": "<double>",
+                  "description": "(Required) Requesting amount in order price currency to refund"
+                },
+                {
+                  "disabled": false,
+                  "key": "address",
+                  "value": "<string>",
+                  "description": "(Required) Cryptocurrency address to which the refund will be sent"
+                },
+                {
+                  "disabled": false,
+                  "key": "currency_id",
+                  "value": "<integer>",
+                  "description": "(Required) ID of the currency in which the refund will be issued"
+                },
+                {
+                  "disabled": false,
+                  "key": "platform_id",
+                  "value": "<integer>",
+                  "description": "(Required) Platform ID associated with the selected refund currency"
+                },
+                {
+                  "disabled": false,
+                  "key": "reason",
+                  "value": "<string>",
+                  "description": "(Required) Reason for issuing the refund"
+                },
+                {
+                  "disabled": false,
+                  "key": "email",
+                  "value": "<email>",
+                  "description": "(Required) Customer will receive updates on refund status to this email"
+                },
+                {
+                  "disabled": false,
+                  "key": "ledger_account_id",
+                  "value": "<string>",
+                  "description": "(Required) Ledger balance from which the refund amount will be deducted"
+                },
+                {
+                  "disabled": false,
+                  "key": "address_memo",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "callback_url",
+                  "value": "<string>",
+                  "description": "URL for automated refund status change notifications"
+                },
+                {
+                  "disabled": false,
+                  "key": "skip_user_address_confirmation",
+                  "value": "false",
+                  "description": "Skip email confirmation of crypto address to shopper"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ea4d46d5-b8ec-488d-b3d1-701a0cd32ba9",
+              "name": "Refund created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "orders",
+                    ":order_id",
+                    "refunds"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "order_id",
+                      "description": "(Required) ID of the order to be refunded"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Requesting amount in order price currency to refund",
+                        "type": "text/plain"
+                      },
+                      "key": "amount",
+                      "value": "<double>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Cryptocurrency address to which the refund will be sent",
+                        "type": "text/plain"
+                      },
+                      "key": "address",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ID of the currency in which the refund will be issued",
+                        "type": "text/plain"
+                      },
+                      "key": "currency_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Platform ID associated with the selected refund currency",
+                        "type": "text/plain"
+                      },
+                      "key": "platform_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Reason for issuing the refund",
+                        "type": "text/plain"
+                      },
+                      "key": "reason",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Customer will receive updates on refund status to this email",
+                        "type": "text/plain"
+                      },
+                      "key": "email",
+                      "value": "<email>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Ledger balance from which the refund amount will be deducted",
+                        "type": "text/plain"
+                      },
+                      "key": "ledger_account_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "address_memo",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "URL for automated refund status change notifications",
+                        "type": "text/plain"
+                      },
+                      "key": "callback_url",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "Skip email confirmation of crypto address to shopper",
+                        "type": "text/plain"
+                      },
+                      "key": "skip_user_address_confirmation",
+                      "value": "false"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 4932,\n  \"request_amount\": \"string\",\n  \"refund_amount\": \"string\",\n  \"address\": \"string\",\n  \"status\": \"string\",\n  \"created_at\": \"2007-04-14T04:27:25.361Z\",\n  \"updated_at\": \"1996-10-03T08:45:13.949Z\",\n  \"skip_user_address_confirmation\": true,\n  \"processor\": \"string\",\n  \"order\": {},\n  \"refund_currency\": {},\n  \"ledger_account\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "13cdf1d5-f1ad-4259-a655-0045f3042219",
+              "name": "Validation error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "orders",
+                    ":order_id",
+                    "refunds"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "order_id",
+                      "description": "(Required) ID of the order to be refunded"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Requesting amount in order price currency to refund",
+                        "type": "text/plain"
+                      },
+                      "key": "amount",
+                      "value": "<double>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Cryptocurrency address to which the refund will be sent",
+                        "type": "text/plain"
+                      },
+                      "key": "address",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ID of the currency in which the refund will be issued",
+                        "type": "text/plain"
+                      },
+                      "key": "currency_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Platform ID associated with the selected refund currency",
+                        "type": "text/plain"
+                      },
+                      "key": "platform_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Reason for issuing the refund",
+                        "type": "text/plain"
+                      },
+                      "key": "reason",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Customer will receive updates on refund status to this email",
+                        "type": "text/plain"
+                      },
+                      "key": "email",
+                      "value": "<email>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Ledger balance from which the refund amount will be deducted",
+                        "type": "text/plain"
+                      },
+                      "key": "ledger_account_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "address_memo",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "URL for automated refund status change notifications",
+                        "type": "text/plain"
+                      },
+                      "key": "callback_url",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "Skip email confirmation of crypto address to shopper",
+                        "type": "text/plain"
+                      },
+                      "key": "skip_user_address_confirmation",
+                      "value": "false"
+                    }
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"reason\": \"string\",\n  \"errors\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.coingate.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "fb4f3ebd-5355-4921-a3c1-945b915a2bc7",
+    "name": "CoinGate Payment Gateway Conversions Refunds API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for accepting cryptocurrency payments, managing orders, processing refunds, handling payouts, performing currency conversions, and accessing merchant ledger and billing data. Supports both production and sandbox environments.\n\nContact Support:\n Name: CoinGate Support\n Email: support@coingate.com",
+      "type": "text/plain"
+    }
+  }
+}
