@@ -30,7 +30,7 @@ tags:
 created: '2026-06-13'
 modified: '2026-06-13'
 url: https://raw.githubusercontent.com/api-evangelist/coingate/refs/heads/main/apis.yml
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
 - aid: coingate:coingate-conversions-api
   name: CoinGate Conversions API
