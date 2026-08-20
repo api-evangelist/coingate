@@ -64,6 +64,8 @@ apis:
   humanURL: https://developer.coingate.com/
   baseURL: https://api.coingate.com/v2
   tags:
+  - Currency
+  tags_raw:
   - Currencies
   properties:
   - type: OpenAPI
@@ -90,6 +92,8 @@ apis:
   humanURL: https://developer.coingate.com/
   baseURL: https://api.coingate.com/v2
   tags:
+  - Order
+  tags_raw:
   - Orders
   properties:
   - type: OpenAPI
