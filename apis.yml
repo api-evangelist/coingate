@@ -4,6 +4,18 @@ description: CoinGate is a cryptocurrency payment gateway providing REST APIs fo
   payouts, managing merchant ledger accounts, and accessing billing and reporting
   data. Merchants can accept 70+ cryptocurrencies and settle in fiat or crypto, with
   integrations available via hosted checkout, plugins, and direct API.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: paid
   onboarding: self-serve
