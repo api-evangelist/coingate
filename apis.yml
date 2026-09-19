@@ -51,6 +51,8 @@ apis:
   humanURL: https://developer.coingate.com/
   baseURL: https://api.coingate.com/v2
   tags:
+  - Conversion
+  tags_raw:
   - Conversions
   properties:
   - type: OpenAPI
