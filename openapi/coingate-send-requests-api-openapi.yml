@@ -147,20 +147,20 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Error:
+    Currency:
       type: object
       properties:
-        message:
+        id:
+          type: integer
+        title:
           type: string
-          description: Human-readable error message
-        reason:
+        kind:
           type: string
-          description: Machine-readable error reason code
-        errors:
-          type: array
-          items:
-            type: string
-          description: List of validation errors
+          enum:
+          - crypto
+          - fiat
+        symbol:
+          type: string
     SendRequest:
       type: object
       properties:
@@ -209,20 +209,20 @@ components:
               type: string
         requires_2fa_confirmation:
           type: boolean
-    Currency:
+    Error:
       type: object
       properties:
-        id:
-          type: integer
-        title:
+        message:
           type: string
-        kind:
+          description: Human-readable error message
+        reason:
           type: string
-          enum:
-          - crypto
-          - fiat
-        symbol:
-          type: string
+          description: Machine-readable error reason code
+        errors:
+          type: array
+          items:
+            type: string
+          description: List of validation errors
     LedgerAccount:
       type: object
       properties:

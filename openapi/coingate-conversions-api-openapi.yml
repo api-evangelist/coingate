@@ -143,6 +143,20 @@ paths:
                           format: date-time
 components:
   schemas:
+    Currency:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        kind:
+          type: string
+          enum:
+          - crypto
+          - fiat
+        symbol:
+          type: string
     Error:
       type: object
       properties:
@@ -171,20 +185,6 @@ components:
           - inactive
         currency:
           $ref: '#/components/schemas/Currency'
-    Currency:
-      type: object
-      properties:
-        id:
-          type: integer
-        title:
-          type: string
-        kind:
-          type: string
-          enum:
-          - crypto
-          - fiat
-        symbol:
-          type: string
   securitySchemes:
     bearerAuth:
       type: http
