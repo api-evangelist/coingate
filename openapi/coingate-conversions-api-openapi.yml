@@ -143,20 +143,6 @@ paths:
                           format: date-time
 components:
   schemas:
-    Currency:
-      type: object
-      properties:
-        id:
-          type: integer
-        title:
-          type: string
-        kind:
-          type: string
-          enum:
-          - crypto
-          - fiat
-        symbol:
-          type: string
     Error:
       type: object
       properties:
@@ -171,6 +157,20 @@ components:
           items:
             type: string
           description: List of validation errors
+    Currency:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        kind:
+          type: string
+          enum:
+          - crypto
+          - fiat
+        symbol:
+          type: string
     LedgerAccount:
       type: object
       properties:

@@ -268,20 +268,6 @@ components:
         blockchain_transactions:
           type: array
           items: {}
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message
-        reason:
-          type: string
-          description: Machine-readable error reason code
-        errors:
-          type: array
-          items:
-            type: string
-          description: List of validation errors
     Shopper:
       type: object
       description: Optional shopper information for Travel Rule compliance and checkout prefill
@@ -332,6 +318,20 @@ components:
               type: string
             country:
               type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message
+        reason:
+          type: string
+          description: Machine-readable error reason code
+        errors:
+          type: array
+          items:
+            type: string
+          description: List of validation errors
   securitySchemes:
     bearerAuth:
       type: http
