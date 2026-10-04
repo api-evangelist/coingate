@@ -147,6 +147,48 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message
+        reason:
+          type: string
+          description: Machine-readable error reason code
+        errors:
+          type: array
+          items:
+            type: string
+          description: List of validation errors
+    LedgerAccount:
+      type: object
+      properties:
+        id:
+          type: string
+        balance:
+          type: string
+        status:
+          type: string
+          enum:
+          - active
+          - inactive
+        currency:
+          $ref: '#/components/schemas/Currency'
+    Currency:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        kind:
+          type: string
+          enum:
+          - crypto
+          - fiat
+        symbol:
+          type: string
     SendRequest:
       type: object
       properties:
@@ -195,48 +237,6 @@ components:
               type: string
         requires_2fa_confirmation:
           type: boolean
-    Currency:
-      type: object
-      properties:
-        id:
-          type: integer
-        title:
-          type: string
-        kind:
-          type: string
-          enum:
-          - crypto
-          - fiat
-        symbol:
-          type: string
-    LedgerAccount:
-      type: object
-      properties:
-        id:
-          type: string
-        balance:
-          type: string
-        status:
-          type: string
-          enum:
-          - active
-          - inactive
-        currency:
-          $ref: '#/components/schemas/Currency'
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message
-        reason:
-          type: string
-          description: Machine-readable error reason code
-        errors:
-          type: array
-          items:
-            type: string
-          description: List of validation errors
   securitySchemes:
     bearerAuth:
       type: http

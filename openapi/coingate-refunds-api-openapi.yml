@@ -100,20 +100,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message
-        reason:
-          type: string
-          description: Machine-readable error reason code
-        errors:
-          type: array
-          items:
-            type: string
-          description: List of validation errors
     Refund:
       type: object
       properties:
@@ -146,6 +132,20 @@ components:
           items: {}
         ledger_account:
           type: object
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message
+        reason:
+          type: string
+          description: Machine-readable error reason code
+        errors:
+          type: array
+          items:
+            type: string
+          description: List of validation errors
   securitySchemes:
     bearerAuth:
       type: http

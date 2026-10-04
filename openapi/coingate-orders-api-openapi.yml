@@ -197,6 +197,70 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message
+        reason:
+          type: string
+          description: Machine-readable error reason code
+        errors:
+          type: array
+          items:
+            type: string
+          description: List of validation errors
+    Shopper:
+      type: object
+      description: Optional shopper information for Travel Rule compliance and checkout prefill
+      properties:
+        type:
+          type: string
+          enum:
+          - business
+          - personal
+        ip_address:
+          type: string
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        date_of_birth:
+          type: string
+          format: date
+        residence_address:
+          type: string
+        residence_postal_code:
+          type: string
+        residence_city:
+          type: string
+        residence_country:
+          type: string
+          description: Alpha-2 country code
+        company_details:
+          type: object
+          properties:
+            name:
+              type: string
+            code:
+              type: string
+            incorporation_date:
+              type: string
+              format: date
+            incorporation_country:
+              type: string
+            address:
+              type: string
+            postal_code:
+              type: string
+            city:
+              type: string
+            country:
+              type: string
     Order:
       type: object
       properties:
@@ -268,70 +332,6 @@ components:
         blockchain_transactions:
           type: array
           items: {}
-    Shopper:
-      type: object
-      description: Optional shopper information for Travel Rule compliance and checkout prefill
-      properties:
-        type:
-          type: string
-          enum:
-          - business
-          - personal
-        ip_address:
-          type: string
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        date_of_birth:
-          type: string
-          format: date
-        residence_address:
-          type: string
-        residence_postal_code:
-          type: string
-        residence_city:
-          type: string
-        residence_country:
-          type: string
-          description: Alpha-2 country code
-        company_details:
-          type: object
-          properties:
-            name:
-              type: string
-            code:
-              type: string
-            incorporation_date:
-              type: string
-              format: date
-            incorporation_country:
-              type: string
-            address:
-              type: string
-            postal_code:
-              type: string
-            city:
-              type: string
-            country:
-              type: string
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message
-        reason:
-          type: string
-          description: Machine-readable error reason code
-        errors:
-          type: array
-          items:
-            type: string
-          description: List of validation errors
   securitySchemes:
     bearerAuth:
       type: http
