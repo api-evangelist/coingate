@@ -25,7 +25,27 @@ edges:
     detected: '2026-10-14'
   detected_by: sweep-crypto.py
   first_seen: '2026-10-14'
+- partner_name: WordPress (own)
+  partner: wordpress
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://wordpress.org/plugins/coingate-for-woocommerce/
+  mirror_of: wordpress/integrations/wordpress-integration-edges.yml
+  apps:
+  - CoinGate for WooCommerce
+  listing_count: 1
+  detected: '2026-10-15'
+  detected_by: mirror-platform-listings.py
+  category: WordPress plugin
 generated: '2026-10-13'
 method: searched
 checked:
 - https://www.esma.europa.eu/sites/default/files/2024-12/CASPS.csv
+- wordpress/integrations/wordpress-integration-edges.yml
+source:
+- wordpress/integrations/wordpress-integration-edges.yml
