@@ -1,0 +1,75 @@
+openapi: 3.2.0
+info:
+  title: v2 Deposits API
+  version: '2'
+servers:
+- url: https://api.coingate.com/api/v2
+security:
+- {}
+tags:
+- name: Deposits
+paths:
+  /deposits/supported-currencies:
+    get:
+      summary: Supported Currencies
+      description: List Supported Deposit Currencies and Crypto Platforms
+      operationId: deposit-supported-currencies
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "[\n   {\n      \"id\":50,\n      \"title\":\"Ethereum\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"ETH\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":40,\n            \"id_name\":\"arbitrum\",\n            \"title\":\"Arbitrum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":42,\n            \"id_name\":\"base\",\n            \"title\":\"Base\",\n            \"enabled\":true\n         },\n         {\n            \"id\":44,\n            \"id_name\":\"optimism\",\n            \"title\":\"Optimism\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":61,\n      \"title\":\"Dai\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"DAI\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         },\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":91,\n      \"title\":\"Binance Coin\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"BNB\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":97,\n      \"title\":\"USDT\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"USDT\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         },\n         {\n            \"id\":4,\n            \"id_name\":\"tron\",\n            \"title\":\"Tron\",\n            \"enabled\":true\n         },\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         },\n         {\n            \"id\":40,\n            \"id_name\":\"arbitrum\",\n            \"title\":\"Arbitrum\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":103,\n      \"title\":\"Mysterium\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"MYST\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":113,\n      \"title\":\"USDC\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"USDC\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         },\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         },\n         {\n            \"id\":42,\n            \"id_name\":\"base\",\n            \"title\":\"Base\",\n            \"enabled\":true\n         },\n         {\n            \"id\":44,\n            \"id_name\":\"optimism\",\n            \"title\":\"Optimism\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":165,\n      \"title\":\"SHIBA INU\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"SHIB\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         },\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":60,\n      \"title\":\"TRON\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"TRX\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":4,\n            \"id_name\":\"tron\",\n            \"title\":\"Tron\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":8,\n      \"title\":\"Bitcoin\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"BTC\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":5,\n            \"id_name\":\"bitcoin\",\n            \"title\":\"Bitcoin\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":49,\n      \"title\":\"Litecoin\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"LTC\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":6,\n            \"id_name\":\"litecoin\",\n            \"title\":\"Litecoin\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":64,\n      \"title\":\"Dogecoin\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"DOGE\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":7,\n            \"id_name\":\"dogecoin\",\n            \"title\":\"Dogecoin\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":52,\n      \"title\":\"Bitcoin Cash\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"BCH\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":8,\n            \"id_name\":\"bitcoin_cash\",\n            \"title\":\"Bitcoin Cash\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":112,\n      \"title\":\"Polygon\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"POL\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         }\n      ]\n   }\n]"
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 50
+                      default: 0
+                    title:
+                      type: string
+                      example: Ethereum
+                    kind:
+                      type: string
+                      example: crypto
+                    symbol:
+                      type: string
+                      example: ETH
+                    enabled:
+                      type: boolean
+                      example: true
+                      default: true
+                    disabled_message: {}
+                    platforms:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                            default: 0
+                          id_name:
+                            type: string
+                            example: ethereum
+                          title:
+                            type: string
+                            example: Ethereum
+                          enabled:
+                            type: boolean
+                            example: true
+                            default: true
+      deprecated: false
+      security: []
+      tags:
+      - Deposits
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

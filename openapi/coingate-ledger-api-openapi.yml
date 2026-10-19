@@ -1,0 +1,1921 @@
+openapi: 3.2.0
+info:
+  title: v2 Ledger API
+  version: '2'
+servers:
+- url: https://api.coingate.com/api/v2
+security:
+- {}
+tags:
+- name: Ledger
+paths:
+  /ledger/accounts:
+    get:
+      summary: List Accounts
+      description: List the ledger accounts that belong to the authenticated account. Ledger accounts hold your funds on CoinGate, with one account per currency and account type. Only visible accounts are returned — those with status `active` or `suspended` — and each includes its current balance and currency details. Results are paginated, 100 per page by default.
+      operationId: ledger-accounts
+      parameters:
+      - name: page
+        in: query
+        description: Page number. Defaults to 1.
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: per_page
+        in: query
+        description: Records per page. Defaults to 100, maximum 100. Values below 1 are set to 1.
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      responses:
+        '200':
+          description: A paginated list of ledger accounts.
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    current_page: 1
+                    per_page: 100
+                    total_accounts: 2
+                    total_pages: 1
+                    accounts:
+                    - id: 01KS2DT6X277ZEERSGKRPW8YZV
+                      balance: '10.88'
+                      status: active
+                      account_type: main
+                      title: Euro main account
+                      currency:
+                        id: 2
+                        title: Euro
+                        kind: fiat
+                        symbol: EUR
+                        enabled: true
+                        disabled_message: null
+                    - id: 01KJZ0PM6K2V3ZFV416S17Q6MH
+                      balance: '1443.060408'
+                      status: active
+                      account_type: main
+                      title: USDC main account
+                      currency:
+                        id: 22
+                        title: USDC
+                        kind: crypto
+                        symbol: USDC
+                        enabled: true
+                        disabled_message: null
+              schema:
+                type: object
+                properties:
+                  current_page:
+                    type: integer
+                    description: Current page number.
+                    example: 1
+                  per_page:
+                    type: integer
+                    description: Records per page.
+                    example: 100
+                  total_accounts:
+                    type: integer
+                    description: Total number of visible accounts.
+                    example: 2
+                  total_pages:
+                    type: integer
+                    description: Total number of pages.
+                    example: 1
+                  accounts:
+                    type: array
+                    description: The ledger accounts on this page.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ledger account ID (ULID).
+                          example: 01KS2DT6X277ZEERSGKRPW8YZV
+                        balance:
+                          type: string
+                          description: Current balance, floored to the currency's precision. Returned as a string to preserve precision.
+                          example: '10.88'
+                        status:
+                          type: string
+                          enum:
+                          - active
+                          - disabled
+                          - error_creating
+                          - suspended
+                          description: Account state. Only active/suspended accounts are listed.
+                          example: active
+                        account_type:
+                          type: string
+                          enum:
+                          - main
+                          - secondary
+                          - tertiary
+                          description: Type of the ledger account.
+                          example: main
+                        title:
+                          type:
+                          - string
+                          - 'null'
+                          description: Account title. Defaults to "{currency title} {account_type} account" when not set explicitly.
+                          example: Euro main account
+                        currency:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: Currency ID.
+                              example: 2
+                            title:
+                              type: string
+                              description: Currency name.
+                              example: Euro
+                            kind:
+                              type: string
+                              enum:
+                              - fiat
+                              - crypto
+                              description: Whether the currency is fiat or crypto.
+                              example: fiat
+                            symbol:
+                              type: string
+                              description: ISO symbol of the currency.
+                              example: EUR
+                            enabled:
+                              type: boolean
+                              description: Whether the currency is currently enabled (not temporarily disabled).
+                              example: true
+                            disabled_message:
+                              type:
+                              - string
+                              - 'null'
+                              description: Reason the currency is temporarily disabled, or null when enabled.
+                              example: null
+        '401':
+          description: Missing or invalid API token.
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    message: Auth Token is not valid
+                    reason: BadAuthToken
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Auth Token is not valid
+                  reason:
+                    type: string
+                    example: BadAuthToken
+      deprecated: false
+      tags:
+      - Ledger
+  /ledger/transactions:
+    get:
+      summary: List Transactions
+      description: This endpoint allows you to retrieve a list of all ledger transactions associated with your CoinGate account. This is crucial for reconciliation purposes, enabling you to track all movements of funds (credits and debits) and maintain an accurate ledger of your financial activities within the CoinGate system.
+      operationId: list-transactions
+      parameters:
+      - name: page
+        in: query
+        description: Current page number
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: per_page
+        in: query
+        description: Number of refunds per page (max - 100)
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: sort
+        in: query
+        description: One of "created_at_desc", "created_at_asc"
+        schema:
+          type: string
+          default: created_at_desc
+      - name: date_from
+        in: query
+        schema:
+          type: string
+      - name: date_to
+        in: query
+        schema:
+          type: string
+      - name: currency
+        in: query
+        description: ISO 4217 currency code, e.g. BTC, EUR, USD
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: Filter by transaction type (e.g. fee, merchant_order, withdrawal). See the type field for the full list of values.
+        schema:
+          type: string
+          enum:
+          - trader_order_buy
+          - trader_order_sell
+          - trader_order_swap
+          - withdrawal
+          - fee
+          - withdrawal_revert
+          - fee_revert
+          - merchant_refund
+          - merchant_refund_revert
+          - merchant_order
+          - merchant_order_revert
+          - funds_transfer
+          - deposit
+          - exchange_addition
+          - exchange_deduction
+          - balance_deduction
+          - mass_payout
+          - mass_payout_entry_refund
+          - merchant_order_pfb_deduction
+          - mass_payout_entry_service_fee_refund
+          - send_request
+          - send_request_revert
+          - flat_fee
+          - outgoing_fee
+          - conversion_fee
+          - fx_revenue
+          - exchange_fee
+          - claim_transaction_fee
+          - order_unclaimed_funds_addition
+          - order_unclaimed_funds_deduction
+          - abandonment_fee
+          - abandonment_balance
+          - deposit_revert
+          - usdt_usdc_conversion
+          - fx_revenue_revert
+          - tx_network_fee
+          - batch_payout
+          - batch_payout_revert
+          - payout_link
+          - payout_link_revert
+      - in: query
+        name: source_type
+        schema:
+          type: string
+        description: Type of the associated record (e.g. Order, Withdrawal). Must be provided together with `source_id`
+      - in: query
+        name: source_id
+        schema:
+          type: string
+        description: Identifier of the associated record. Must be provided together with `source_type`
+      responses:
+        '200':
+          description: A paginated list of ledger transactions.
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    current_page: 1
+                    per_page: 100
+                    sort: created_at_desc
+                    date_from: ''
+                    date_to: ''
+                    currency: all
+                    total_entries: 22
+                    total_pages: 1
+                    entries:
+                    - id: 01KS2DT7051V73P3A64P71GMBE
+                      created_at: '2026-05-20T10:10:01.862Z'
+                      purpose: 'Order ID #67983 processing fee 0.11 EUR'
+                      type: fee
+                      source_type: Fee
+                      source_id: '139981'
+                      account:
+                        id: 01KS2DT6X277ZEERSGKRPW8YZV
+                        balance: '10.88'
+                        status: active
+                        account_type: main
+                        title: Euro main account
+                        currency:
+                          id: 2
+                          title: Euro
+                          kind: fiat
+                          symbol: EUR
+                          enabled: true
+                          disabled_message: null
+                      currency:
+                        id: 2
+                        title: Euro
+                        kind: fiat
+                        symbol: EUR
+                        enabled: true
+                        disabled_message: null
+                      credited_amount: '0.11'
+                      debited_amount: '0'
+                      closing_balance: '10.88'
+                    - id: 01KS2DT6XRJ210SZHYT36HWYS9
+                      created_at: '2026-05-20T10:10:01.784Z'
+                      purpose: 'Order ID #67983 10.99 EUR'
+                      type: merchant_order
+                      source_type: Order
+                      source_id: '67983'
+                      account:
+                        id: 01KS2DT6X277ZEERSGKRPW8YZV
+                        balance: '10.88'
+                        status: active
+                        account_type: main
+                        title: Euro main account
+                        currency:
+                          id: 2
+                          title: Euro
+                          kind: fiat
+                          symbol: EUR
+                          enabled: true
+                          disabled_message: null
+                      currency:
+                        id: 2
+                        title: Euro
+                        kind: fiat
+                        symbol: EUR
+                        enabled: true
+                        disabled_message: null
+                      credited_amount: '0'
+                      debited_amount: '10.99'
+                      closing_balance: '10.99'
+              schema:
+                type: object
+                properties:
+                  current_page:
+                    type: integer
+                    description: Current page number.
+                    example: 1
+                  per_page:
+                    type: integer
+                    description: Records per page.
+                    example: 100
+                  sort:
+                    type: string
+                    description: The sort order applied.
+                    example: created_at_desc
+                  date_from:
+                    type: string
+                    description: The date_from filter applied (empty string if none).
+                    example: ''
+                  date_to:
+                    type: string
+                    description: The date_to filter applied (empty string if none).
+                    example: ''
+                  currency:
+                    type: string
+                    description: The currency filter applied (all if none).
+                    example: all
+                  total_entries:
+                    type: integer
+                    description: Total number of matching transactions.
+                    example: 22
+                  total_pages:
+                    type: integer
+                    description: Total number of pages.
+                    example: 1
+                  entries:
+                    type: array
+                    description: The transactions on this page.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The transaction (ledger entry) ID (ULID). Sortable by creation time.
+                          example: 01KS2DT7051V73P3A64P71GMBE
+                        created_at:
+                          type: string
+                          format: date-time
+                          description: When the transaction was created (ISO 8601, UTC).
+                          example: '2026-05-20T10:10:01.862Z'
+                        purpose:
+                          type:
+                          - string
+                          - 'null'
+                          description: Free-text note describing the transaction, or null.
+                          example: 'Order ID #67983 processing fee 0.11 EUR'
+                        type:
+                          type: string
+                          enum:
+                          - trader_order_buy
+                          - trader_order_sell
+                          - trader_order_swap
+                          - withdrawal
+                          - fee
+                          - withdrawal_revert
+                          - fee_revert
+                          - merchant_refund
+                          - merchant_refund_revert
+                          - merchant_order
+                          - merchant_order_revert
+                          - funds_transfer
+                          - deposit
+                          - exchange_addition
+                          - exchange_deduction
+                          - balance_deduction
+                          - mass_payout
+                          - mass_payout_entry_refund
+                          - merchant_order_pfb_deduction
+                          - mass_payout_entry_service_fee_refund
+                          - send_request
+                          - send_request_revert
+                          - flat_fee
+                          - outgoing_fee
+                          - conversion_fee
+                          - fx_revenue
+                          - exchange_fee
+                          - claim_transaction_fee
+                          - order_unclaimed_funds_addition
+                          - order_unclaimed_funds_deduction
+                          - abandonment_fee
+                          - abandonment_balance
+                          - deposit_revert
+                          - usdt_usdc_conversion
+                          - fx_revenue_revert
+                          - tx_network_fee
+                          - batch_payout
+                          - batch_payout_revert
+                          - payout_link
+                          - payout_link_revert
+                          description: The kind of ledger transaction.
+                          example: fee
+                        source_type:
+                          type:
+                          - string
+                          - 'null'
+                          description: Type of the record that produced this transaction (e.g. Order, Fee, Withdrawal), or null.
+                          example: Fee
+                        source_id:
+                          type:
+                          - string
+                          - 'null'
+                          description: ID of the record that produced this transaction, or null.
+                          example: '139981'
+                        account:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: The ledger account ID (ULID).
+                              example: 01KS2DT6X277ZEERSGKRPW8YZV
+                            balance:
+                              type: string
+                              description: Current balance, floored to the currency's precision. Returned as a string to preserve precision.
+                              example: '10.88'
+                            status:
+                              type: string
+                              enum:
+                              - active
+                              - disabled
+                              - error_creating
+                              - suspended
+                              description: Account state.
+                              example: active
+                            account_type:
+                              type: string
+                              enum:
+                              - main
+                              - secondary
+                              - tertiary
+                              description: Type of the ledger account.
+                              example: main
+                            title:
+                              type:
+                              - string
+                              - 'null'
+                              description: Account title. Defaults to "{currency title} {account_type} account" when not set explicitly.
+                              example: Euro main account
+                            currency:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  description: Currency ID.
+                                  example: 2
+                                title:
+                                  type: string
+                                  description: Currency name.
+                                  example: Euro
+                                kind:
+                                  type: string
+                                  enum:
+                                  - fiat
+                                  - crypto
+                                  description: Whether the currency is fiat or crypto.
+                                  example: fiat
+                                symbol:
+                                  type: string
+                                  description: ISO symbol of the currency.
+                                  example: EUR
+                                enabled:
+                                  type: boolean
+                                  description: Whether the currency is currently enabled (not temporarily disabled).
+                                  example: true
+                                disabled_message:
+                                  type:
+                                  - string
+                                  - 'null'
+                                  description: Reason the currency is temporarily disabled, or null when enabled.
+                                  example: null
+                        currency:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: Currency ID.
+                              example: 2
+                            title:
+                              type: string
+                              description: Currency name.
+                              example: Euro
+                            kind:
+                              type: string
+                              enum:
+                              - fiat
+                              - crypto
+                              description: Whether the currency is fiat or crypto.
+                              example: fiat
+                            symbol:
+                              type: string
+                              description: ISO symbol of the currency.
+                              example: EUR
+                            enabled:
+                              type: boolean
+                              description: Whether the currency is currently enabled (not temporarily disabled).
+                              example: true
+                            disabled_message:
+                              type:
+                              - string
+                              - 'null'
+                              description: Reason the currency is temporarily disabled, or null when enabled.
+                              example: null
+                        credited_amount:
+                          type: string
+                          description: Amount credited in this transaction, as a positive decimal string. Credits reduce the account balance (e.g. a fee or withdrawal). "0" when the transaction is a debit.
+                          example: '0.11'
+                        debited_amount:
+                          type: string
+                          description: Amount debited in this transaction, as a positive decimal string. Debits increase the account balance (e.g. an incoming merchant_order). "0" when the transaction is a credit.
+                          example: '0'
+                        closing_balance:
+                          type: string
+                          description: Account balance immediately after this transaction was applied.
+                          example: '10.88'
+        '401':
+          description: Missing or invalid API token.
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    message: Auth Token is not valid
+                    reason: BadAuthToken
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Auth Token is not valid
+                  reason:
+                    type: string
+                    example: BadAuthToken
+        '422':
+          description: A date filter is not a valid YYYY-MM-DD date.
+          content:
+            application/json:
+              examples:
+                Result:
+                  value:
+                    message: Please correct date format 2026-13-99
+                    reason: IncorrectDateRangeError
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Please correct date format 2026-13-99
+                  reason:
+                    type: string
+                    example: IncorrectDateRangeError
+      deprecated: false
+      tags:
+      - Ledger
+  /ledger/conversions:
+    post:
+      summary: Create Conversion
+      description: ''
+      operationId: create-conversion
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ledger_account_id:
+                  type: string
+                  description: The ID of the ledger account from which the balance will be converted. Can be retrieved from https://api.coingate.com/api/v2/ledger/accounts
+                quote_currency_id:
+                  type: integer
+                  description: The ID of the currency to which the balance will be converted. Can be retrieved from https://developer.coingate.com/reference/conversion-rates
+                base_amount:
+                  type: string
+                  description: Amount to convert, expressed in the currency of the ledger account
+              required:
+              - ledger_account_id
+              - quote_currency_id
+              - base_amount
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"id\": \"01JWDJNDPFYC04ZCPC9VC568SP\",\n  \"status\": \"pending\",\n  \"base_amount\": \"0.001\",\n  \"base_ledger_account\": {\n    \"id\": \"01JRFQJ16HTQTT969F3G81F185\",\n    \"balance\": \"0.93534066\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 1,\n      \"title\": \"Bitcoin\",\n      \"kind\": \"crypto\",\n      \"symbol\": \"BTC\",\n      \"enabled\": true,\n      \"disabled_message\": null\n    }\n  },\n  \"quote_amount\": \"81.67\",\n  \"quote_ledger_account\": {\n    \"id\": \"01JS1EHJDFEF9KD5J9FFV2A1S0\",\n    \"balance\": \"1387.13\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 2,\n      \"title\": \"Euro\",\n      \"kind\": \"fiat\",\n      \"symbol\": \"EUR\",\n      \"enabled\": true,\n      \"disabled_message\": null\n    }\n  },\n  \"fees\": {\n    \"conversion_fee\": {\n      \"amount\": \"0.00001\",\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\",\n        \"enabled\": true,\n        \"disabled_message\": null\n      }\n    }\n  },\n  \"actions_required\": {\n    \"confirm\": \"https://api.coingate.com/api/v2/ledger/conversions/01JWDJNDPFYC04ZCPC9VC568SP/confirm\",\n    \"cancel\": \"https://api.coingate.com/api/v2/ledger/conversions/01JWDJNDPFYC04ZCPC9VC568SP/cancel\"\n  },\n  \"created_at\": \"2025-05-29T08:31:13.622Z\",\n  \"expires_at\": \"2025-05-29T08:32:18.615Z\"\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 01JWDJNDPFYC04ZCPC9VC568SP
+                  status:
+                    type: string
+                    example: pending
+                  base_amount:
+                    type: string
+                    example: '0.001'
+                  base_ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01JRFQJ16HTQTT969F3G81F185
+                      balance:
+                        type: string
+                        example: '0.93534066'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                            default: 0
+                          title:
+                            type: string
+                            example: Bitcoin
+                          kind:
+                            type: string
+                            example: crypto
+                          symbol:
+                            type: string
+                            example: BTC
+                          enabled:
+                            type: boolean
+                            example: true
+                            default: true
+                          disabled_message: {}
+                  quote_amount:
+                    type: string
+                    example: '81.67'
+                  quote_ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01JS1EHJDFEF9KD5J9FFV2A1S0
+                      balance:
+                        type: string
+                        example: '1387.13'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 2
+                            default: 0
+                          title:
+                            type: string
+                            example: Euro
+                          kind:
+                            type: string
+                            example: fiat
+                          symbol:
+                            type: string
+                            example: EUR
+                          enabled:
+                            type: boolean
+                            example: true
+                            default: true
+                          disabled_message: {}
+                  fees:
+                    type: object
+                    properties:
+                      conversion_fee:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            example: '0.00001'
+                          currency:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                                default: 0
+                              title:
+                                type: string
+                                example: Bitcoin
+                              kind:
+                                type: string
+                                example: crypto
+                              symbol:
+                                type: string
+                                example: BTC
+                              enabled:
+                                type: boolean
+                                example: true
+                                default: true
+                              disabled_message: {}
+                  actions_required:
+                    type: object
+                    properties:
+                      confirm:
+                        type: string
+                        example: https://api.coingate.com/api/v2/ledger/conversions/01JWDJNDPFYC04ZCPC9VC568SP/confirm
+                      cancel:
+                        type: string
+                        example: https://api.coingate.com/api/v2/ledger/conversions/01JWDJNDPFYC04ZCPC9VC568SP/cancel
+                  created_at:
+                    type: string
+                    example: '2025-05-29T08:31:13.622Z'
+                  expires_at:
+                    type: string
+                    example: '2025-05-29T08:32:18.615Z'
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"message\": \"Ledger Conversion is not valid\",\n  \"reason\": \"LedgerConversionIsNotValid\",\n  \"errors\": [\n    \"The BTC/GBP conversion pair is not supported on CoinGate.\"\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Ledger Conversion is not valid
+                  reason:
+                    type: string
+                    example: LedgerConversionIsNotValid
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: The BTC/GBP conversion pair is not supported on CoinGate.
+      deprecated: false
+      tags:
+      - Ledger
+    get:
+      summary: List Conversions
+      description: ''
+      operationId: list-conversions
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                per_page:
+                  type: integer
+                  description: Records per page you would like to see
+                  default: 100
+                  format: int32
+                page:
+                  type: integer
+                  description: Current page number
+                  default: 1
+                  format: int32
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"current_page\": 1,\n  \"per_page\": 5,\n  \"total_records\": 34,\n  \"total_pages\": 7,\n  \"exchange_transactions\": [\n    {\n      \"id\": \"01JW6EM5M1PDKHWW865WJXS8TG\",\n      \"status\": \"canceled\",\n      \"base_amount\": \"0.001\",\n      \"base_ledger_account\": {\n        \"id\": \"01JRFQJ16HTQTT969F3G81F185\",\n        \"balance\": \"0.93534066\",\n        \"status\": \"active\",\n        \"currency\": {\n          \"id\": 1,\n          \"title\": \"Bitcoin\",\n          \"kind\": \"crypto\",\n          \"symbol\": \"BTC\",\n          \"enabled\": true,\n          \"disabled_message\": null\n        }\n      },\n      \"quote_amount\": \"81.67\",\n      \"quote_ledger_account\": {\n        \"id\": \"01JS1EHJDFEF9KD5J9FFV2A1S0\",\n        \"balance\": \"1387.13\",\n        \"status\": \"active\",\n        \"currency\": {\n          \"id\": 2,\n          \"title\": \"Euro\",\n          \"kind\": \"fiat\",\n          \"symbol\": \"EUR\",\n          \"enabled\": true,\n          \"disabled_message\": null\n        }\n      },\n      \"fees\": {\n        \"conversion_fee\": {\n          \"amount\": \"0.00001\",\n          \"currency\": {\n            \"id\": 1,\n            \"title\": \"Bitcoin\",\n            \"kind\": \"crypto\",\n            \"symbol\": \"BTC\",\n            \"enabled\": true,\n            \"disabled_message\": null\n          }\n        }\n      },\n      \"created_at\": \"2025-05-26T14:05:57.273Z\",\n      \"expires_at\": \"2025-05-26T14:07:02.251Z\"\n    },\n    {\n      \"id\": \"01JW6EMXNPVJN56C0MBZJNT030\",\n      \"status\": \"completed\",\n      \"base_amount\": \"0.001\",\n      \"base_ledger_account\": {\n        \"id\": \"01JRFQJ16HTQTT969F3G81F185\",\n        \"balance\": \"0.93534066\",\n        \"status\": \"active\",\n        \"currency\": {\n          \"id\": 1,\n          \"title\": \"Bitcoin\",\n          \"kind\": \"crypto\",\n          \"symbol\": \"BTC\",\n          \"enabled\": true,\n          \"disabled_message\": null\n        }\n      },\n      \"quote_amount\": \"81.67\",\n      \"quote_ledger_account\": {\n        \"id\": \"01JS1EHJDFEF9KD5J9FFV2A1S0\",\n        \"balance\": \"1387.13\",\n        \"status\": \"active\",\n        \"currency\": {\n          \"id\": 2,\n          \"title\": \"Euro\",\n          \"kind\": \"fiat\",\n          \"symbol\": \"EUR\",\n          \"enabled\": true,\n          \"disabled_message\": null\n        }\n      },\n      \"fees\": {\n        \"conversion_fee\": {\n          \"amount\": \"0.00001\",\n          \"currency\": {\n            \"id\": 1,\n            \"title\": \"Bitcoin\",\n            \"kind\": \"crypto\",\n            \"symbol\": \"BTC\",\n            \"enabled\": true,\n            \"disabled_message\": null\n          }\n        }\n      },\n      \"created_at\": \"2025-05-26T14:06:21.885Z\",\n      \"expires_at\": \"2025-05-26T14:07:26.878Z\"\n    },\n    {\n      \"id\": \"01JW8B2AYED0FMKW6X4CKB58F3\",\n      \"status\": \"completed\",\n      \"base_amount\": \"100.0\",\n      \"base_ledger_account\": {\n        \"id\": \"01JS1EHJDFEF9KD5J9FFV2A1S0\",\n        \"balance\": \"1387.13\",\n        \"status\": \"active\",\n        \"currency\": {\n          \"id\": 2,\n          \"title\": \"Euro\",\n          \"kind\": \"fiat\",\n          \"symbol\": \"EUR\",\n          \"enabled\": true,\n          \"disabled_message\": null\n        }\n      },\n      \"quote_amount\": \"0.001225\",\n      \"quote_ledger_account\": {\n        \"id\": \"01JRFQJ16HTQTT969F3G81F185\",\n        \"balance\": \"0.93534066\",\n        \"status\": \"active\",\n        \"currency\": {\n          \"id\": 1,\n          \"title\": \"Bitcoin\",\n          \"kind\": \"crypto\",\n          \"symbol\": \"BTC\",\n          \"enabled\": true,\n          \"disabled_message\": null\n        }\n      },\n      \"fees\": {\n        \"conversion_fee\": {\n          \"amount\": \"1.0\",\n          \"currency\": {\n            \"id\": 2,\n            \"title\": \"Euro\",\n            \"kind\": \"fiat\",\n            \"symbol\": \"EUR\",\n            \"enabled\": true,\n            \"disabled_message\": null\n          }\n        }\n      },\n      \"created_at\": \"2025-05-27T07:42:16.040Z\",\n      \"expires_at\": \"2025-05-27T07:43:21.014Z\"\n    },\n    {\n      \"id\": \"01JW94AMCJK51Z00K5DHWTD4S1\",\n      \"status\": \"pending\",\n      \"base_amount\": \"0.01\",\n      \"base_ledger_account\": {\n        \"id\": \"01JRFQJ16HTQTT969F3G81F185\",\n        \"balance\": \"0.93534066\",\n        \"status\": \"active\",\n        \"currency\": {\n          \"id\": 1,\n          \"title\": \"Bitcoin\",\n          \"kind\": \"crypto\",\n          \"symbol\": \"BTC\",\n          \"enabled\": true,\n          \"disabled_message\": null\n        }\n      },\n      \"quote_amount\": \"816.66\",\n      \"quote_ledger_account\": {\n        \"id\": \"01JS1EHJDFEF9KD5J9FFV2A1S0\",\n        \"balance\": \"1387.13\",\n        \"status\": \"active\",\n        \"currency\": {\n          \"id\": 2,\n          \"title\": \"Euro\",\n          \"kind\": \"fiat\",\n          \"symbol\": \"EUR\",\n          \"enabled\": true,\n          \"disabled_message\": null\n        }\n      },\n      \"fees\": {\n        \"conversion_fee\": {\n          \"amount\": \"0.0001\",\n          \"currency\": {\n            \"id\": 1,\n            \"title\": \"Bitcoin\",\n            \"kind\": \"crypto\",\n            \"symbol\": \"BTC\",\n            \"enabled\": true,\n            \"disabled_message\": null\n          }\n        }\n      },\n      \"actions_required\": {\n        \"confirm\": \"https://api.coingate.com/api/v2/ledger/conversions/01JW94AMCJK51Z00K5DHWTD4S1/confirm\",\n        \"cancel\": \"https://api.coingate.com/api/v2/ledger/conversions/01JW94AMCJK51Z00K5DHWTD4S1/cancel\"\n      },\n      \"created_at\": \"2025-05-27T15:03:42.256Z\",\n      \"expires_at\": \"2025-05-27T15:04:47.226Z\"\n    },\n    {\n      \"id\": \"01JW94F88NBY2RYMZV46HK182W\",\n      \"status\": \"pending\",\n      \"base_amount\": \"0.01\",\n      \"base_ledger_account\": {\n        \"id\": \"01JRFQJ16HTQTT969F3G81F185\",\n        \"balance\": \"0.93534066\",\n        \"status\": \"active\",\n        \"currency\": {\n          \"id\": 1,\n          \"title\": \"Bitcoin\",\n          \"kind\": \"crypto\",\n          \"symbol\": \"BTC\",\n          \"enabled\": true,\n          \"disabled_message\": null\n        }\n      },\n      \"quote_amount\": \"816.66\",\n      \"quote_ledger_account\": {\n        \"id\": \"01JS1EHJDFEF9KD5J9FFV2A1S0\",\n        \"balance\": \"1387.13\",\n        \"status\": \"active\",\n        \"currency\": {\n          \"id\": 2,\n          \"title\": \"Euro\",\n          \"kind\": \"fiat\",\n          \"symbol\": \"EUR\",\n          \"enabled\": true,\n          \"disabled_message\": null\n        }\n      },\n      \"fees\": {\n        \"conversion_fee\": {\n          \"amount\": \"0.0001\",\n          \"currency\": {\n            \"id\": 1,\n            \"title\": \"Bitcoin\",\n            \"kind\": \"crypto\",\n            \"symbol\": \"BTC\",\n            \"enabled\": true,\n            \"disabled_message\": null\n          }\n        }\n      },\n      \"actions_required\": {\n        \"confirm\": \"https://api.coingate.com/api/v2/ledger/conversions/01JW94F88NBY2RYMZV46HK182W/confirm\",\n        \"cancel\": \"https://api.coingate.com/api/v2/ledger/conversions/01JW94F88NBY2RYMZV46HK182W/cancel\"\n      },\n      \"created_at\": \"2025-05-27T15:06:13.700Z\",\n      \"expires_at\": \"2025-05-27T15:07:18.654Z\"\n    }\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  current_page:
+                    type: integer
+                    example: 1
+                    default: 0
+                  per_page:
+                    type: integer
+                    example: 5
+                    default: 0
+                  total_records:
+                    type: integer
+                    example: 34
+                    default: 0
+                  total_pages:
+                    type: integer
+                    example: 7
+                    default: 0
+                  exchange_transactions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 01JW6EM5M1PDKHWW865WJXS8TG
+                        status:
+                          type: string
+                          example: canceled
+                        base_amount:
+                          type: string
+                          example: '0.001'
+                        base_ledger_account:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 01JRFQJ16HTQTT969F3G81F185
+                            balance:
+                              type: string
+                              example: '0.93534066'
+                            status:
+                              type: string
+                              example: active
+                            currency:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                  default: 0
+                                title:
+                                  type: string
+                                  example: Bitcoin
+                                kind:
+                                  type: string
+                                  example: crypto
+                                symbol:
+                                  type: string
+                                  example: BTC
+                                enabled:
+                                  type: boolean
+                                  example: true
+                                  default: true
+                                disabled_message: {}
+                        quote_amount:
+                          type: string
+                          example: '81.67'
+                        quote_ledger_account:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 01JS1EHJDFEF9KD5J9FFV2A1S0
+                            balance:
+                              type: string
+                              example: '1387.13'
+                            status:
+                              type: string
+                              example: active
+                            currency:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 2
+                                  default: 0
+                                title:
+                                  type: string
+                                  example: Euro
+                                kind:
+                                  type: string
+                                  example: fiat
+                                symbol:
+                                  type: string
+                                  example: EUR
+                                enabled:
+                                  type: boolean
+                                  example: true
+                                  default: true
+                                disabled_message: {}
+                        fees:
+                          type: object
+                          properties:
+                            conversion_fee:
+                              type: object
+                              properties:
+                                amount:
+                                  type: string
+                                  example: '0.00001'
+                                currency:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 1
+                                      default: 0
+                                    title:
+                                      type: string
+                                      example: Bitcoin
+                                    kind:
+                                      type: string
+                                      example: crypto
+                                    symbol:
+                                      type: string
+                                      example: BTC
+                                    enabled:
+                                      type: boolean
+                                      example: true
+                                      default: true
+                                    disabled_message: {}
+                        created_at:
+                          type: string
+                          example: '2025-05-26T14:05:57.273Z'
+                        expires_at:
+                          type: string
+                          example: '2025-05-26T14:07:02.251Z'
+      deprecated: false
+      tags:
+      - Ledger
+  /ledger/conversions/{id}/confirm:
+    patch:
+      summary: Confirm Conversion
+      description: ''
+      operationId: confirm-conversion
+      parameters:
+      - name: id
+        in: path
+        description: Conversion ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"id\": \"01JWDJX0KJE1D3BP97R2TKTED6\",\n  \"status\": \"completed\",\n  \"base_amount\": \"0.001\",\n  \"base_ledger_account\": {\n    \"id\": \"01JRFQJ16HTQTT969F3G81F185\",\n    \"balance\": \"0.93534066\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 1,\n      \"title\": \"Bitcoin\",\n      \"kind\": \"crypto\",\n      \"symbol\": \"BTC\",\n      \"enabled\": true,\n      \"disabled_message\": null\n    }\n  },\n  \"quote_amount\": \"81.67\",\n  \"quote_ledger_account\": {\n    \"id\": \"01JS1EHJDFEF9KD5J9FFV2A1S0\",\n    \"balance\": \"1387.13\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 2,\n      \"title\": \"Euro\",\n      \"kind\": \"fiat\",\n      \"symbol\": \"EUR\",\n      \"enabled\": true,\n      \"disabled_message\": null\n    }\n  },\n  \"fees\": {\n    \"conversion_fee\": {\n      \"amount\": \"0.00001\",\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\",\n        \"enabled\": true,\n        \"disabled_message\": null\n      }\n    }\n  },\n  \"created_at\": \"2025-05-29T08:35:22.364Z\",\n  \"expires_at\": \"2025-05-29T08:36:27.355Z\"\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 01JWDJX0KJE1D3BP97R2TKTED6
+                  status:
+                    type: string
+                    example: completed
+                  base_amount:
+                    type: string
+                    example: '0.001'
+                  base_ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01JRFQJ16HTQTT969F3G81F185
+                      balance:
+                        type: string
+                        example: '0.93534066'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                            default: 0
+                          title:
+                            type: string
+                            example: Bitcoin
+                          kind:
+                            type: string
+                            example: crypto
+                          symbol:
+                            type: string
+                            example: BTC
+                          enabled:
+                            type: boolean
+                            example: true
+                            default: true
+                          disabled_message: {}
+                  quote_amount:
+                    type: string
+                    example: '81.67'
+                  quote_ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01JS1EHJDFEF9KD5J9FFV2A1S0
+                      balance:
+                        type: string
+                        example: '1387.13'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 2
+                            default: 0
+                          title:
+                            type: string
+                            example: Euro
+                          kind:
+                            type: string
+                            example: fiat
+                          symbol:
+                            type: string
+                            example: EUR
+                          enabled:
+                            type: boolean
+                            example: true
+                            default: true
+                          disabled_message: {}
+                  fees:
+                    type: object
+                    properties:
+                      conversion_fee:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            example: '0.00001'
+                          currency:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                                default: 0
+                              title:
+                                type: string
+                                example: Bitcoin
+                              kind:
+                                type: string
+                                example: crypto
+                              symbol:
+                                type: string
+                                example: BTC
+                              enabled:
+                                type: boolean
+                                example: true
+                                default: true
+                              disabled_message: {}
+                  created_at:
+                    type: string
+                    example: '2025-05-29T08:35:22.364Z'
+                  expires_at:
+                    type: string
+                    example: '2025-05-29T08:36:27.355Z'
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"message\": \"Ledger conversion not found\",\n  \"reason\": \"LedgerConversionNotFound\"\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Ledger conversion not found
+                  reason:
+                    type: string
+                    example: LedgerConversionNotFound
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"message\": \"Ledger Conversion is not valid\",\n  \"reason\": \"LedgerConversionIsNotValid\",\n  \"errors\": [\n    \"Conversion can only be confirmed when in 'pending' state. Current state: completed.\"\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Ledger Conversion is not valid
+                  reason:
+                    type: string
+                    example: LedgerConversionIsNotValid
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: 'Conversion can only be confirmed when in ''pending'' state. Current state: completed.'
+      deprecated: false
+      tags:
+      - Ledger
+  /ledger/conversions/{id}/cancel:
+    patch:
+      summary: Cancel Conversion
+      description: ''
+      operationId: cancel-conversion
+      parameters:
+      - name: id
+        in: path
+        description: Conversion ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"id\": \"01JWDK7X1CCB0NATRJQMMM7995\",\n  \"status\": \"canceled\",\n  \"base_amount\": \"0.001\",\n  \"base_ledger_account\": {\n    \"id\": \"01JRFQJ16HTQTT969F3G81F185\",\n    \"balance\": \"0.93433066\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 1,\n      \"title\": \"Bitcoin\",\n      \"kind\": \"crypto\",\n      \"symbol\": \"BTC\",\n      \"enabled\": true,\n      \"disabled_message\": null\n    }\n  },\n  \"quote_amount\": \"81.67\",\n  \"quote_ledger_account\": {\n    \"id\": \"01JS1EHJDFEF9KD5J9FFV2A1S0\",\n    \"balance\": \"1468.8\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 2,\n      \"title\": \"Euro\",\n      \"kind\": \"fiat\",\n      \"symbol\": \"EUR\",\n      \"enabled\": true,\n      \"disabled_message\": null\n    }\n  },\n  \"fees\": {\n    \"conversion_fee\": {\n      \"amount\": \"0.00001\",\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\",\n        \"enabled\": true,\n        \"disabled_message\": null\n      }\n    }\n  },\n  \"created_at\": \"2025-05-29T08:41:19.159Z\",\n  \"expires_at\": \"2025-05-29T08:42:24.149Z\"\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 01JWDK7X1CCB0NATRJQMMM7995
+                  status:
+                    type: string
+                    example: canceled
+                  base_amount:
+                    type: string
+                    example: '0.001'
+                  base_ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01JRFQJ16HTQTT969F3G81F185
+                      balance:
+                        type: string
+                        example: '0.93433066'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                            default: 0
+                          title:
+                            type: string
+                            example: Bitcoin
+                          kind:
+                            type: string
+                            example: crypto
+                          symbol:
+                            type: string
+                            example: BTC
+                          enabled:
+                            type: boolean
+                            example: true
+                            default: true
+                          disabled_message: {}
+                  quote_amount:
+                    type: string
+                    example: '81.67'
+                  quote_ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01JS1EHJDFEF9KD5J9FFV2A1S0
+                      balance:
+                        type: string
+                        example: '1468.8'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 2
+                            default: 0
+                          title:
+                            type: string
+                            example: Euro
+                          kind:
+                            type: string
+                            example: fiat
+                          symbol:
+                            type: string
+                            example: EUR
+                          enabled:
+                            type: boolean
+                            example: true
+                            default: true
+                          disabled_message: {}
+                  fees:
+                    type: object
+                    properties:
+                      conversion_fee:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            example: '0.00001'
+                          currency:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                                default: 0
+                              title:
+                                type: string
+                                example: Bitcoin
+                              kind:
+                                type: string
+                                example: crypto
+                              symbol:
+                                type: string
+                                example: BTC
+                              enabled:
+                                type: boolean
+                                example: true
+                                default: true
+                              disabled_message: {}
+                  created_at:
+                    type: string
+                    example: '2025-05-29T08:41:19.159Z'
+                  expires_at:
+                    type: string
+                    example: '2025-05-29T08:42:24.149Z'
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"message\": \"Ledger conversion not found\",\n  \"reason\": \"LedgerConversionNotFound\"\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Ledger conversion not found
+                  reason:
+                    type: string
+                    example: LedgerConversionNotFound
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"message\": \"Ledger Conversion is not valid\",\n  \"reason\": \"LedgerConversionIsNotValid\",\n  \"errors\": [\n    \"Conversion can only be canceled when in 'pending' state. Current state: completed.\"\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Ledger Conversion is not valid
+                  reason:
+                    type: string
+                    example: LedgerConversionIsNotValid
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: 'Conversion can only be canceled when in ''pending'' state. Current state: completed.'
+      deprecated: false
+      tags:
+      - Ledger
+  /ledger/conversions/{id}:
+    get:
+      summary: Get Conversion
+      description: ''
+      operationId: get-conversion
+      parameters:
+      - name: id
+        in: path
+        description: Conversion ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"id\": \"01JW6EM5M1PDKHWW865WJXS8TG\",\n  \"status\": \"canceled\",\n  \"base_amount\": \"0.001\",\n  \"base_ledger_account\": {\n    \"id\": \"01JRFQJ16HTQTT969F3G81F185\",\n    \"balance\": \"0.93534066\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 1,\n      \"title\": \"Bitcoin\",\n      \"kind\": \"crypto\",\n      \"symbol\": \"BTC\",\n      \"enabled\": true,\n      \"disabled_message\": null\n    }\n  },\n  \"quote_amount\": \"81.67\",\n  \"quote_ledger_account\": {\n    \"id\": \"01JS1EHJDFEF9KD5J9FFV2A1S0\",\n    \"balance\": \"1387.13\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 2,\n      \"title\": \"Euro\",\n      \"kind\": \"fiat\",\n      \"symbol\": \"EUR\",\n      \"enabled\": true,\n      \"disabled_message\": null\n    }\n  },\n  \"fees\": {\n    \"conversion_fee\": {\n      \"amount\": \"0.00001\",\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\",\n        \"enabled\": true,\n        \"disabled_message\": null\n      }\n    }\n  },\n  \"created_at\": \"2025-05-26T14:05:57.273Z\",\n  \"expires_at\": \"2025-05-26T14:07:02.251Z\"\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 01JW6EM5M1PDKHWW865WJXS8TG
+                  status:
+                    type: string
+                    example: canceled
+                  base_amount:
+                    type: string
+                    example: '0.001'
+                  base_ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01JRFQJ16HTQTT969F3G81F185
+                      balance:
+                        type: string
+                        example: '0.93534066'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                            default: 0
+                          title:
+                            type: string
+                            example: Bitcoin
+                          kind:
+                            type: string
+                            example: crypto
+                          symbol:
+                            type: string
+                            example: BTC
+                          enabled:
+                            type: boolean
+                            example: true
+                            default: true
+                          disabled_message: {}
+                  quote_amount:
+                    type: string
+                    example: '81.67'
+                  quote_ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01JS1EHJDFEF9KD5J9FFV2A1S0
+                      balance:
+                        type: string
+                        example: '1387.13'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 2
+                            default: 0
+                          title:
+                            type: string
+                            example: Euro
+                          kind:
+                            type: string
+                            example: fiat
+                          symbol:
+                            type: string
+                            example: EUR
+                          enabled:
+                            type: boolean
+                            example: true
+                            default: true
+                          disabled_message: {}
+                  fees:
+                    type: object
+                    properties:
+                      conversion_fee:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            example: '0.00001'
+                          currency:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                                default: 0
+                              title:
+                                type: string
+                                example: Bitcoin
+                              kind:
+                                type: string
+                                example: crypto
+                              symbol:
+                                type: string
+                                example: BTC
+                              enabled:
+                                type: boolean
+                                example: true
+                                default: true
+                              disabled_message: {}
+                  created_at:
+                    type: string
+                    example: '2025-05-26T14:05:57.273Z'
+                  expires_at:
+                    type: string
+                    example: '2025-05-26T14:07:02.251Z'
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"message\": \"Ledger conversion not found\",\n  \"reason\": \"LedgerConversionNotFound\"\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Ledger conversion not found
+                  reason:
+                    type: string
+                    example: LedgerConversionNotFound
+      deprecated: false
+      tags:
+      - Ledger
+  /ledger/conversions/rates:
+    get:
+      summary: Conversion Rates
+      description: List Supported Conversion Rates
+      operationId: conversion-rates
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"rates\": {\n    \"BTC\": {\n      \"USD\": \"108822.41\",\n      \"EUR\": \"96048.7\",\n      \"GBP\": \"80657.4\",\n      \"DAI\": \"108899\",\n      \"USDC\": \"108829\",\n      \"LTC\": \"1128.41\",\n      \"ETH\": \"41.0877\",\n      \"BCH\": \"261.1716\",\n      \"XRP\": \"47258.98\",\n      \"TRX\": \"395257\",\n      \"DOGE\": \"487805\",\n      \"BNB\": \"158.6043\",\n      \"AVA\": \"112867\",\n      \"POL\": \"471698\",\n      \"ADA\": \"143472\",\n      \"SOL\": \"626.4487\",\n      \"AVAX\": \"2240.65\"\n    },\n    \"LTC\": {\n      \"USD\": \"96.74\",\n      \"BTC\": \"0.0008862\",\n      \"EUR\": \"85.39\",\n      \"GBP\": \"71.7\",\n      \"ETH\": \"0.03646\",\n      \"USDC\": \"96.73\"\n    },\n    \"ETH\": {\n      \"USD\": \"2648.6\",\n      \"BTC\": \"0.02433819\",\n      \"EUR\": \"2338.55\",\n      \"GBP\": \"1964.0\",\n      \"DAI\": \"2651.18\",\n      \"USDC\": \"2648.29\",\n      \"LTC\": \"27.4273\",\n      \"SOL\": \"15.2138\"\n    },\n    \"BCH\": {\n      \"USD\": \"419.71\",\n      \"BTC\": \"0.0038289\",\n      \"EUR\": \"370.31\",\n      \"GBP\": \"310.78\",\n      \"USDC\": \"419.8\"\n    },\n    \"XRP\": {\n      \"USD\": \"2.31\",\n      \"BTC\": \"0.00002116\",\n      \"EUR\": \"2.04\",\n      \"GBP\": \"1.71\",\n      \"USDC\": \"2.30616\"\n    },\n    \"TRX\": {\n      \"BTC\": \"0.00000253\",\n      \"EUR\": \"0.2433\",\n      \"USDC\": \"0.2757\"\n    },\n    \"DAI\": {\n      \"EUR\": \"0.882\",\n      \"BTC\": \"0.00000918\",\n      \"ETH\": \"0.00037719\"\n    },\n    \"DOGE\": {\n      \"BTC\": \"0.00000205\",\n      \"EUR\": \"0.1972\",\n      \"GBP\": \"0.1655\",\n      \"USDC\": \"0.22309\"\n    },\n    \"BNB\": {\n      \"BTC\": \"0.006305\",\n      \"EUR\": \"606.2\",\n      \"GBP\": \"508.77\",\n      \"POL\": \"2984.18\"\n    },\n    \"AVA\": {\n      \"BTC\": \"0.00000886\"\n    },\n    \"POL\": {\n      \"USD\": \"0.2312\",\n      \"BTC\": \"0.00000212\",\n      \"EUR\": \"0.2041\",\n      \"GBP\": \"0.1713\",\n      \"BNB\": \"0.0003351\"\n    },\n    \"USDC\": {\n      \"USD\": \"0.9998\",\n      \"EUR\": \"0.8827\",\n      \"GBP\": \"0.7411\",\n      \"BTC\": \"0.00000919\",\n      \"LTC\": \"0.01033805\",\n      \"ETH\": \"0.0003776\",\n      \"BCH\": \"0.00238209\",\n      \"XRP\": \"0.433621\",\n      \"TRX\": \"3.627131\",\n      \"DOGE\": \"4.482496\",\n      \"ADA\": \"1.316619\",\n      \"SOL\": \"0.00574515\",\n      \"SHIB\": \"69979.01\"\n    },\n    \"ADA\": {\n      \"USD\": \"0.759\",\n      \"BTC\": \"0.00000697\",\n      \"EUR\": \"0.67\",\n      \"GBP\": \"0.5624\",\n      \"USDC\": \"0.759521\"\n    },\n    \"SOL\": {\n      \"BTC\": \"0.0015963\",\n      \"EUR\": \"153.72\",\n      \"GBP\": \"129.01\",\n      \"ETH\": \"0.06573\",\n      \"USDC\": \"174.06\"\n    },\n    \"SHIB\": {\n      \"EUR\": \"0.00001264\",\n      \"USDC\": \"0.00001429\"\n    },\n    \"AVAX\": {\n      \"BTC\": \"0.0004463\",\n      \"EUR\": \"23.82\"\n    },\n    \"USD\": {\n      \"BTC\": \"0.00000919\",\n      \"LTC\": \"0.010337\",\n      \"ETH\": \"0.00037756\",\n      \"BCH\": \"0.002383\",\n      \"XRP\": \"0.4333\",\n      \"POL\": \"4.3253\",\n      \"USDC\": \"1.0002\",\n      \"ADA\": \"1.3176\"\n    },\n    \"EUR\": {\n      \"BTC\": \"0.00001041\",\n      \"LTC\": \"0.011711\",\n      \"ETH\": \"0.00042762\",\n      \"BCH\": \"0.0027\",\n      \"XRP\": \"0.491\",\n      \"TRX\": \"4.1101\",\n      \"DAI\": \"1.1338\",\n      \"DOGE\": \"5.0715\",\n      \"BNB\": \"0.00165\",\n      \"POL\": \"4.9005\",\n      \"USDC\": \"1.1329\",\n      \"ADA\": \"1.4924\",\n      \"SOL\": \"0.006505\",\n      \"SHIB\": \"79114\",\n      \"AVAX\": \"0.041982\"\n    },\n    \"GBP\": {\n      \"BTC\": \"0.0000124\",\n      \"LTC\": \"0.013947\",\n      \"ETH\": \"0.00050916\",\n      \"BCH\": \"0.003218\",\n      \"XRP\": \"0.585\",\n      \"DOGE\": \"6.0427\",\n      \"BNB\": \"0.001966\",\n      \"POL\": \"5.839\",\n      \"USDC\": \"1.3493\",\n      \"ADA\": \"1.7782\",\n      \"SOL\": \"0.007751\"\n    }\n  }\n}"
+              schema:
+                type: object
+                properties:
+                  rates:
+                    type: object
+                    properties:
+                      BTC:
+                        type: object
+                        properties:
+                          USD:
+                            type: string
+                            example: '108822.41'
+                          EUR:
+                            type: string
+                            example: '96048.7'
+                          GBP:
+                            type: string
+                            example: '80657.4'
+                          DAI:
+                            type: string
+                            example: '108899'
+                          USDC:
+                            type: string
+                            example: '108829'
+                          LTC:
+                            type: string
+                            example: '1128.41'
+                          ETH:
+                            type: string
+                            example: '41.0877'
+                          BCH:
+                            type: string
+                            example: '261.1716'
+                          XRP:
+                            type: string
+                            example: '47258.98'
+                          TRX:
+                            type: string
+                            example: '395257'
+                          DOGE:
+                            type: string
+                            example: '487805'
+                          BNB:
+                            type: string
+                            example: '158.6043'
+                          AVA:
+                            type: string
+                            example: '112867'
+                          POL:
+                            type: string
+                            example: '471698'
+                          ADA:
+                            type: string
+                            example: '143472'
+                          SOL:
+                            type: string
+                            example: '626.4487'
+                          AVAX:
+                            type: string
+                            example: '2240.65'
+                      LTC:
+                        type: object
+                        properties:
+                          USD:
+                            type: string
+                            example: '96.74'
+                          BTC:
+                            type: string
+                            example: '0.0008862'
+                          EUR:
+                            type: string
+                            example: '85.39'
+                          GBP:
+                            type: string
+                            example: '71.7'
+                          ETH:
+                            type: string
+                            example: '0.03646'
+                          USDC:
+                            type: string
+                            example: '96.73'
+                      ETH:
+                        type: object
+                        properties:
+                          USD:
+                            type: string
+                            example: '2648.6'
+                          BTC:
+                            type: string
+                            example: '0.02433819'
+                          EUR:
+                            type: string
+                            example: '2338.55'
+                          GBP:
+                            type: string
+                            example: '1964.0'
+                          DAI:
+                            type: string
+                            example: '2651.18'
+                          USDC:
+                            type: string
+                            example: '2648.29'
+                          LTC:
+                            type: string
+                            example: '27.4273'
+                          SOL:
+                            type: string
+                            example: '15.2138'
+                      BCH:
+                        type: object
+                        properties:
+                          USD:
+                            type: string
+                            example: '419.71'
+                          BTC:
+                            type: string
+                            example: '0.0038289'
+                          EUR:
+                            type: string
+                            example: '370.31'
+                          GBP:
+                            type: string
+                            example: '310.78'
+                          USDC:
+                            type: string
+                            example: '419.8'
+                      XRP:
+                        type: object
+                        properties:
+                          USD:
+                            type: string
+                            example: '2.31'
+                          BTC:
+                            type: string
+                            example: '0.00002116'
+                          EUR:
+                            type: string
+                            example: '2.04'
+                          GBP:
+                            type: string
+                            example: '1.71'
+                          USDC:
+                            type: string
+                            example: '2.30616'
+                      TRX:
+                        type: object
+                        properties:
+                          BTC:
+                            type: string
+                            example: '0.00000253'
+                          EUR:
+                            type: string
+                            example: '0.2433'
+                          USDC:
+                            type: string
+                            example: '0.2757'
+                      DAI:
+                        type: object
+                        properties:
+                          EUR:
+                            type: string
+                            example: '0.882'
+                          BTC:
+                            type: string
+                            example: '0.00000918'
+                          ETH:
+                            type: string
+                            example: '0.00037719'
+                      DOGE:
+                        type: object
+                        properties:
+                          BTC:
+                            type: string
+                            example: '0.00000205'
+                          EUR:
+                            type: string
+                            example: '0.1972'
+                          GBP:
+                            type: string
+                            example: '0.1655'
+                          USDC:
+                            type: string
+                            example: '0.22309'
+                      BNB:
+                        type: object
+                        properties:
+                          BTC:
+                            type: string
+                            example: '0.006305'
+                          EUR:
+                            type: string
+                            example: '606.2'
+                          GBP:
+                            type: string
+                            example: '508.77'
+                          POL:
+                            type: string
+                            example: '2984.18'
+                      AVA:
+                        type: object
+                        properties:
+                          BTC:
+                            type: string
+                            example: '0.00000886'
+                      POL:
+                        type: object
+                        properties:
+                          USD:
+                            type: string
+                            example: '0.2312'
+                          BTC:
+                            type: string
+                            example: '0.00000212'
+                          EUR:
+                            type: string
+                            example: '0.2041'
+                          GBP:
+                            type: string
+                            example: '0.1713'
+                          BNB:
+                            type: string
+                            example: '0.0003351'
+                      USDC:
+                        type: object
+                        properties:
+                          USD:
+                            type: string
+                            example: '0.9998'
+                          EUR:
+                            type: string
+                            example: '0.8827'
+                          GBP:
+                            type: string
+                            example: '0.7411'
+                          BTC:
+                            type: string
+                            example: '0.00000919'
+                          LTC:
+                            type: string
+                            example: '0.01033805'
+                          ETH:
+                            type: string
+                            example: '0.0003776'
+                          BCH:
+                            type: string
+                            example: '0.00238209'
+                          XRP:
+                            type: string
+                            example: '0.433621'
+                          TRX:
+                            type: string
+                            example: '3.627131'
+                          DOGE:
+                            type: string
+                            example: '4.482496'
+                          ADA:
+                            type: string
+                            example: '1.316619'
+                          SOL:
+                            type: string
+                            example: '0.00574515'
+                          SHIB:
+                            type: string
+                            example: '69979.01'
+                      ADA:
+                        type: object
+                        properties:
+                          USD:
+                            type: string
+                            example: '0.759'
+                          BTC:
+                            type: string
+                            example: '0.00000697'
+                          EUR:
+                            type: string
+                            example: '0.67'
+                          GBP:
+                            type: string
+                            example: '0.5624'
+                          USDC:
+                            type: string
+                            example: '0.759521'
+                      SOL:
+                        type: object
+                        properties:
+                          BTC:
+                            type: string
+                            example: '0.0015963'
+                          EUR:
+                            type: string
+                            example: '153.72'
+                          GBP:
+                            type: string
+                            example: '129.01'
+                          ETH:
+                            type: string
+                            example: '0.06573'
+                          USDC:
+                            type: string
+                            example: '174.06'
+                      SHIB:
+                        type: object
+                        properties:
+                          EUR:
+                            type: string
+                            example: '0.00001264'
+                          USDC:
+                            type: string
+                            example: '0.00001429'
+                      AVAX:
+                        type: object
+                        properties:
+                          BTC:
+                            type: string
+                            example: '0.0004463'
+                          EUR:
+                            type: string
+                            example: '23.82'
+                      USD:
+                        type: object
+                        properties:
+                          BTC:
+                            type: string
+                            example: '0.00000919'
+                          LTC:
+                            type: string
+                            example: '0.010337'
+                          ETH:
+                            type: string
+                            example: '0.00037756'
+                          BCH:
+                            type: string
+                            example: '0.002383'
+                          XRP:
+                            type: string
+                            example: '0.4333'
+                          POL:
+                            type: string
+                            example: '4.3253'
+                          USDC:
+                            type: string
+                            example: '1.0002'
+                          ADA:
+                            type: string
+                            example: '1.3176'
+                      EUR:
+                        type: object
+                        properties:
+                          BTC:
+                            type: string
+                            example: '0.00001041'
+                          LTC:
+                            type: string
+                            example: '0.011711'
+                          ETH:
+                            type: string
+                            example: '0.00042762'
+                          BCH:
+                            type: string
+                            example: '0.0027'
+                          XRP:
+                            type: string
+                            example: '0.491'
+                          TRX:
+                            type: string
+                            example: '4.1101'
+                          DAI:
+                            type: string
+                            example: '1.1338'
+                          DOGE:
+                            type: string
+                            example: '5.0715'
+                          BNB:
+                            type: string
+                            example: '0.00165'
+                          POL:
+                            type: string
+                            example: '4.9005'
+                          USDC:
+                            type: string
+                            example: '1.1329'
+                          ADA:
+                            type: string
+                            example: '1.4924'
+                          SOL:
+                            type: string
+                            example: '0.006505'
+                          SHIB:
+                            type: string
+                            example: '79114'
+                          AVAX:
+                            type: string
+                            example: '0.041982'
+                      GBP:
+                        type: object
+                        properties:
+                          BTC:
+                            type: string
+                            example: '0.0000124'
+                          LTC:
+                            type: string
+                            example: '0.013947'
+                          ETH:
+                            type: string
+                            example: '0.00050916'
+                          BCH:
+                            type: string
+                            example: '0.003218'
+                          XRP:
+                            type: string
+                            example: '0.585'
+                          DOGE:
+                            type: string
+                            example: '6.0427'
+                          BNB:
+                            type: string
+                            example: '0.001966'
+                          POL:
+                            type: string
+                            example: '5.839'
+                          USDC:
+                            type: string
+                            example: '1.3493'
+                          ADA:
+                            type: string
+                            example: '1.7782'
+                          SOL:
+                            type: string
+                            example: '0.007751'
+      deprecated: false
+      security: []
+      tags:
+      - Ledger
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

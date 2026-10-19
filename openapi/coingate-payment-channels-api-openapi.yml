@@ -1,0 +1,467 @@
+openapi: 3.2.0
+info:
+  title: v2 Payment Channels API
+  version: '2'
+servers:
+- url: https://api.coingate.com/api/v2
+security:
+- {}
+tags:
+- name: Payment Channels
+paths:
+  /payment_channels:
+    post:
+      description: ''
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                OK:
+                  summary: OK
+                  value:
+                    id: 76
+                    contact_id: 40
+                    payment_purpose: Subscription fees
+                    callback_url: https://example.com/webhooks/payment-channels
+                    receive_currency_id: 1
+                    status: active
+                    created_at: '2026-06-09T05:43:14.172Z'
+                    addresses:
+                    - currency_id: 1
+                      platform_id: 4
+                      address: null
+                      memo: ''
+                      status: enqueued
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 76
+                    default: 0
+                  contact_id:
+                    type: integer
+                    example: 40
+                    default: 0
+                  payment_purpose:
+                    type: string
+                    example: Subscription fees
+                  callback_url:
+                    type: string
+                    example: https://example.com/webhooks/payment-channels
+                  receive_currency_id:
+                    type: integer
+                    example: 1
+                    default: 0
+                  status:
+                    type: string
+                    example: active
+                  created_at:
+                    type: string
+                    example: '2026-06-09T05:43:14.172Z'
+                  addresses:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        currency_id:
+                          type: integer
+                          example: 1
+                          default: 0
+                        platform_id:
+                          type: integer
+                          example: 4
+                          default: 0
+                        address: {}
+                        memo:
+                          type: string
+                          example: ''
+                        expires_at: {}
+                        status:
+                          type: string
+                          example: enqueued
+        '422':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Payment channel is not valid
+                  reason:
+                    type: string
+                    example: PaymentChannelIsNotValid
+                  errors:
+                    type: object
+                    properties:
+                      contact_id:
+                        type: array
+                        items:
+                          type: string
+                          example: is already assigned to another payment channel
+              examples:
+                '422':
+                  summary: '422'
+                  value:
+                    message: Payment channel is not valid
+                    reason: PaymentChannelIsNotValid
+                    errors:
+                      contact_id:
+                      - is already assigned to another payment channel
+          description: '422'
+      parameters: []
+      operationId: post_payment-channels
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                contact_id:
+                  type: integer
+                  description: Contact to associate with this channel. Must belong to the same merchant, have all required travel-rule fields filled, and not already be assigned to another payment channel (a contact maps to at most one channel).
+                receive_currency_id:
+                  type: integer
+                  description: Currency the merchant wants to receive. Must be enabled and support merchant receive.
+                payment_purpose:
+                  type: string
+                  description: Purpose of the payment (e.g. merchant_payment, subscription, donation).
+                callback_url:
+                  type: string
+                  description: URL to receive webhook notifications for transactions on this channel.
+                assets:
+                  type: array
+                  description: 'Crypto assets to generate addresses for. New addresses start enqueued (null address) and become active within ~1 min. Each item: currency_id (integer, required), platform_id (integer, required).'
+                  items:
+                    properties: {}
+                    type: object
+              required:
+              - contact_id
+              - receive_currency_id
+      summary: Create Payment Channel
+      tags:
+      - Payment Channels
+    get:
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              examples:
+                OK:
+                  summary: OK
+                  value:
+                    current_page: 1
+                    per_page: 100
+                    total_records: 2
+                    total_pages: 1
+                    payment_channels:
+                    - id: 61
+                      contact_id: 29
+                      payment_purpose: Subscription fees
+                      callback_url: https://example.com/webhooks/payment-channels
+                      receive_currency_id: 4
+                      status: active
+                      created_at: '2026-06-02T08:19:38.374Z'
+                      addresses:
+                      - currency_id: 1
+                        platform_id: 4
+                        address: bc1qexampledepositaddress00000000000000000
+                        memo: ''
+                        status: active
+                      - currency_id: 7
+                        platform_id: 11
+                        address: 0xExampleEthereumAddress00000000000000000000
+                        memo: ''
+                        status: active
+      parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: '1'
+        description: 1-indexed page number. Defaults to 1.
+      - in: query
+        name: per_page
+        schema:
+          type: integer
+          default: '100'
+        description: Items per page. Defaults to 100. Capped at 100.
+      operationId: get_payment-channels
+      summary: List Payment Channels
+      tags:
+      - Payment Channels
+  /payment_channels/supported-currencies:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              examples:
+                OK:
+                  summary: OK
+                  value:
+                  - id: 1
+                    title: Bitcoin
+                    kind: crypto
+                    symbol: BTC
+                    enabled: true
+                    disabled_message: null
+                    platforms:
+                    - id: 4
+                      id_name: bitcoin
+                      title: Bitcoin
+                      enabled: true
+                  - id: 7
+                    title: Tether
+                    kind: crypto
+                    symbol: USDT
+                    enabled: true
+                    disabled_message: null
+                    platforms:
+                    - id: 11
+                      id_name: ethereum
+                      title: Ethereum
+                      enabled: true
+                    - id: 18
+                      id_name: tron
+                      title: Tron
+                      enabled: true
+      parameters: []
+      operationId: get_payment-channels-supported-currencies
+      summary: Supported Currencies
+      tags:
+      - Payment Channels
+  /payment_channels/{id}/addresses:
+    post:
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_channel_id:
+                    type: integer
+                  addresses:
+                    type: array
+                    items:
+                      properties:
+                        currency_id:
+                          type: integer
+                        platform_id:
+                          type: integer
+                        address:
+                          type: string
+                        memo:
+                          type: string
+                        expires_at:
+                          type: string
+                          format: date-time
+                        status:
+                          type: string
+                      type: object
+                      required:
+                      - platform_id
+                      - currency_id
+                      - expires_at
+                      - status
+                required:
+                - payment_channel_id
+                - addresses
+              examples:
+                OK:
+                  summary: OK
+                  value:
+                    payment_channel_id: 61
+                    addresses:
+                    - currency_id: 7
+                      platform_id: 11
+                      address: null
+                      memo: ''
+                      status: enqueued
+                    - currency_id: 7
+                      platform_id: 18
+                      address: null
+                      memo: ''
+                      status: enqueued
+        '422':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Payment channel is not valid
+                  reason:
+                    type: string
+                    example: PaymentChannelIsNotValid
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Platform 11 does not exist or is not eligible for currency 7
+              examples:
+                Unsupported asset:
+                  summary: Unsupported asset
+                  value:
+                    message: Payment channel is not valid
+                    reason: PaymentChannelIsNotValid
+                    errors:
+                    - Platform 11 does not exist or is not eligible for currency 7
+          description: Unsupported asset
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: Payment channel ID.
+      summary: Add Addresses
+      operationId: post_payment-channels-id-addresses
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                assets:
+                  type: array
+                  items:
+                    properties:
+                      currency_id:
+                        type: integer
+                      platform_id:
+                        type: integer
+                    type: object
+                    required:
+                    - currency_id
+                    - platform_id
+                  description: 'One or more { currency_id, platform_id } pairs to generate addresses for. Each item: currency_id (integer, required), platform_id (integer, required).'
+              required:
+              - assets
+      x-readme:
+        code-samples:
+        - code: "curl -X POST \"https://api.coingate.com/api/v2/payment_channels/61/addresses\" \\\n  -H \"Authorization: Token <API_APP_TOKEN>\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  --data-urlencode \"assets[][currency_id]=7\" \\\n  --data-urlencode \"assets[][platform_id]=11\" \\\n  --data-urlencode \"assets[][currency_id]=7\" \\\n  --data-urlencode \"assets[][platform_id]=18\""
+          language: shell
+          name: ''
+        samples-languages:
+        - shell
+      tags:
+      - Payment Channels
+  /payment_channels/{id}:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                '200':
+                  summary: '200'
+                  value:
+                    id: 86
+                    contact_id: 45
+                    payment_purpose: Subscription fees
+                    callback_url: https://example.com/webhooks/payment-channels
+                    receive_currency_id: 1
+                    status: active
+                    created_at: '2026-06-09T08:20:44.998Z'
+                    addresses:
+                    - currency_id: 1
+                      platform_id: 4
+                      address: tb1qexampledepositaddress00000000000000000
+                      memo: ''
+                      status: active
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 86
+                    default: 0
+                  contact_id:
+                    type: integer
+                    example: 45
+                    default: 0
+                  payment_purpose:
+                    type: string
+                    example: Subscription fees
+                  callback_url:
+                    type: string
+                    example: https://example.com/webhooks/payment-channels
+                  receive_currency_id:
+                    type: integer
+                    example: 1
+                    default: 0
+                  status:
+                    type: string
+                    example: active
+                  created_at:
+                    type: string
+                    example: '2026-06-09T08:20:44.998Z'
+                  addresses:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        currency_id:
+                          type: integer
+                          example: 1
+                          default: 0
+                        platform_id:
+                          type: integer
+                          example: 4
+                          default: 0
+                        address:
+                          type: string
+                          example: tb1qexampledepositaddress00000000000000000
+                        memo:
+                          type: string
+                          example: ''
+                        expires_at: {}
+                        status:
+                          type: string
+                          example: active
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Payment channel not found
+                  reason:
+                    type: string
+                    example: PaymentChannelNotFound
+              examples:
+                '404':
+                  summary: '404'
+                  value:
+                    message: Payment channel not found
+                    reason: PaymentChannelNotFound
+          description: '404'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: ID of the payment channel to retrieve.
+      operationId: get_payment-channels-id
+      summary: Get Payment Channel
+      tags:
+      - Payment Channels
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

@@ -1,0 +1,37 @@
+openapi: 3.2.0
+info:
+  title: v2 New Endpoint API
+  version: '2'
+servers:
+- url: https://api.coingate.com/api/v2
+security:
+- {}
+tags:
+- name: New Endpoint
+paths:
+  /new-endpoint:
+    post:
+      description: ''
+      operationId: post_new-endpoint
+      responses:
+        '200':
+          description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                test:
+                  type: string
+                  description: test
+              type: object
+      tags:
+      - New Endpoint
+      summary: Post new endpoint
+      x-summary-source: derived
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

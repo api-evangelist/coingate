@@ -1,0 +1,32 @@
+openapi: 3.2.0
+info:
+  title: v2 Ping API
+  version: '2'
+servers:
+- url: https://api.coingate.com/api/v2
+security:
+- {}
+tags:
+- name: Ping
+paths:
+  /ping:
+    get:
+      summary: Ping
+      description: A health check endpoint for CoinGate API. This endpoint is public, authentication is not required.
+      operationId: ping
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  ping: \"pong\",\n  time: \"2017-12-13T19:07:18+00:00\"\n}"
+      deprecated: false
+      tags:
+      - Ping
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

@@ -1,0 +1,350 @@
+openapi: 3.2.0
+info:
+  title: v2 Contacts API
+  version: '2'
+servers:
+- url: https://api.coingate.com/api/v2
+security:
+- {}
+tags:
+- name: Contacts
+paths:
+  /contacts:
+    post:
+      description: ''
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              examples:
+                '200':
+                  summary: '200'
+                  value:
+                    id: 45
+                    contact_type: person
+                    email: jane.doe@example.com
+                    external_contact_id: shop_user_45
+                    status: active
+                    created_at: '2026-06-09T08:20:35.437Z'
+                    first_name: Jane
+                    surname: Doe
+                    date_of_birth: '1990-01-15'
+                    address_country_id: 133
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 45
+                    default: 0
+                  contact_type:
+                    type: string
+                    example: person
+                  email:
+                    type: string
+                    example: jane.doe@example.com
+                  external_contact_id:
+                    type: string
+                    example: shop_user_45
+                  status:
+                    type: string
+                    example: active
+                  created_at:
+                    type: string
+                    example: '2026-06-09T08:20:35.437Z'
+                  first_name:
+                    type: string
+                    example: Jane
+                  surname:
+                    type: string
+                    example: Doe
+                  date_of_birth:
+                    type: string
+                    example: '1990-01-15'
+                  address_country_id:
+                    type: integer
+                    example: 133
+                    default: 0
+      parameters: []
+      operationId: post_contacts
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                contact_type:
+                  type: string
+                  description: 'Type of contact. Allowed values: person, business.'
+                  default: person
+                email:
+                  type: string
+                  description: Contact email address. Must be a valid, non-disposable email.
+                external_contact_id:
+                  type: string
+                  description: External Contact ID used in your application (e.g. user or customer ID). Must be unique per merchant.
+                first_name:
+                  type: string
+                  description: First name of the contact (required if contact_type is person).
+                surname:
+                  type: string
+                  description: Last name of the contact (required if contact_type is person).
+                company_name:
+                  type: string
+                  description: Company name (required if contact_type is business).
+                date_of_birth:
+                  type: string
+                  description: Date of birth in YYYY-MM-DD format (required if contact_type is person).
+                address_country:
+                  type: string
+                  default: ''
+                  description: Country of residence as ISO 3166-1 alpha-2 (e.g. LT) or alpha-3 (e.g. LTU) code (required if contact_type is person).
+                company_code:
+                  type: string
+                  description: Company registration code (required if contact_type is business).
+                incorporation_country:
+                  type: string
+                  description: Company registration country as ISO 3166-1 alpha-2 or alpha-3 code (required if contact_type is business).
+              required:
+              - contact_type
+              - email
+              - external_contact_id
+      summary: Create Contact
+      tags:
+      - Contacts
+    get:
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              examples:
+                OK:
+                  summary: OK
+                  value:
+                    current_page: 1
+                    per_page: 100
+                    total_records: 2
+                    total_pages: 1
+                    contacts:
+                    - id: 29
+                      contact_type: person
+                      email: qa.test+example@coingate.com
+                      external_contact_id: QA-EXTERNAL-1
+                      status: active
+                      created_at: '2026-06-02T08:19:30.572Z'
+                      first_name: Jane
+                      surname: Doe
+                      date_of_birth: '1995-05-21'
+                      address_country_id: 133
+                    - id: 30
+                      contact_type: business
+                      email: qa.test+acme@coingate.com
+                      external_contact_id: QA-EXTERNAL-2
+                      status: active
+                      created_at: '2026-06-02T09:14:11.022Z'
+                      company_name: Acme QA UAB
+                      company_code: QA-12345678
+                      incorporation_country_id: 133
+      parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: '1'
+        description: 1-indexed page number. Defaults to 1.
+      - in: query
+        name: per_page
+        schema:
+          type: integer
+          default: '100'
+        description: Items per page. Defaults to 100. Capped at 100.
+      summary: List Contacts
+      operationId: get_contacts
+      tags:
+      - Contacts
+  /contacts/{id}:
+    get:
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                '200':
+                  summary: '200'
+                  value:
+                    id: 45
+                    contact_type: person
+                    email: jane.doe@example.com
+                    external_contact_id: shop_user_45
+                    status: active
+                    created_at: '2026-06-09T08:20:35.437Z'
+                    first_name: Jane
+                    surname: Doe
+                    date_of_birth: '1990-01-15'
+                    address_country_id: 133
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 45
+                    default: 0
+                  contact_type:
+                    type: string
+                    example: person
+                  email:
+                    type: string
+                    example: jane.doe@example.com
+                  external_contact_id:
+                    type: string
+                    example: shop_user_45
+                  status:
+                    type: string
+                    example: active
+                  created_at:
+                    type: string
+                    example: '2026-06-09T08:20:35.437Z'
+                  first_name:
+                    type: string
+                    example: Jane
+                  surname:
+                    type: string
+                    example: Doe
+                  date_of_birth:
+                    type: string
+                    example: '1990-01-15'
+                  address_country_id:
+                    type: integer
+                    example: 133
+                    default: 0
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Contact not found
+                  reason:
+                    type: string
+                    example: ContactNotFound
+              examples:
+                '404':
+                  summary: '404'
+                  value:
+                    message: Contact not found
+                    reason: ContactNotFound
+          description: '404'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: Contact ID.
+      summary: Get Contact
+      operationId: get_contacts-id
+      tags:
+      - Contacts
+  /contacts/{id}/upload-documents:
+    post:
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Server-assigned uploaded-file ID. Stable.
+                    created_at:
+                      type: string
+                      description: Upload timestamp in UTC (ISO8601).
+                    filename:
+                      type: string
+                      description: Original filename submitted in the multipart upload.
+                    document_type:
+                      type: string
+                      description: Echoes the document_type from the request.
+                  required:
+                  - id
+              examples:
+                '200':
+                  summary: '200'
+                  value:
+                    files:
+                    - id: 4821
+                      created_at: '2026-06-04T08:12:33.114Z'
+                      filename: passport.pdf
+                      document_type: passport
+        '422':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Document upload failed
+                  reason:
+                    type: string
+                    example: DocumentUploadFailed
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Document type is not allowed for person contacts
+              examples:
+                '422':
+                  summary: '422'
+                  value:
+                    message: Document upload failed
+                    reason: DocumentUploadFailed
+                    errors:
+                    - Document type is not allowed for person contacts
+          description: '422'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: Contact ID.
+      summary: Upload Documents
+      description: ''
+      operationId: post_contacts-id-upload-documents
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: byte
+                  default: ''
+                  description: The document file to upload. Refer to file constraints above.
+                document_type:
+                  type: string
+                  description: The kind of document. Allowed values depend on the contact type. Refer to the allowed document types above.
+                comment:
+                  type: string
+                  description: Optional note for compliance reviewers.
+              required:
+              - file
+              - document_type
+      tags:
+      - Contacts
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

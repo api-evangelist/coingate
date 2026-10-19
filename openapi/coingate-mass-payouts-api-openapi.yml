@@ -1,0 +1,1414 @@
+openapi: 3.2.0
+info:
+  title: v2 Mass Payouts API
+  version: '2'
+servers:
+- url: https://api.coingate.com/api/v2
+security:
+- {}
+tags:
+- name: Mass Payouts
+paths:
+  /mass_payouts:
+    post:
+      summary: Create Mass Payout
+      description: ''
+      operationId: create-mass-payout
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - title
+              - currency_id
+              - ledger_account_id
+              - callback_url
+              - amount
+              - payouts
+              properties:
+                title:
+                  type: string
+                  description: Title of mass payout
+                currency_id:
+                  type: integer
+                  description: Currency ID can be retrieved from https://api.coingate.com/api/v2/currencies
+                  format: int32
+                ledger_account_id:
+                  type: string
+                  description: Ledger account ID can be retrieved from https://api.coingate.com/api/v2/ledger/accounts
+                callback_url:
+                  type: string
+                  description: We will send call back request about status change on your mass payout
+                amount:
+                  type: string
+                  description: Amount of mass payout has to be sum of all mass payout entries amounts
+                payouts:
+                  type: array
+                  description: Must contain at least one payout object
+                  items:
+                    properties:
+                      entry_type:
+                        type: string
+                        description: Entry type decides if first name surname and date of birth or company_name and company code fields will be required
+                        enum:
+                        - '"person"'
+                        - '"business"'
+                      internal_id:
+                        type: string
+                        description: ID by which entry is recognised on merchant system
+                      address:
+                        type: string
+                        description: Crypto address
+                      amount:
+                        type: number
+                        description: Entry amount
+                        format: double
+                      platform_id:
+                        type: integer
+                        description: Platform ID and it's supported currencies can be seen on https://api.coingate.com/api/v2/platforms. Platform must support mass payout currency
+                        format: int32
+                      currency_id:
+                        type: integer
+                        description: Currency which should match ledger account currency as well as every mass payout entry currency. Currency ID's can be seen on https://developer.coingate.com/reference/currencies
+                        format: int32
+                      country:
+                        type: string
+                        description: Three-letter country code
+                      purpose:
+                        type: string
+                        description: Payment purpose
+                        enum:
+                        - '"payroll"'
+                        - '"commission"'
+                        - '"withdrawal"'
+                        - '"refund"'
+                        - '"vendor_payment"'
+                        - '"other"'
+                      first_name:
+                        type: string
+                        description: Required only if entry_type is "person"
+                      surname:
+                        type: string
+                        description: Required only if entry_type is "person"
+                      date_of_birth:
+                        type: string
+                        description: Required only if entry_type is "person"
+                        format: date
+                      company_name:
+                        type: string
+                        description: Required only if entry_type is "business"
+                      company_code:
+                        type: string
+                        description: Required only if entry_type is "business"
+                    required:
+                    - entry_type
+                    - internal_id
+                    - address
+                    - amount
+                    - platform_id
+                    - currency_id
+                    - country
+                    - purpose
+                    type: object
+            examples:
+              Request Example:
+                value:
+                  title: 'Mass Payout #1'
+                  currency_id: 1
+                  ledger_account_id: 01HBG17JWMSF3TAVSQCW3EYMTA
+                  callback_url: https://my-callback-url.com/mass-payouts
+                  amount: '0.0002'
+                  payouts:
+                  - entry_type: person
+                    internal_id: 11
+                    address: mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa
+                    amount: '0.0001'
+                    platform_id: 6
+                    currency_id: 1
+                    country: DEU
+                    purpose: payroll
+                    first_name: Bob
+                    surname: Bailey
+                    date_of_birth: '1983-08-14'
+                    company_name: ledai
+                    company_code: LT-844741251151
+                  - entry_type: business
+                    internal_id: 12
+                    address: mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa
+                    amount: '0.0001'
+                    platform_id: 6
+                    currency_id: 1
+                    country: DEU
+                    purpose: withdrawal
+                    company_name: Gleichner Group
+                    company_code: 19-211-8140
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"id\": 71,\n    \"status\": \"draft\",\n    \"title\": \"Mass Payout #1\",\n    \"amount\": \"0.0002\",\n    \"confirmed_at\": null,\n    \"created_at\": \"2023-10-02T11:57:24.691Z\",\n    \"updated_at\": \"2023-10-02T11:57:24.691Z\",\n    \"callback_url\": \"https://my-callback-url.com/mass-payouts\",\n    \"ledger_account\": {\n        \"id\": \"01HBG17JWMSF3TAVSQCW3EYMTA\",\n        \"balance\": \"0.469332132\",\n        \"status\": \"active\",\n        \"currency\": {\n            \"id\": 1,\n            \"title\": \"Bitcoin\",\n            \"symbol\": \"BTC\"\n        }\n    },\n    \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n    },\n    \"service_fee\": \"0.0000006\",\n    \"total_amount\": \"0.0002006\",\n    \"expires_at\": \"2023-10-03T11:57:24.691Z\",\n    \"payouts\": [\n        {\n            \"id\": 1220,\n            \"status\": \"draft\",\n            \"compliance_status\": \"draft\",\n            \"internal_id\": \"11\",\n            \"address\": \"mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa\",\n            \"amount\": \"0.0001\",\n            \"created_at\": \"2023-10-02T11:57:24.721Z\",\n            \"updated_at\": \"2023-10-02T11:57:24.721Z\",\n            \"payout_type\": \"person\",\n            \"first_name\": \"Bob\",\n            \"surname\": \"Bailey\",\n            \"date_of_birth\": \"1983-08-14\",\n            \"txid\": null,\n            \"country\": \"DEU\",\n            \"purpose\": \"payroll\",\n            \"platform\": {\n                \"id\": 6,\n                \"title\": \"Bitcoin\",\n                \"id_name\": \"bitcoin\"\n            },\n            \"currency\": {\n                \"id\": 1,\n                \"title\": \"Bitcoin\",\n                \"kind\": \"crypto\",\n                \"symbol\": \"BTC\"\n            }\n        },\n        {\n            \"id\": 1221,\n            \"status\": \"draft\",\n            \"compliance_status\": \"draft\",\n            \"internal_id\": \"12\",\n            \"address\": \"mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa\",\n            \"amount\": \"0.0001\",\n            \"created_at\": \"2023-10-02T11:57:24.748Z\",\n            \"updated_at\": \"2023-10-02T11:57:24.748Z\",\n            \"payout_type\": \"business\",\n            \"txid\": null,\n            \"company_name\": \"Gleichner Group\",\n            \"company_code\": \"19-211-8140\",\n            \"country\": \"DEU\",\n            \"purpose\": \"withdrawal\",\n            \"platform\": {\n                \"id\": 6,\n                \"title\": \"Bitcoin\",\n                \"id_name\": \"bitcoin\"\n            },\n            \"currency\": {\n                \"id\": 1,\n                \"title\": \"Bitcoin\",\n                \"kind\": \"crypto\",\n                \"symbol\": \"BTC\"\n            }\n        }\n    ]\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 71
+                    default: 0
+                  status:
+                    type: string
+                    example: draft
+                  title:
+                    type: string
+                    example: 'Mass Payout #1'
+                  amount:
+                    type: string
+                    example: '0.0002'
+                  confirmed_at: {}
+                  created_at:
+                    type: string
+                    example: '2023-10-02T11:57:24.691Z'
+                  updated_at:
+                    type: string
+                    example: '2023-10-02T11:57:24.691Z'
+                  callback_url:
+                    type: string
+                    example: https://my-callback-url.com/mass-payouts
+                  ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01HBG17JWMSF3TAVSQCW3EYMTA
+                      balance:
+                        type: string
+                        example: '0.469332132'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                            default: 0
+                          title:
+                            type: string
+                            example: Bitcoin
+                          symbol:
+                            type: string
+                            example: BTC
+                  currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                        default: 0
+                      title:
+                        type: string
+                        example: Bitcoin
+                      kind:
+                        type: string
+                        example: crypto
+                      symbol:
+                        type: string
+                        example: BTC
+                  service_fee:
+                    type: string
+                    example: '0.0000006'
+                  total_amount:
+                    type: string
+                    example: '0.0002006'
+                  expires_at:
+                    type: string
+                    example: '2023-10-03T11:57:24.691Z'
+                  payouts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1220
+                          default: 0
+                        status:
+                          type: string
+                          example: draft
+                        compliance_status:
+                          type: string
+                          example: draft
+                        internal_id:
+                          type: string
+                          example: '11'
+                        address:
+                          type: string
+                          example: mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa
+                        amount:
+                          type: string
+                          example: '0.0001'
+                        created_at:
+                          type: string
+                          example: '2023-10-02T11:57:24.721Z'
+                        updated_at:
+                          type: string
+                          example: '2023-10-02T11:57:24.721Z'
+                        payout_type:
+                          type: string
+                          example: person
+                        first_name:
+                          type: string
+                          example: Bob
+                        surname:
+                          type: string
+                          example: Bailey
+                        date_of_birth:
+                          type: string
+                          example: '1983-08-14'
+                        txid: {}
+                        country:
+                          type: string
+                          example: DEU
+                        purpose:
+                          type: string
+                          example: payroll
+                        platform:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 6
+                              default: 0
+                            title:
+                              type: string
+                              example: Bitcoin
+                            id_name:
+                              type: string
+                              example: bitcoin
+                        currency:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                              default: 0
+                            title:
+                              type: string
+                              example: Bitcoin
+                            kind:
+                              type: string
+                              example: crypto
+                            symbol:
+                              type: string
+                              example: BTC
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"message\": \"Mass Payout is not valid\",\n    \"reason\": \"MassPayoutIsNotValid\",\n    \"errors\": [\n        \"Address is not valid for mass payout entry with internal_id 11 and with address mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspas\"\n    ]\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Mass Payout is not valid
+                  reason:
+                    type: string
+                    example: MassPayoutIsNotValid
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Address is not valid for mass payout entry with internal_id 11 and with address mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspas
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: curl
+          code: "curl --location 'https://api.coingate.com/api/v2/mass_payouts' \\\n--header 'Content-Type: application/json' \\\n--header 'Authorization: Bearer token' \\\n--data '{\n    \"title\": \"Mass Payout #1\",\n    \"currency_id\": 1,\n    \"ledger_account_id\": \"01HBG17JWMSF3TAVSQCW3EYMTA\",\n    \"callback_url\": \"https://my-callback-url.com/mass-payouts\",\n    \"amount\": \"0.0002\",\n    \"payouts\": [{\n        \"entry_type\": \"person\",\n        \"internal_id\": 11,\n        \"address\" : \"mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa\",\n        \"amount\" :\"0.0001\",\n        \"platform_id\" : 6,\n        \"currency_id\": 1,\n        \"country\": \"DEU\",\n        \"purpose\": \"payroll\",\n        \"first_name\": \"Bob\",\n        \"surname\" : \"Bailey\",\n        \"date_of_birth\": \"1983-08-14\",\n        \"company_name\": \"ledai\",\n        \"company_code\": \"LT-844741251151\"\n    },\n    {\n        \"entry_type\": \"business\",\n        \"internal_id\": 12,\n        \"address\" : \"mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa\",\n        \"amount\" :\"0.0001\",\n        \"platform_id\" : 6,\n        \"currency_id\": 1,\n        \"country\": \"DEU\",\n        \"purpose\": \"withdrawal\",\n        \"company_name\": \"Gleichner Group\",\n        \"company_code\": \"19-211-8140\"\n    }\n]\n}'"
+        samples-languages:
+        - curl
+      tags:
+      - Mass Payouts
+    get:
+      summary: List Mass Payouts
+      description: Endpoint to list you mass payouts
+      operationId: list-mass-payouts
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                per_page:
+                  type: integer
+                  description: Records per page you would like to see
+                  default: 100
+                  format: int32
+                page:
+                  type: integer
+                  description: Current page number
+                  default: 1
+                  format: int32
+                status:
+                  type: string
+                  description: Status of mass payout to filter
+                  enum:
+                  - '"draft"'
+                  - '"pending"'
+                  - '"confirmed"'
+                  - '"in_progress"'
+                  - '"done"'
+                  - '"rejected"'
+                  - '"expired"'
+                created_at_from:
+                  type: string
+                  description: Filter mass payout to be created after date provided
+                  format: date
+                created_at_to:
+                  type: string
+                  description: Filter mass payout to be created before date provided
+                  format: date
+            examples:
+              Request Example:
+                value:
+                  per_page: 100
+                  page: 1
+                  status: draft
+                  created_at_from: '2000-01-01'
+                  created_at_to: '2025-01-01'
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"current_page\": 1,\n    \"per_page\": 100,\n    \"total_records\": 25,\n    \"total_pages\": 1,\n    \"records\": [\n        {\n            \"id\": 71,\n            \"status\": \"pending\",\n            \"title\": \"Mass Payout #1\",\n            \"amount\": \"0.0002\",\n            \"confirmed_at\": null,\n            \"created_at\": \"2023-10-02T11:57:24.691Z\",\n            \"updated_at\": \"2023-10-02T12:01:12.925Z\",\n            \"callback_url\": \"https://my-callback-url.com/mass-payouts\",\n            \"ledger_account\": {\n                \"id\": \"01HBG17JWMSF3TAVSQCW3EYMTA\",\n                \"balance\": \"0.469332132\",\n                \"status\": \"active\",\n                \"currency\": {\n                    \"id\": 1,\n                    \"title\": \"Bitcoin\",\n                    \"symbol\": \"BTC\"\n                }\n            },\n            \"currency\": {\n                \"id\": 1,\n                \"title\": \"Bitcoin\",\n                \"kind\": \"crypto\",\n                \"symbol\": \"BTC\"\n            },\n            \"service_fee\": \"0.0000006\",\n            \"total_amount\": \"0.0002006\",\n            \"expires_at\": \"2023-10-03T11:57:24.691Z\"\n        }\n    ]\n}"
+              schema:
+                type: object
+                properties:
+                  current_page:
+                    type: integer
+                    example: 1
+                    default: 0
+                  per_page:
+                    type: integer
+                    example: 100
+                    default: 0
+                  total_records:
+                    type: integer
+                    example: 25
+                    default: 0
+                  total_pages:
+                    type: integer
+                    example: 1
+                    default: 0
+                  records:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 71
+                          default: 0
+                        status:
+                          type: string
+                          example: pending
+                        title:
+                          type: string
+                          example: 'Mass Payout #1'
+                        amount:
+                          type: string
+                          example: '0.0002'
+                        confirmed_at: {}
+                        created_at:
+                          type: string
+                          example: '2023-10-02T11:57:24.691Z'
+                        updated_at:
+                          type: string
+                          example: '2023-10-02T12:01:12.925Z'
+                        callback_url:
+                          type: string
+                          example: https://my-callback-url.com/mass-payouts
+                        ledger_account:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 01HBG17JWMSF3TAVSQCW3EYMTA
+                            balance:
+                              type: string
+                              example: '0.469332132'
+                            status:
+                              type: string
+                              example: active
+                            currency:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                  default: 0
+                                title:
+                                  type: string
+                                  example: Bitcoin
+                                symbol:
+                                  type: string
+                                  example: BTC
+                        currency:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                              default: 0
+                            title:
+                              type: string
+                              example: Bitcoin
+                            kind:
+                              type: string
+                              example: crypto
+                            symbol:
+                              type: string
+                              example: BTC
+                        service_fee:
+                          type: string
+                          example: '0.0000006'
+                        total_amount:
+                          type: string
+                          example: '0.0002006'
+                        expires_at:
+                          type: string
+                          example: '2023-10-03T11:57:24.691Z'
+      deprecated: false
+      tags:
+      - Mass Payouts
+  /mass_payouts/exchange:
+    post:
+      summary: Create Mass Payout with quote currency
+      description: ''
+      operationId: create-mass-payout-exchange
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - title
+              - currency_id
+              - ledger_account_id
+              - callback_url
+              - amount
+              - payouts
+              properties:
+                title:
+                  type: string
+                  description: Title of mass payout
+                currency_id:
+                  type: integer
+                  description: Currency ID can be retrieved from https://api.coingate.com/api/v2/currencies
+                  format: int32
+                ledger_account_id:
+                  type: string
+                  description: Ledger account ID can be retrieved from https://api.coingate.com/api/v2/ledger/accounts
+                callback_url:
+                  type: string
+                  description: We will send call back request about status change on your mass payout
+                amount:
+                  type: string
+                  description: Amount of mass payout has to be sum of all mass payout entries amounts
+                payouts:
+                  type: array
+                  description: Must contain at least one payout object
+                  items:
+                    properties:
+                      entry_type:
+                        type: string
+                        description: Entry type decides if first name surname and date of birth or company_name and company code fields will be required
+                        enum:
+                        - '"person"'
+                        - '"business"'
+                      internal_id:
+                        type: string
+                        description: ID by which entry is recognised on merchant system
+                      address:
+                        type: string
+                        description: Crypto address
+                      quote_amount:
+                        type: number
+                        description: Entry amount in quote currency
+                        format: double
+                      currency_id:
+                        type: integer
+                        description: Payment currency ID
+                        format: int32
+                      platform_id:
+                        type: integer
+                        description: Platform ID and it's supported currencies can be seen on https://api.coingate.com/api/v2/platforms. Platform must support mass payout currency
+                        format: int32
+                      quote_currency_id:
+                        type: integer
+                        description: Quote currency which should match ledger account currency as well as every mass payout entry currency. Currency ID's can be seen on https://developer.coingate.com/reference/currencies
+                        format: int32
+                      country:
+                        type: string
+                        description: Three-letter country code
+                      purpose:
+                        type: string
+                        description: Payment purpose
+                        enum:
+                        - '"payroll"'
+                        - '"commission"'
+                        - '"withdrawal"'
+                        - '"refund"'
+                        - '"vendor_payment"'
+                        - '"other"'
+                      first_name:
+                        type: string
+                        description: Required only if entry_type is "person"
+                      surname:
+                        type: string
+                        description: Required only if entry_type is "person"
+                      date_of_birth:
+                        type: string
+                        description: Required only if entry_type is "person"
+                        format: date
+                      company_name:
+                        type: string
+                        description: Required only if entry_type is "business"
+                      company_code:
+                        type: string
+                        description: Required only if entry_type is "business"
+                    type: object
+            examples:
+              Request Example:
+                value:
+                  title: 'Mass Payout #1'
+                  currency_id: 1
+                  ledger_account_id: 01HBG17JWMSF3TAVSQCW3EYMTA
+                  callback_url: https://my-callback-url.com/mass-payouts
+                  amount: '0.0002'
+                  payouts:
+                  - entry_type: person
+                    internal_id: 11
+                    address: mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa
+                    quote_amount: '0.0001'
+                    platform_id: 6
+                    currency_id: 1
+                    quote_currency_id: 2
+                    country: DEU
+                    purpose: payroll
+                    first_name: Bob
+                    surname: Bailey
+                    date_of_birth: '1983-08-14'
+                    company_name: ledai
+                    company_code: LT-844741251151
+                  - entry_type: business
+                    internal_id: 12
+                    address: mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa
+                    quote_amount: '0.0001'
+                    quote_currency_id: 2
+                    platform_id: 6
+                    currency_id: 1
+                    country: DEU
+                    purpose: withdrawal
+                    company_name: Gleichner Group
+                    company_code: 19-211-8140
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"id\": 71,\n    \"status\": \"draft\",\n    \"title\": \"Mass Payout #1\",\n    \"amount\": \"0.0002\",\n    \"confirmed_at\": null,\n    \"created_at\": \"2023-10-02T11:57:24.691Z\",\n    \"updated_at\": \"2023-10-02T11:57:24.691Z\",\n    \"callback_url\": \"https://my-callback-url.com/mass-payouts\",\n    \"ledger_account\": {\n        \"id\": \"01HBG17JWMSF3TAVSQCW3EYMTA\",\n        \"balance\": \"0.469332132\",\n        \"status\": \"active\",\n        \"currency\": {\n            \"id\": 1,\n            \"title\": \"Bitcoin\",\n            \"symbol\": \"BTC\"\n        }\n    },\n    \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n    },\n    \"service_fee\": \"0.0000006\",\n    \"total_amount\": \"0.0002006\",\n    \"expires_at\": \"2023-10-03T11:57:24.691Z\",\n    \"payouts\": [\n        {\n            \"id\": 1220,\n            \"status\": \"draft\",\n            \"compliance_status\": \"draft\",\n            \"internal_id\": \"11\",\n            \"address\": \"mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa\",\n            \"amount\": \"0.0001\",\n            \"created_at\": \"2023-10-02T11:57:24.721Z\",\n            \"updated_at\": \"2023-10-02T11:57:24.721Z\",\n            \"payout_type\": \"person\",\n            \"first_name\": \"Bob\",\n            \"surname\": \"Bailey\",\n            \"date_of_birth\": \"1983-08-14\",\n            \"txid\": null,\n            \"country\": \"DEU\",\n          \t\"purpose\": \"payroll\",\n            \"platform\": {\n                \"id\": 6,\n                \"title\": \"Bitcoin\",\n                \"id_name\": \"bitcoin\"\n            },\n            \"currency\": {\n                \"id\": 1,\n                \"title\": \"Bitcoin\",\n                \"kind\": \"crypto\",\n                \"symbol\": \"BTC\"\n            }\n        },\n        {\n            \"id\": 1221,\n            \"status\": \"draft\",\n            \"compliance_status\": \"draft\",\n            \"internal_id\": \"12\",\n            \"address\": \"mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa\",\n            \"amount\": \"0.0001\",\n            \"created_at\": \"2023-10-02T11:57:24.748Z\",\n            \"updated_at\": \"2023-10-02T11:57:24.748Z\",\n            \"payout_type\": \"business\",\n            \"txid\": null,\n            \"company_name\": \"Gleichner Group\",\n            \"company_code\": \"19-211-8140\",\n            \"country\": \"DEU\",\n          \t\"purpose\": \"withdrawal\",\n            \"platform\": {\n                \"id\": 6,\n                \"title\": \"Bitcoin\",\n                \"id_name\": \"bitcoin\"\n            },\n            \"currency\": {\n                \"id\": 1,\n                \"title\": \"Bitcoin\",\n                \"kind\": \"crypto\",\n                \"symbol\": \"BTC\"\n            }\n        }\n    ]\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 71
+                    default: 0
+                  status:
+                    type: string
+                    example: draft
+                  title:
+                    type: string
+                    example: 'Mass Payout #1'
+                  amount:
+                    type: string
+                    example: '0.0002'
+                  confirmed_at: {}
+                  created_at:
+                    type: string
+                    example: '2023-10-02T11:57:24.691Z'
+                  updated_at:
+                    type: string
+                    example: '2023-10-02T11:57:24.691Z'
+                  callback_url:
+                    type: string
+                    example: https://my-callback-url.com/mass-payouts
+                  ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01HBG17JWMSF3TAVSQCW3EYMTA
+                      balance:
+                        type: string
+                        example: '0.469332132'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                            default: 0
+                          title:
+                            type: string
+                            example: Bitcoin
+                          symbol:
+                            type: string
+                            example: BTC
+                  currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                        default: 0
+                      title:
+                        type: string
+                        example: Bitcoin
+                      kind:
+                        type: string
+                        example: crypto
+                      symbol:
+                        type: string
+                        example: BTC
+                  service_fee:
+                    type: string
+                    example: '0.0000006'
+                  total_amount:
+                    type: string
+                    example: '0.0002006'
+                  expires_at:
+                    type: string
+                    example: '2023-10-03T11:57:24.691Z'
+                  payouts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1220
+                          default: 0
+                        status:
+                          type: string
+                          example: draft
+                        compliance_status:
+                          type: string
+                          example: draft
+                        internal_id:
+                          type: string
+                          example: '11'
+                        address:
+                          type: string
+                          example: mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa
+                        amount:
+                          type: string
+                          example: '0.0001'
+                        created_at:
+                          type: string
+                          example: '2023-10-02T11:57:24.721Z'
+                        updated_at:
+                          type: string
+                          example: '2023-10-02T11:57:24.721Z'
+                        payout_type:
+                          type: string
+                          example: person
+                        first_name:
+                          type: string
+                          example: Bob
+                        surname:
+                          type: string
+                          example: Bailey
+                        date_of_birth:
+                          type: string
+                          example: '1983-08-14'
+                        txid: {}
+                        country:
+                          type: string
+                          example: DEU
+                        purpose:
+                          type: string
+                          example: payroll
+                        platform:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 6
+                              default: 0
+                            title:
+                              type: string
+                              example: Bitcoin
+                            id_name:
+                              type: string
+                              example: bitcoin
+                        currency:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                              default: 0
+                            title:
+                              type: string
+                              example: Bitcoin
+                            kind:
+                              type: string
+                              example: crypto
+                            symbol:
+                              type: string
+                              example: BTC
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"message\": \"Mass Payout is not valid\",\n    \"reason\": \"MassPayoutIsNotValid\",\n    \"errors\": [\n        \"Address is not valid for mass payout entry with internal_id 11 and with address mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspas\"\n    ]\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Mass Payout is not valid
+                  reason:
+                    type: string
+                    example: MassPayoutIsNotValid
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Address is not valid for mass payout entry with internal_id 11 and with address mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspas
+      deprecated: false
+      tags:
+      - Mass Payouts
+  /mass_payouts/{id}:
+    get:
+      summary: Get Mass Payout
+      description: Get single mass payout by its ID
+      operationId: get-mass-payout
+      parameters:
+      - name: id
+        in: path
+        description: Mass payout ID
+        schema:
+          type: integer
+          format: int32
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"id\": 71,\n    \"status\": \"pending\",\n    \"title\": \"Mass Payout #1\",\n    \"amount\": \"0.0002\",\n    \"confirmed_at\": null,\n    \"created_at\": \"2023-10-02T11:57:24.691Z\",\n    \"updated_at\": \"2023-10-02T12:01:12.925Z\",\n    \"callback_url\": \"https://my-callback-url.com/mass-payouts\",\n    \"ledger_account\": {\n        \"id\": \"01HBG17JWMSF3TAVSQCW3EYMTA\",\n        \"balance\": \"0.469332132\",\n        \"status\": \"active\",\n        \"currency\": {\n            \"id\": 1,\n            \"title\": \"Bitcoin\",\n            \"symbol\": \"BTC\"\n        }\n    },\n    \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n    },\n    \"service_fee\": \"0.0000006\",\n    \"total_amount\": \"0.0002006\",\n    \"expires_at\": \"2023-10-03T11:57:24.691Z\",\n    \"payouts\": [\n        {\n            \"id\": 1220,\n            \"status\": \"draft\",\n            \"compliance_status\": \"draft\",\n            \"internal_id\": \"11\",\n            \"address\": \"mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa\",\n            \"amount\": \"0.0001\",\n            \"created_at\": \"2023-10-02T11:57:24.721Z\",\n            \"updated_at\": \"2023-10-02T11:57:24.721Z\",\n            \"payout_type\": \"person\",\n            \"first_name\": \"Bob\",\n            \"surname\": \"Bailey\",\n            \"date_of_birth\": \"1983-08-14\",\n            \"txid\": null,\n            \"country\": \"DEU\",\n          \t\"purpose\": \"payroll\",\n            \"platform\": {\n                \"id\": 6,\n                \"title\": \"Bitcoin\",\n                \"id_name\": \"bitcoin\"\n            },\n            \"currency\": {\n                \"id\": 1,\n                \"title\": \"Bitcoin\",\n                \"kind\": \"crypto\",\n                \"symbol\": \"BTC\"\n            }\n        },\n        {\n            \"id\": 1221,\n            \"status\": \"draft\",\n            \"compliance_status\": \"draft\",\n            \"internal_id\": \"12\",\n            \"address\": \"mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa\",\n            \"amount\": \"0.0001\",\n            \"created_at\": \"2023-10-02T11:57:24.748Z\",\n            \"updated_at\": \"2023-10-02T11:57:24.748Z\",\n            \"payout_type\": \"business\",\n            \"txid\": null,\n            \"company_name\": \"Gleichner Group\",\n            \"company_code\": \"19-211-8140\",\n            \"country\": \"DEU\",\n            \"purpose\": \"withdrawal\",\n            \"platform\": {\n                \"id\": 6,\n                \"title\": \"Bitcoin\",\n                \"id_name\": \"bitcoin\"\n            },\n            \"currency\": {\n                \"id\": 1,\n                \"title\": \"Bitcoin\",\n                \"kind\": \"crypto\",\n                \"symbol\": \"BTC\"\n            }\n        }\n    ]\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 71
+                    default: 0
+                  status:
+                    type: string
+                    example: pending
+                  title:
+                    type: string
+                    example: 'Mass Payout #1'
+                  amount:
+                    type: string
+                    example: '0.0002'
+                  confirmed_at: {}
+                  created_at:
+                    type: string
+                    example: '2023-10-02T11:57:24.691Z'
+                  updated_at:
+                    type: string
+                    example: '2023-10-02T12:01:12.925Z'
+                  callback_url:
+                    type: string
+                    example: https://my-callback-url.com/mass-payouts
+                  ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01HBG17JWMSF3TAVSQCW3EYMTA
+                      balance:
+                        type: string
+                        example: '0.469332132'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                            default: 0
+                          title:
+                            type: string
+                            example: Bitcoin
+                          symbol:
+                            type: string
+                            example: BTC
+                  currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                        default: 0
+                      title:
+                        type: string
+                        example: Bitcoin
+                      kind:
+                        type: string
+                        example: crypto
+                      symbol:
+                        type: string
+                        example: BTC
+                  service_fee:
+                    type: string
+                    example: '0.0000006'
+                  total_amount:
+                    type: string
+                    example: '0.0002006'
+                  expires_at:
+                    type: string
+                    example: '2023-10-03T11:57:24.691Z'
+                  payouts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1220
+                          default: 0
+                        status:
+                          type: string
+                          example: draft
+                        compliance_status:
+                          type: string
+                          example: draft
+                        internal_id:
+                          type: string
+                          example: '11'
+                        address:
+                          type: string
+                          example: mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa
+                        amount:
+                          type: string
+                          example: '0.0001'
+                        created_at:
+                          type: string
+                          example: '2023-10-02T11:57:24.721Z'
+                        updated_at:
+                          type: string
+                          example: '2023-10-02T11:57:24.721Z'
+                        payout_type:
+                          type: string
+                          example: person
+                        first_name:
+                          type: string
+                          example: Bob
+                        surname:
+                          type: string
+                          example: Bailey
+                        date_of_birth:
+                          type: string
+                          example: '1983-08-14'
+                        txid: {}
+                        country:
+                          type: string
+                          example: DEU
+                        purpose:
+                          type: string
+                          example: payroll
+                        platform:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 6
+                              default: 0
+                            title:
+                              type: string
+                              example: Bitcoin
+                            id_name:
+                              type: string
+                              example: bitcoin
+                        currency:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                              default: 0
+                            title:
+                              type: string
+                              example: Bitcoin
+                            kind:
+                              type: string
+                              example: crypto
+                            symbol:
+                              type: string
+                              example: BTC
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"message\": \"Record not found\",\n    \"reason\": \"RecordNotFound\"\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Record not found
+                  reason:
+                    type: string
+                    example: RecordNotFound
+      deprecated: false
+      tags:
+      - Mass Payouts
+  /mass_payouts/{id}/confirm:
+    patch:
+      summary: Confirm Mass Payout
+      description: ''
+      operationId: confirm-mass-payout
+      parameters:
+      - name: id
+        in: path
+        description: ID of mass payout
+        schema:
+          type: integer
+          format: int32
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"id\": 71,\n    \"status\": \"in_progress\",\n    \"title\": \"Mass Payout #1\",\n    \"amount\": \"0.0002\",\n    \"confirmed_at\": \"2023-10-02T12:08:12.000Z\",\n    \"created_at\": \"2023-10-02T11:57:24.691Z\",\n    \"updated_at\": \"2023-10-02T12:08:12.668Z\",\n    \"callback_url\": \"https://my-callback-url.com/mass-payouts\",\n    \"ledger_account\": {\n        \"id\": \"01HBG17JWMSF3TAVSQCW3EYMTA\",\n        \"balance\": \"0.469332132\",\n        \"status\": \"active\",\n        \"currency\": {\n            \"id\": 1,\n            \"title\": \"Bitcoin\",\n            \"symbol\": \"BTC\"\n        }\n    },\n    \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n    },\n    \"service_fee\": \"0.0000006\",\n    \"total_amount\": \"0.0002006\",\n    \"expires_at\": null\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 71
+                    default: 0
+                  status:
+                    type: string
+                    example: in_progress
+                  title:
+                    type: string
+                    example: 'Mass Payout #1'
+                  amount:
+                    type: string
+                    example: '0.0002'
+                  confirmed_at:
+                    type: string
+                    example: '2023-10-02T12:08:12.000Z'
+                  created_at:
+                    type: string
+                    example: '2023-10-02T11:57:24.691Z'
+                  updated_at:
+                    type: string
+                    example: '2023-10-02T12:08:12.668Z'
+                  callback_url:
+                    type: string
+                    example: https://my-callback-url.com/mass-payouts
+                  ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01HBG17JWMSF3TAVSQCW3EYMTA
+                      balance:
+                        type: string
+                        example: '0.469332132'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                            default: 0
+                          title:
+                            type: string
+                            example: Bitcoin
+                          symbol:
+                            type: string
+                            example: BTC
+                  currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                        default: 0
+                      title:
+                        type: string
+                        example: Bitcoin
+                      kind:
+                        type: string
+                        example: crypto
+                      symbol:
+                        type: string
+                        example: BTC
+                  service_fee:
+                    type: string
+                    example: '0.0000006'
+                  total_amount:
+                    type: string
+                    example: '0.0002006'
+                  expires_at: {}
+        '404':
+          description: '404'
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: "{\n    \"message\": \"Record not found\",\n    \"reason\": \"RecordNotFound\"\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Record not found
+                  reason:
+                    type: string
+                    example: RecordNotFound
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"message\": \"Confirming Mass Payout failed\",\n    \"reason\": \"MassPayoutIsNotValid\",\n    \"errors\": [\n        \"Mass Payout is not in pending status to be confirmed.\"\n    ]\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Confirming Mass Payout failed
+                  reason:
+                    type: string
+                    example: MassPayoutIsNotValid
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Mass Payout is not in pending status to be confirmed.
+      deprecated: false
+      security: []
+      tags:
+      - Mass Payouts
+  /mass_payouts/:id/entries:
+    get:
+      summary: List Entries of Mass Payouts
+      description: List Entries of mass payout by mass payout id
+      operationId: get-mass-payout-entries
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                per_page:
+                  type: integer
+                  description: Number of record you would like to see per page
+                  default: 100
+                  format: int32
+                page:
+                  type: integer
+                  description: Current page
+                  default: 1
+                  format: int32
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"current_page\": 1,\n    \"per_page\": 100,\n    \"total_records\": 2,\n    \"total_pages\": 1,\n    \"records\": [\n        {\n            \"id\": 1220,\n            \"status\": \"draft\",\n            \"compliance_status\": \"draft\",\n            \"internal_id\": \"11\",\n            \"address\": \"mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa\",\n            \"amount\": \"0.0001\",\n            \"created_at\": \"2023-10-02T11:57:24.721Z\",\n            \"updated_at\": \"2023-10-02T11:57:24.721Z\",\n            \"payout_type\": \"person\",\n            \"first_name\": \"Bob\",\n            \"surname\": \"Bailey\",\n            \"date_of_birth\": \"1983-08-14\",\n            \"txid\": null,\n            \"country\": \"DEU\",\n            \"purpose\": \"payroll\",\n            \"platform\": {\n                \"id\": 6,\n                \"title\": \"Bitcoin\",\n                \"id_name\": \"bitcoin\"\n            },\n            \"currency\": {\n                \"id\": 1,\n                \"title\": \"Bitcoin\",\n                \"kind\": \"crypto\",\n                \"symbol\": \"BTC\"\n            }\n        },\n        {\n            \"id\": 1221,\n            \"status\": \"draft\",\n            \"compliance_status\": \"draft\",\n            \"internal_id\": \"12\",\n            \"address\": \"mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa\",\n            \"amount\": \"0.0001\",\n            \"created_at\": \"2023-10-02T11:57:24.748Z\",\n            \"updated_at\": \"2023-10-02T11:57:24.748Z\",\n            \"payout_type\": \"business\",\n            \"txid\": null,\n            \"company_name\": \"Gleichner Group\",\n            \"company_code\": \"19-211-8140\",\n            \"country\": \"DEU\",\n            \"purpose\": \"withdrawal\",\n            \"platform\": {\n                \"id\": 6,\n                \"title\": \"Bitcoin\",\n                \"id_name\": \"bitcoin\"\n            },\n            \"currency\": {\n                \"id\": 1,\n                \"title\": \"Bitcoin\",\n                \"kind\": \"crypto\",\n                \"symbol\": \"BTC\"\n            }\n        }\n    ]\n}"
+              schema:
+                type: object
+                properties:
+                  current_page:
+                    type: integer
+                    example: 1
+                    default: 0
+                  per_page:
+                    type: integer
+                    example: 100
+                    default: 0
+                  total_records:
+                    type: integer
+                    example: 2
+                    default: 0
+                  total_pages:
+                    type: integer
+                    example: 1
+                    default: 0
+                  records:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1220
+                          default: 0
+                        status:
+                          type: string
+                          example: draft
+                        compliance_status:
+                          type: string
+                          example: draft
+                        internal_id:
+                          type: string
+                          example: '11'
+                        address:
+                          type: string
+                          example: mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa
+                        amount:
+                          type: string
+                          example: '0.0001'
+                        created_at:
+                          type: string
+                          example: '2023-10-02T11:57:24.721Z'
+                        updated_at:
+                          type: string
+                          example: '2023-10-02T11:57:24.721Z'
+                        payout_type:
+                          type: string
+                          example: person
+                        first_name:
+                          type: string
+                          example: Bob
+                        surname:
+                          type: string
+                          example: Bailey
+                        date_of_birth:
+                          type: string
+                          example: '1983-08-14'
+                        txid: {}
+                        country:
+                          type: string
+                          example: DEU
+                        purpose:
+                          type: string
+                          example: payroll
+                        platform:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 6
+                              default: 0
+                            title:
+                              type: string
+                              example: Bitcoin
+                            id_name:
+                              type: string
+                              example: bitcoin
+                        currency:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                              default: 0
+                            title:
+                              type: string
+                              example: Bitcoin
+                            kind:
+                              type: string
+                              example: crypto
+                            symbol:
+                              type: string
+                              example: BTC
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"message\": \"Record not found\",\n    \"reason\": \"RecordNotFound\"\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Record not found
+                  reason:
+                    type: string
+                    example: RecordNotFound
+      deprecated: false
+      security: []
+      tags:
+      - Mass Payouts
+  /mass_payouts/{mass_payout_id}/entries/{entry_id}:
+    get:
+      summary: Show Entry of Mass Payout
+      description: Get mass payout entry by mass payout and entry id
+      operationId: show-entry-of-mass-payout
+      parameters:
+      - name: mass_payout_id
+        in: path
+        description: ID of mass payout
+        schema:
+          type: string
+        required: true
+      - name: entry_id
+        in: path
+        description: ID of mass payout entry
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"id\": 1220,\n    \"status\": \"draft\",\n    \"compliance_status\": \"draft\",\n    \"internal_id\": \"11\",\n    \"address\": \"mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa\",\n    \"amount\": \"0.0001\",\n    \"created_at\": \"2023-10-02T11:57:24.721Z\",\n    \"updated_at\": \"2023-10-02T11:57:24.721Z\",\n    \"payout_type\": \"person\",\n    \"first_name\": \"Bob\",\n    \"surname\": \"Bailey\",\n    \"date_of_birth\": \"1983-08-14\",\n    \"txid\": null,\n    \"country\": \"DEU\",\n    \"purpose\": \"payroll\",\n    \"platform\": {\n        \"id\": 6,\n        \"title\": \"Bitcoin\",\n        \"id_name\": \"bitcoin\"\n    },\n    \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n    }\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1220
+                    default: 0
+                  status:
+                    type: string
+                    example: draft
+                  compliance_status:
+                    type: string
+                    example: draft
+                  internal_id:
+                    type: string
+                    example: '11'
+                  address:
+                    type: string
+                    example: mxMuzMBauEyoPDfib11jKq6Xy8DLQvfspa
+                  amount:
+                    type: string
+                    example: '0.0001'
+                  created_at:
+                    type: string
+                    example: '2023-10-02T11:57:24.721Z'
+                  updated_at:
+                    type: string
+                    example: '2023-10-02T11:57:24.721Z'
+                  payout_type:
+                    type: string
+                    example: person
+                  first_name:
+                    type: string
+                    example: Bob
+                  surname:
+                    type: string
+                    example: Bailey
+                  date_of_birth:
+                    type: string
+                    example: '1983-08-14'
+                  txid: {}
+                  country:
+                    type: string
+                    example: DEU
+                  purpose:
+                    type: string
+                    example: payroll
+                  platform:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 6
+                        default: 0
+                      title:
+                        type: string
+                        example: Bitcoin
+                      id_name:
+                        type: string
+                        example: bitcoin
+                  currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                        default: 0
+                      title:
+                        type: string
+                        example: Bitcoin
+                      kind:
+                        type: string
+                        example: crypto
+                      symbol:
+                        type: string
+                        example: BTC
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"message\": \"Record not found\",\n    \"reason\": \"RecordNotFound\"\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Record not found
+                  reason:
+                    type: string
+                    example: RecordNotFound
+      deprecated: false
+      security: []
+      tags:
+      - Mass Payouts
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

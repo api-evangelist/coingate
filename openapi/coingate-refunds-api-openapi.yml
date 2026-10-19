@@ -1,156 +1,385 @@
 openapi: 3.2.0
 info:
-  title: CoinGate Payment Gateway Refunds API
-  description: REST API for accepting cryptocurrency payments, managing orders, processing refunds, handling payouts, performing currency conversions, and accessing merchant ledger and billing data. Supports both production and sandbox environments.
+  title: v2 Refunds API
   version: '2'
-  contact:
-    name: CoinGate Support
-    url: https://coingate.com/contact
-    email: support@coingate.com
-  termsOfService: https://coingate.com/terms
-  x-logo:
-    url: https://coingate.com/images/coingate-logo.png
 servers:
 - url: https://api.coingate.com/api/v2
-  description: Production
-- url: https://api-sandbox.coingate.com/api/v2
-  description: Sandbox
 security:
-- bearerAuth: []
+- {}
 tags:
 - name: Refunds
-  description: Process order refunds
 paths:
-  /orders/{order_id}/refunds:
-    post:
-      summary: Create Order Refund
-      description: Create a refund for a specific order.
-      operationId: create-refund
-      tags:
-      - Refunds
-      parameters:
-      - name: order_id
-        in: path
-        description: ID of the order to be refunded
-        required: true
-        schema:
-          type: integer
-          format: int32
+  /refunds:
+    get:
+      summary: Get Refunds
+      description: ''
+      operationId: get-refunds
       requestBody:
-        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
-              required:
-              - amount
-              - address
-              - currency_id
-              - platform_id
-              - reason
-              - email
-              - ledger_account_id
               properties:
-                amount:
-                  type: number
-                  format: double
-                  description: Requesting amount in order price currency to refund
-                address:
-                  type: string
-                  description: Cryptocurrency address to which the refund will be sent
-                address_memo:
-                  type: string
-                currency_id:
+                page:
                   type: integer
+                  description: Current page number
+                  default: 1
                   format: int32
-                  description: ID of the currency in which the refund will be issued
-                platform_id:
+                per_page:
                   type: integer
+                  description: Number of refunds per page (max - 100)
+                  default: 100
                   format: int32
-                  description: Platform ID associated with the selected refund currency
-                reason:
+                created_at:
+                  properties:
+                    from:
+                      type: string
+                      description: 'Optional. Where refund creation time is equal or greater. Example: 2018-09-01'
+                    to:
+                      type: string
+                      description: 'Optional. Where refund creation time is equal or less. Example: 2018-09-30'
+                  required: []
+                  type: object
+                updated_at:
+                  properties:
+                    from:
+                      type: string
+                      description: 'Optional. Where refund updated time is equal or greater. Example: 2018-09-01'
+                    at:
+                      type: string
+                      description: 'Optional. Where refund updated time is equal or less. Example: 2018-09-30'
+                  required: []
+                  type: object
+                sort:
                   type: string
-                  description: Reason for issuing the refund
-                email:
-                  type: string
-                  format: email
-                  description: Customer will receive updates on refund status to this email
-                ledger_account_id:
-                  type: string
-                  description: Ledger balance from which the refund amount will be deducted
-                callback_url:
-                  type: string
-                  description: URL for automated refund status change notifications
-                skip_user_address_confirmation:
-                  type: boolean
-                  default: false
-                  description: Skip email confirmation of crypto address to shopper
+                  description: 'Sort orders by field. Available sort options: created_at_asc, created_at_desc, updated_at_asc, updated_at_desc. Default: created_at_desc.'
+                  default: created_at_desc
       responses:
         '200':
-          description: Refund created successfully
+          description: '200'
           content:
             application/json:
+              examples:
+                Result:
+                  value:
+                    current_page: 1
+                    per_page: 100
+                    total_refunds: 2
+                    total_pages: 1
+                    refunds:
+                    - id: 3
+                      request_amount: '1.0'
+                      refund_amount: '1.0553'
+                      address: '0x165E05749951AB88B5F17bd1f2080eC3dFB442E6'
+                      status: rejected
+                      memo: null
+                      skip_user_address_confirmation: false
+                      created_at: '2022-05-04T13:30:38+00:00'
+                      updated_at: '2022-05-04T13:30:38+00:00'
+                      order:
+                        id: 11874016
+                        title: null
+                        price_amount: '2.0'
+                        created_at: '2022-05-04T10:50:01+00:00'
+                        processor: coingate
+                        binance_refund_id: null
+                        price_currency:
+                          id: 11
+                          title: Euro
+                          kind: fiat
+                          symbol: EUR
+                      refund_currency:
+                        id: 97
+                        title: Tether
+                        symbol: USDT
+                        platform:
+                          id: 1
+                          title: Ethereum
+                      transactions: []
+                      ledger_account:
+                        id: 01G27GBKX653FKV2S0SCXXDBES
+                        currency:
+                          id: 97
+                          title: Tether
+                          symbol: USDT
+                      rejection_type: shopper
+                      rejection_reason: Shopper did not complete email verification in time.
+                    - id: 2
+                      request_amount: '1.0'
+                      refund_amount: '1.0553'
+                      address: '0x165E05749951AB88B5F17bd1f2080eC3dFB442E6'
+                      status: pending
+                      memo: null
+                      created_at: '2022-05-04T13:30:38+00:00'
+                      updated_at: '2022-05-04T13:30:38+00:00'
+                      processor: coingate
+                      binance_refund_id: null
+                      order:
+                        id: 11874016
+                        title: null
+                        price_amount: '2.0'
+                        created_at: '2022-05-04T10:50:01+00:00'
+                        price_currency:
+                          id: 11
+                          title: Euro
+                          kind: fiat
+                          symbol: EUR
+                      refund_currency:
+                        id: 97
+                        title: Tether
+                        symbol: USDT
+                        platform:
+                          id: 1
+                          title: Ethereum
+                      transactions: []
+                      ledger_account:
+                        id: 01G27GBKX653FKV2S0SCXXDBES
+                        currency:
+                          id: 97
+                          title: Tether
+                          symbol: USDT
+                    - id: 1
+                      request_amount: '1.0'
+                      refund_amount: '1.0541'
+                      address: '0x165E05749951AB88B5F17bd1f2080eC3dFB442E6'
+                      status: completed
+                      memo: null
+                      created_at: '2022-05-04T12:33:33+00:00'
+                      updated_at: '2022-05-04T13:33:33+00:00'
+                      order:
+                        id: 11874016
+                        title: null
+                        price_amount: '2.0'
+                        created_at: '2022-05-04T10:50:01+00:00'
+                        processor: coingate
+                        binance_refund_id: null
+                        price_currency:
+                          id: 11
+                          title: Euro
+                          kind: fiat
+                          symbol: EUR
+                      refund_currency:
+                        id: 97
+                        title: Tether
+                        symbol: USDT
+                        platform:
+                          id: 1
+                          title: Ethereum
+                      transactions: []
+                      ledger_account:
+                        id: 01G27GBKX653FKV2S0SCXXDBES
+                        currency:
+                          id: 97
+                          title: Tether
+                          symbol: USDT
               schema:
-                $ref: '#/components/schemas/Refund'
-        '422':
-          description: Validation error
+                type: object
+                properties:
+                  current_page:
+                    type: integer
+                    example: 1
+                    default: 0
+                  per_page:
+                    type: integer
+                    example: 100
+                    default: 0
+                  total_refunds:
+                    type: integer
+                    example: 2
+                    default: 0
+                  total_pages:
+                    type: integer
+                    example: 1
+                    default: 0
+                  refunds:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 2
+                          default: 0
+                        request_amount:
+                          type: string
+                          example: '1.0'
+                        refund_amount:
+                          type: string
+                          example: '1.0553'
+                        address:
+                          type: string
+                          example: '0x165E05749951AB88B5F17bd1f2080eC3dFB442E6'
+                        status:
+                          type: string
+                          example: pending
+                        memo: {}
+                        created_at:
+                          type: string
+                          example: '2022-05-04T13:30:38+00:00'
+                        updated_at:
+                          type: string
+                          example: '2022-05-04T13:30:38+00:00'
+                        processor:
+                          type: string
+                          example: coingate
+                        binance_refund_id: {}
+                        order:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 11874016
+                              default: 0
+                            title: {}
+                            price_amount:
+                              type: string
+                              example: '2.0'
+                            created_at:
+                              type: string
+                              example: '2022-05-04T10:50:01+00:00'
+                            price_currency:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 11
+                                  default: 0
+                                title:
+                                  type: string
+                                  example: Euro
+                                kind:
+                                  type: string
+                                  example: fiat
+                                symbol:
+                                  type: string
+                                  example: EUR
+                        refund_currency:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 97
+                              default: 0
+                            title:
+                              type: string
+                              example: Tether
+                            symbol:
+                              type: string
+                              example: USDT
+                            platform:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                  default: 0
+                                title:
+                                  type: string
+                                  example: Ethereum
+                        transactions:
+                          type: array
+                        ledger_account:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 01G27GBKX653FKV2S0SCXXDBES
+                            currency:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 97
+                                  default: 0
+                                title:
+                                  type: string
+                                  example: Tether
+                                symbol:
+                                  type: string
+                                  example: USDT
+                        rejection_type:
+                          type: string
+                        rejection_reason:
+                          type: string
+        '401':
+          description: '401'
           content:
             application/json:
+              examples:
+                Result:
+                  value: "{\n\t\"message\": \"Auth Token is not valid\",\n\t\"reason\": \"BadAuthToken\"\n}"
               schema:
-                $ref: '#/components/schemas/Error'
-components:
-  schemas:
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message
-        reason:
-          type: string
-          description: Machine-readable error reason code
-        errors:
-          type: array
-          items:
-            type: string
-          description: List of validation errors
-    Refund:
-      type: object
-      properties:
-        id:
-          type: integer
-        request_amount:
-          type: string
-        refund_amount:
-          type: string
-        address:
-          type: string
-        status:
-          type: string
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-        skip_user_address_confirmation:
-          type: boolean
-        processor:
-          type: string
-        order:
-          type: object
-        refund_currency:
-          type: object
-        transactions:
-          type: array
-          items: {}
-        ledger_account:
-          type: object
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      description: API Token authentication. Obtain your API token from the CoinGate merchant dashboard.
-externalDocs:
-  description: CoinGate Developer Documentation
-  url: https://developer.coingate.com/docs/api-overview
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Auth Token is not valid
+                  reason:
+                    type: string
+                    example: BadAuthToken
+      deprecated: false
+      tags:
+      - Refunds
+  /refunds/supported-currencies:
+    get:
+      summary: Supported Currencies
+      description: ''
+      operationId: refund-supported-currencies
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "[\n   {\n      \"id\":8,\n      \"title\":\"Bitcoin\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"BTC\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":5,\n            \"id_name\":\"bitcoin\",\n            \"title\":\"Bitcoin\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":11,\n      \"title\":\"Euro\",\n      \"kind\":\"fiat\",\n      \"symbol\":\"EUR\",\n      \"enabled\":true,\n      \"disabled_message\":null\n   },\n   {\n      \"id\":49,\n      \"title\":\"Litecoin\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"LTC\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":6,\n            \"id_name\":\"litecoin\",\n            \"title\":\"Litecoin\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":50,\n      \"title\":\"Ethereum\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"ETH\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":40,\n            \"id_name\":\"arbitrum\",\n            \"title\":\"Arbitrum\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":52,\n      \"title\":\"Bitcoin Cash\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"BCH\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":8,\n            \"id_name\":\"bitcoin_cash\",\n            \"title\":\"Bitcoin Cash\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":53,\n      \"title\":\"XRP\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"XRP\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":9,\n            \"id_name\":\"ripple\",\n            \"title\":\"XRP\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":60,\n      \"title\":\"TRON\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"TRX\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":4,\n            \"id_name\":\"tron\",\n            \"title\":\"Tron\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":61,\n      \"title\":\"Dai\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"DAI\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         },\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":64,\n      \"title\":\"Dogecoin\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"DOGE\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":7,\n            \"id_name\":\"dogecoin\",\n            \"title\":\"Dogecoin\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":91,\n      \"title\":\"Binance Coin\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"BNB\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":97,\n      \"title\":\"USDT\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"USDT\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         },\n         {\n            \"id\":4,\n            \"id_name\":\"tron\",\n            \"title\":\"Tron\",\n            \"enabled\":true\n         },\n         {\n            \"id\":20,\n            \"id_name\":\"solana\",\n            \"title\":\"Solana\",\n            \"enabled\":true\n         },\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         },\n         {\n            \"id\":40,\n            \"id_name\":\"arbitrum\",\n            \"title\":\"Arbitrum\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":112,\n      \"title\":\"Polygon\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"POL\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":113,\n      \"title\":\"USDC\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"USDC\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         },\n         {\n            \"id\":4,\n            \"id_name\":\"tron\",\n            \"title\":\"Tron\",\n            \"enabled\":true\n         },\n         {\n            \"id\":20,\n            \"id_name\":\"solana\",\n            \"title\":\"Solana\",\n            \"enabled\":true\n         },\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         },\n         {\n            \"id\":40,\n            \"id_name\":\"arbitrum\",\n            \"title\":\"Arbitrum\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":117,\n      \"title\":\"Solana\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"SOL\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":20,\n            \"id_name\":\"solana\",\n            \"title\":\"Solana\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":165,\n      \"title\":\"SHIBA INU\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"SHIB\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         },\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         }\n      ]\n   }\n]"
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 8
+                      default: 0
+                    title:
+                      type: string
+                      example: Bitcoin
+                    kind:
+                      type: string
+                      example: crypto
+                    symbol:
+                      type: string
+                      example: BTC
+                    enabled:
+                      type: boolean
+                      example: true
+                      default: true
+                    disabled_message: {}
+                    platforms:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 5
+                            default: 0
+                          id_name:
+                            type: string
+                            example: bitcoin
+                          title:
+                            type: string
+                            example: Bitcoin
+                          enabled:
+                            type: boolean
+                            example: true
+                            default: true
+      deprecated: false
+      tags:
+      - Refunds
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

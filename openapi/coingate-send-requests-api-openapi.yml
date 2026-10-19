@@ -1,35 +1,20 @@
 openapi: 3.2.0
 info:
-  title: CoinGate Payment Gateway Send Requests API
-  description: REST API for accepting cryptocurrency payments, managing orders, processing refunds, handling payouts, performing currency conversions, and accessing merchant ledger and billing data. Supports both production and sandbox environments.
+  title: v2 Send Requests API
   version: '2'
-  contact:
-    name: CoinGate Support
-    url: https://coingate.com/contact
-    email: support@coingate.com
-  termsOfService: https://coingate.com/terms
-  x-logo:
-    url: https://coingate.com/images/coingate-logo.png
 servers:
 - url: https://api.coingate.com/api/v2
-  description: Production
-- url: https://api-sandbox.coingate.com/api/v2
-  description: Sandbox
 security:
-- bearerAuth: []
+- {}
 tags:
 - name: Send Requests
-  description: Send cryptocurrency payouts to beneficiaries
 paths:
   /send_requests:
     post:
       summary: Create Send Request
-      description: Create a payout send request to transfer crypto to a beneficiary.
+      description: ''
       operationId: create-send
-      tags:
-      - Send Requests
       requestBody:
-        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
@@ -43,54 +28,294 @@ paths:
               properties:
                 ledger_account_id:
                   type: string
-                  description: Ledger account ID (see /ledger/accounts)
+                  description: Ledger account ID can be retrieved from https://api.coingate.com/api/v2/ledger/accounts
                 beneficiary_payout_setting_id:
                   type: integer
+                  description: Beneficiary payout setting ID can be retrieved from https://api.coingate.com/api/v2/beneficiaries
                   format: int32
-                  description: Beneficiary payout setting ID (see /beneficiaries)
                 amount:
                   type: string
                   description: Amount to send
                 amount_currency_id:
                   type: integer
+                  description: Currency of amount. Currency ID's can be seen on https://developer.coingate.com/reference/currencies
                   format: int32
-                  description: Currency ID for the amount (see /currencies)
                 purpose:
                   type: string
-                  description: Purpose of the send request
+                  description: Purpose of sending
                 callback_url:
                   type: string
-                  description: URL for automated send request status change notifications
+                  description: Send an automated message to Merchant URL when request status is changed. For testing you can use requestcatcher.com tool. URL must be direct without redirection. Read about billing request callbacks here.
                 external_id:
                   type: string
-                  description: Merchant internal reference ID (must be unique, max 50 chars)
+                  description: 'This field allows merchants to associate the record with their own internal reference. If provided, it must be unique.. (max length: 50)'
       responses:
         '200':
-          description: Send request created successfully
+          description: '200'
           content:
             application/json:
+              examples:
+                Result:
+                  value: "{\n  \"id\": 11,\n  \"status\": \"draft\",\n  \"purpose\": \"Sending 100 EUR Value\",\n  \"callback_url\": \"https://example.com/callback_url\",\n  \"created_at\": \"2025-03-13T00:45:17.250Z\",\n  \"external_id\": \"1\",\n  \"requestable_id\": 7,\n  \"requestable_type\": \"batch_payout\",\n  \"ledger_account\": {\n    \"id\": \"01JNQWKKJ6WXN8BZT1Y66B6G9H\",\n    \"balance\": \"1.0\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 1,\n      \"title\": \"Bitcoin\",\n      \"symbol\": \"BTC\"\n    }\n  },\n  \"input_amount\": \"100.0\",\n  \"input_currency\": {\n    \"id\": 2,\n    \"title\": \"Euro\",\n    \"kind\": \"fiat\",\n    \"symbol\": \"EUR\"\n  },\n  \"sending_amount\": \"0.049422\",\n  \"sending_currency\": {\n    \"id\": 5,\n    \"title\": \"Ethereum\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"ETH\"\n  },\n  \"input_to_sending_rate\": \"0.00049422\",\n  \"sending_to_balance_debit_rate\": \"40.3258\",\n  \"balance_debit_amount\": \"0.00122557\",\n  \"balance_debit_currency\": {\n    \"id\": 1,\n    \"title\": \"Bitcoin\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"BTC\"\n  },\n  \"beneficiary_payout_setting\": {\n    \"id\": 2,\n    \"created_at\": \"2025-03-07T10:39:33.152Z\",\n    \"beneficiary_id\": 1,\n    \"platform\": {\n      \"id\": 2,\n      \"title\": \"Ethereum\",\n      \"id_name\": \"ethereum\"\n    },\n    \"crypto_address\": \"tb1qcq670zweall6zz4f96flfrefhr8myfxz9ll9l2\",\n    \"crypto_address_metadata\": null,\n    \"currency\": {\n      \"id\": 5,\n      \"title\": \"Ethereum\",\n      \"kind\": \"crypto\",\n      \"symbol\": \"ETH\"\n    }\n  },\n  \"fees\": {\n    \"service_fee\": {\n      \"amount\": \"0.00001226\",\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n      }\n    },\n    \"conversion_fee\": {\n      \"amount\": \"0.00001226\",\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n      }\n    }\n  },\n  \"blockchain_transactions\": [],\n  \"actions_required\": {\n    \"confirm\": \"https://api.coingate.com/api/v2/send_requests/11/confirm\",\n    \"cancel\": \"https://api.coingate.com/api/v2/send_requests/11/cancel\"\n  },\n  \"requires_2fa_confirmation\": true\n}"
               schema:
-                $ref: '#/components/schemas/SendRequest'
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 11
+                    default: 0
+                  status:
+                    type: string
+                    example: draft
+                  purpose:
+                    type: string
+                    example: Sending 100 EUR Value
+                  callback_url:
+                    type: string
+                    example: https://example.com/callback_url
+                  created_at:
+                    type: string
+                    example: '2025-03-13T00:45:17.250Z'
+                  external_id:
+                    type: string
+                    example: '1'
+                  requestable_id:
+                    type: integer
+                    description: null when the send request was not created from a batch payout or payout link.
+                    example: 7
+                  requestable_type:
+                    type: string
+                    description: null when the send request was not created from a batch payout or payout link.
+                    enum:
+                    - batch_payout
+                    - payout_link
+                    example: batch_payout
+                  ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01JNQWKKJ6WXN8BZT1Y66B6G9H
+                      balance:
+                        type: string
+                        example: '1.0'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                            default: 0
+                          title:
+                            type: string
+                            example: Bitcoin
+                          symbol:
+                            type: string
+                            example: BTC
+                  input_amount:
+                    type: string
+                    example: '100.0'
+                  input_currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                        default: 0
+                      title:
+                        type: string
+                        example: Euro
+                      kind:
+                        type: string
+                        example: fiat
+                      symbol:
+                        type: string
+                        example: EUR
+                  sending_amount:
+                    type: string
+                    example: '0.049422'
+                  sending_currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 5
+                        default: 0
+                      title:
+                        type: string
+                        example: Ethereum
+                      kind:
+                        type: string
+                        example: crypto
+                      symbol:
+                        type: string
+                        example: ETH
+                  input_to_sending_rate:
+                    type: string
+                    example: '0.00049422'
+                  sending_to_balance_debit_rate:
+                    type: string
+                    example: '40.3258'
+                  balance_debit_amount:
+                    type: string
+                    example: '0.00122557'
+                  balance_debit_currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                        default: 0
+                      title:
+                        type: string
+                        example: Bitcoin
+                      kind:
+                        type: string
+                        example: crypto
+                      symbol:
+                        type: string
+                        example: BTC
+                  beneficiary_payout_setting:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                        default: 0
+                      created_at:
+                        type: string
+                        example: '2025-03-07T10:39:33.152Z'
+                      beneficiary_id:
+                        type: integer
+                        example: 1
+                        default: 0
+                      platform:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 2
+                            default: 0
+                          title:
+                            type: string
+                            example: Ethereum
+                          id_name:
+                            type: string
+                            example: ethereum
+                      crypto_address:
+                        type: string
+                        example: tb1qcq670zweall6zz4f96flfrefhr8myfxz9ll9l2
+                      crypto_address_metadata: {}
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 5
+                            default: 0
+                          title:
+                            type: string
+                            example: Ethereum
+                          kind:
+                            type: string
+                            example: crypto
+                          symbol:
+                            type: string
+                            example: ETH
+                  fees:
+                    type: object
+                    properties:
+                      service_fee:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            example: '0.00001226'
+                          currency:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                                default: 0
+                              title:
+                                type: string
+                                example: Bitcoin
+                              kind:
+                                type: string
+                                example: crypto
+                              symbol:
+                                type: string
+                                example: BTC
+                      conversion_fee:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            example: '0.00001226'
+                          currency:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                                default: 0
+                              title:
+                                type: string
+                                example: Bitcoin
+                              kind:
+                                type: string
+                                example: crypto
+                              symbol:
+                                type: string
+                                example: BTC
+                  blockchain_transactions:
+                    type: array
+                  actions_required:
+                    type: object
+                    properties:
+                      confirm:
+                        type: string
+                        example: https://api.coingate.com/api/v2/send_requests/11/confirm
+                      cancel:
+                        type: string
+                        example: https://api.coingate.com/api/v2/send_requests/11/cancel
+                  requires_2fa_confirmation:
+                    type: boolean
+                    example: true
+                    default: true
         '422':
-          description: Validation error
+          description: '422'
           content:
             application/json:
+              examples:
+                Result:
+                  value: "{\n  \"message\": \"SendRequest is not valid\",\n  \"reason\": \"SendRequestIsNotValid\",\n  \"errors\": [\n    \"Ledger account is invalid\"\n  ]\n}"
               schema:
-                $ref: '#/components/schemas/Error'
-    get:
-      summary: List Send Requests
-      description: Retrieve a paginated list of all send requests.
-      operationId: list-send
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: SendRequest is not valid
+                  reason:
+                    type: string
+                    example: SendRequestIsNotValid
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Ledger account is invalid
+      deprecated: false
       tags:
       - Send Requests
+    get:
+      summary: List Send Requests
+      description: ''
+      operationId: list-send
       parameters:
-      - name: per_page
-        in: query
-        description: Records per page
-        schema:
-          type: integer
-          format: int32
-          default: 100
       - name: page
         in: query
         description: Current page number
@@ -98,150 +323,1170 @@ paths:
           type: integer
           format: int32
           default: 1
-      responses:
-        '200':
-          description: List of send requests
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  current_page:
-                    type: integer
-                  per_page:
-                    type: integer
-                  total_records:
-                    type: integer
-                  total_pages:
-                    type: integer
-                  send_requests:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/SendRequest'
-  /send_requests/{id}:
-    get:
-      summary: Get Send Request
-      description: Retrieve details of a specific send request.
-      operationId: get-send
-      tags:
-      - Send Requests
-      parameters:
-      - name: id
-        in: path
-        required: true
+      - name: per_page
+        in: query
+        description: Records per page (max - 100)
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: requestable_type
+        in: query
+        description: Return only send requests created by this source. Combine with requestable_id to filter down to a single batch payout or payout link.
+        schema:
+          type: string
+          enum:
+          - batch_payout
+          - payout_link
+      - name: requestable_id
+        in: query
+        description: ID of the source that created the send requests, e.g. the batch payout ID. Combine with requestable_type, otherwise the same ID may match both a batch payout and a payout link.
         schema:
           type: integer
           format: int32
       responses:
         '200':
-          description: Send request details
+          description: '200'
           content:
             application/json:
+              examples:
+                Result:
+                  value: "{\n  \"current_page\": 1,\n  \"per_page\": 100,\n  \"total_records\": 1,\n  \"total_pages\": 1,\n  \"send_requests\": [\n    {\n  \"id\": 11,\n  \"status\": \"draft\",\n  \"purpose\": \"Sending 100 EUR Value\",\n  \"callback_url\": \"https://example.com/callback_url\",\n  \"created_at\": \"2025-03-13T00:45:17.250Z\",\n  \"external_id\": \"1\",\n  \"requestable_id\": 7,\n  \"requestable_type\": \"batch_payout\",\n  \"ledger_account\": {\n    \"id\": \"01JNQWKKJ6WXN8BZT1Y66B6G9H\",\n    \"balance\": \"1.0\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 1,\n      \"title\": \"Bitcoin\",\n      \"symbol\": \"BTC\"\n    }\n  },\n  \"input_amount\": \"100.0\",\n  \"input_currency\": {\n    \"id\": 2,\n    \"title\": \"Euro\",\n    \"kind\": \"fiat\",\n    \"symbol\": \"EUR\"\n  },\n  \"sending_amount\": \"0.049422\",\n  \"sending_currency\": {\n    \"id\": 5,\n    \"title\": \"Ethereum\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"ETH\"\n  },\n  \"input_to_sending_rate\": \"0.00049422\",\n  \"sending_to_balance_debit_rate\": \"40.3258\",\n  \"balance_debit_amount\": \"0.00122557\",\n  \"balance_debit_currency\": {\n    \"id\": 1,\n    \"title\": \"Bitcoin\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"BTC\"\n  },\n  \"beneficiary_payout_setting\": {\n    \"id\": 2,\n    \"created_at\": \"2025-03-07T10:39:33.152Z\",\n    \"beneficiary_id\": 1,\n    \"platform\": {\n      \"id\": 2,\n      \"title\": \"Ethereum\",\n      \"id_name\": \"ethereum\"\n    },\n    \"crypto_address\": \"tb1qcq670zweall6zz4f96flfrefhr8myfxz9ll9l2\",\n    \"crypto_address_metadata\": null,\n    \"currency\": {\n      \"id\": 5,\n      \"title\": \"Ethereum\",\n      \"kind\": \"crypto\",\n      \"symbol\": \"ETH\"\n    }\n  },\n  \"fees\": {\n    \"service_fee\": {\n      \"amount\": \"0.00001226\",\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n      }\n    },\n    \"conversion_fee\": {\n      \"amount\": \"0.00001226\",\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n      }\n    }\n  },\n  \"blockchain_transactions\": [],\n  \"actions_required\": {\n    \"confirm\": \"https://api.coingate.com/api/v2/send_requests/11/confirm\",\n    \"cancel\": \"https://api.coingate.com/api/v2/send_requests/11/cancel\"\n  },\n  \"requires_2fa_confirmation\": true\n}\n  ]\n}"
               schema:
-                $ref: '#/components/schemas/SendRequest'
+                type: object
+                properties:
+                  current_page:
+                    type: integer
+                    example: 1
+                    default: 0
+                  per_page:
+                    type: integer
+                    example: 100
+                    default: 0
+                  total_records:
+                    type: integer
+                    example: 1
+                    default: 0
+                  total_pages:
+                    type: integer
+                    example: 1
+                    default: 0
+                  send_requests:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 11
+                          default: 0
+                        status:
+                          type: string
+                          example: draft
+                        purpose:
+                          type: string
+                          example: Sending 100 EUR Value
+                        callback_url:
+                          type: string
+                          example: https://example.com/callback_url
+                        created_at:
+                          type: string
+                          example: '2025-03-13T00:45:17.250Z'
+                        external_id:
+                          type: string
+                          example: '1'
+                        requestable_id:
+                          type: integer
+                          description: null when the send request was not created from a batch payout or payout link.
+                          example: 7
+                        requestable_type:
+                          type: string
+                          description: null when the send request was not created from a batch payout or payout link.
+                          enum:
+                          - batch_payout
+                          - payout_link
+                          example: batch_payout
+                        ledger_account:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 01JNQWKKJ6WXN8BZT1Y66B6G9H
+                            balance:
+                              type: string
+                              example: '1.0'
+                            status:
+                              type: string
+                              example: active
+                            currency:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                  default: 0
+                                title:
+                                  type: string
+                                  example: Bitcoin
+                                symbol:
+                                  type: string
+                                  example: BTC
+                        input_amount:
+                          type: string
+                          example: '100.0'
+                        input_currency:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 2
+                              default: 0
+                            title:
+                              type: string
+                              example: Euro
+                            kind:
+                              type: string
+                              example: fiat
+                            symbol:
+                              type: string
+                              example: EUR
+                        sending_amount:
+                          type: string
+                          example: '0.049422'
+                        sending_currency:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 5
+                              default: 0
+                            title:
+                              type: string
+                              example: Ethereum
+                            kind:
+                              type: string
+                              example: crypto
+                            symbol:
+                              type: string
+                              example: ETH
+                        input_to_sending_rate:
+                          type: string
+                          example: '0.00049422'
+                        sending_to_balance_debit_rate:
+                          type: string
+                          example: '40.3258'
+                        balance_debit_amount:
+                          type: string
+                          example: '0.00122557'
+                        balance_debit_currency:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                              default: 0
+                            title:
+                              type: string
+                              example: Bitcoin
+                            kind:
+                              type: string
+                              example: crypto
+                            symbol:
+                              type: string
+                              example: BTC
+                        beneficiary_payout_setting:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 2
+                              default: 0
+                            created_at:
+                              type: string
+                              example: '2025-03-07T10:39:33.152Z'
+                            beneficiary_id:
+                              type: integer
+                              example: 1
+                              default: 0
+                            platform:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 2
+                                  default: 0
+                                title:
+                                  type: string
+                                  example: Ethereum
+                                id_name:
+                                  type: string
+                                  example: ethereum
+                            crypto_address:
+                              type: string
+                              example: tb1qcq670zweall6zz4f96flfrefhr8myfxz9ll9l2
+                            crypto_address_metadata: {}
+                            currency:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 5
+                                  default: 0
+                                title:
+                                  type: string
+                                  example: Ethereum
+                                kind:
+                                  type: string
+                                  example: crypto
+                                symbol:
+                                  type: string
+                                  example: ETH
+                        fees:
+                          type: object
+                          properties:
+                            service_fee:
+                              type: object
+                              properties:
+                                amount:
+                                  type: string
+                                  example: '0.00001226'
+                                currency:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 1
+                                      default: 0
+                                    title:
+                                      type: string
+                                      example: Bitcoin
+                                    kind:
+                                      type: string
+                                      example: crypto
+                                    symbol:
+                                      type: string
+                                      example: BTC
+                            conversion_fee:
+                              type: object
+                              properties:
+                                amount:
+                                  type: string
+                                  example: '0.00001226'
+                                currency:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 1
+                                      default: 0
+                                    title:
+                                      type: string
+                                      example: Bitcoin
+                                    kind:
+                                      type: string
+                                      example: crypto
+                                    symbol:
+                                      type: string
+                                      example: BTC
+                        blockchain_transactions:
+                          type: array
+                        actions_required:
+                          type: object
+                          properties:
+                            confirm:
+                              type: string
+                              example: https://api.coingate.com/api/v2/send_requests/11/confirm
+                            cancel:
+                              type: string
+                              example: https://api.coingate.com/api/v2/send_requests/11/cancel
+                        requires_2fa_confirmation:
+                          type: boolean
+                          example: true
+                          default: true
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"message\": \"Invalid parameters\",\n  \"reason\": \"InvalidParameters\",\n  \"errors\": [\n    \"requestable_type must be one of: batch_payout, payout_link\"\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid parameters
+                  reason:
+                    type: string
+                    example: InvalidParameters
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: 'requestable_type must be one of: batch_payout, payout_link'
+      deprecated: false
+      tags:
+      - Send Requests
+  /send_requests/:id:
+    get:
+      summary: Get Send Request
+      description: ''
+      operationId: get-send
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"id\": 11,\n  \"status\": \"draft\",\n  \"purpose\": \"Sending 100 EUR Value\",\n  \"callback_url\": \"https://example.com/callback_url\",\n  \"created_at\": \"2025-03-13T00:45:17.250Z\",\n  \"external_id\": null,\n  \"requestable_id\": 7,\n  \"requestable_type\": \"batch_payout\",\n  \"ledger_account\": {\n    \"id\": \"01JNQWKKJ6WXN8BZT1Y66B6G9H\",\n    \"balance\": \"1.0\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 1,\n      \"title\": \"Bitcoin\",\n      \"symbol\": \"BTC\"\n    }\n  },\n  \"input_amount\": \"100.0\",\n  \"input_currency\": {\n    \"id\": 2,\n    \"title\": \"Euro\",\n    \"kind\": \"fiat\",\n    \"symbol\": \"EUR\"\n  },\n  \"sending_amount\": \"0.049422\",\n  \"sending_currency\": {\n    \"id\": 5,\n    \"title\": \"Ethereum\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"ETH\"\n  },\n  \"input_to_sending_rate\": \"0.00049422\",\n  \"sending_to_balance_debit_rate\": \"40.3258\",\n  \"balance_debit_amount\": \"0.00122557\",\n  \"balance_debit_currency\": {\n    \"id\": 1,\n    \"title\": \"Bitcoin\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"BTC\"\n  },\n  \"beneficiary_payout_setting\": {\n    \"id\": 2,\n    \"created_at\": \"2025-03-07T10:39:33.152Z\",\n    \"beneficiary_id\": 1,\n    \"platform\": {\n      \"id\": 2,\n      \"title\": \"Ethereum\",\n      \"id_name\": \"ethereum\"\n    },\n    \"crypto_address\": \"tb1qcq670zweall6zz4f96flfrefhr8myfxz9ll9l2\",\n    \"crypto_address_metadata\": null,\n    \"currency\": {\n      \"id\": 5,\n      \"title\": \"Ethereum\",\n      \"kind\": \"crypto\",\n      \"symbol\": \"ETH\"\n    }\n  },\n  \"fees\": {\n    \"service_fee\": {\n      \"amount\": \"0.00001226\",\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n      }\n    },\n    \"conversion_fee\": {\n      \"amount\": \"0.00001226\",\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n      }\n    }\n  },\n  \"blockchain_transactions\": [],\n  \"actions_required\": {\n    \"confirm\": \"https://api.coingate.com/api/v2/send_requests/11/confirm\",\n    \"cancel\": \"https://api.coingate.com/api/v2/send_requests/11/cancel\"\n  },\n  \"requires_2fa_confirmation\": true\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 11
+                    default: 0
+                  status:
+                    type: string
+                    example: draft
+                  purpose:
+                    type: string
+                    example: Sending 100 EUR Value
+                  callback_url:
+                    type: string
+                    example: https://example.com/callback_url
+                  created_at:
+                    type: string
+                    example: '2025-03-13T00:45:17.250Z'
+                  external_id: {}
+                  requestable_id:
+                    type: integer
+                    description: null when the send request was not created from a batch payout or payout link.
+                    example: 7
+                  requestable_type:
+                    type: string
+                    description: null when the send request was not created from a batch payout or payout link.
+                    enum:
+                    - batch_payout
+                    - payout_link
+                    example: batch_payout
+                  ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01JNQWKKJ6WXN8BZT1Y66B6G9H
+                      balance:
+                        type: string
+                        example: '1.0'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                            default: 0
+                          title:
+                            type: string
+                            example: Bitcoin
+                          symbol:
+                            type: string
+                            example: BTC
+                  input_amount:
+                    type: string
+                    example: '100.0'
+                  input_currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                        default: 0
+                      title:
+                        type: string
+                        example: Euro
+                      kind:
+                        type: string
+                        example: fiat
+                      symbol:
+                        type: string
+                        example: EUR
+                  sending_amount:
+                    type: string
+                    example: '0.049422'
+                  sending_currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 5
+                        default: 0
+                      title:
+                        type: string
+                        example: Ethereum
+                      kind:
+                        type: string
+                        example: crypto
+                      symbol:
+                        type: string
+                        example: ETH
+                  input_to_sending_rate:
+                    type: string
+                    example: '0.00049422'
+                  sending_to_balance_debit_rate:
+                    type: string
+                    example: '40.3258'
+                  balance_debit_amount:
+                    type: string
+                    example: '0.00122557'
+                  balance_debit_currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                        default: 0
+                      title:
+                        type: string
+                        example: Bitcoin
+                      kind:
+                        type: string
+                        example: crypto
+                      symbol:
+                        type: string
+                        example: BTC
+                  beneficiary_payout_setting:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                        default: 0
+                      created_at:
+                        type: string
+                        example: '2025-03-07T10:39:33.152Z'
+                      beneficiary_id:
+                        type: integer
+                        example: 1
+                        default: 0
+                      platform:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 2
+                            default: 0
+                          title:
+                            type: string
+                            example: Ethereum
+                          id_name:
+                            type: string
+                            example: ethereum
+                      crypto_address:
+                        type: string
+                        example: tb1qcq670zweall6zz4f96flfrefhr8myfxz9ll9l2
+                      crypto_address_metadata: {}
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 5
+                            default: 0
+                          title:
+                            type: string
+                            example: Ethereum
+                          kind:
+                            type: string
+                            example: crypto
+                          symbol:
+                            type: string
+                            example: ETH
+                  fees:
+                    type: object
+                    properties:
+                      service_fee:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            example: '0.00001226'
+                          currency:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                                default: 0
+                              title:
+                                type: string
+                                example: Bitcoin
+                              kind:
+                                type: string
+                                example: crypto
+                              symbol:
+                                type: string
+                                example: BTC
+                      conversion_fee:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            example: '0.00001226'
+                          currency:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                                default: 0
+                              title:
+                                type: string
+                                example: Bitcoin
+                              kind:
+                                type: string
+                                example: crypto
+                              symbol:
+                                type: string
+                                example: BTC
+                  blockchain_transactions:
+                    type: array
+                  actions_required:
+                    type: object
+                    properties:
+                      confirm:
+                        type: string
+                        example: https://api.coingate.com/api/v2/send_requests/11/confirm
+                      cancel:
+                        type: string
+                        example: https://api.coingate.com/api/v2/send_requests/11/cancel
+                  requires_2fa_confirmation:
+                    type: boolean
+                    example: true
+                    default: true
         '404':
-          description: Send request not found
+          description: '404'
           content:
             application/json:
+              examples:
+                Result:
+                  value: "{\n  \"message\": \"Send request not found\",\n  \"reason\": \"SendRequestNotFound\"\n}"
               schema:
-                $ref: '#/components/schemas/Error'
-components:
-  schemas:
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message
-        reason:
-          type: string
-          description: Machine-readable error reason code
-        errors:
-          type: array
-          items:
-            type: string
-          description: List of validation errors
-    LedgerAccount:
-      type: object
-      properties:
-        id:
-          type: string
-        balance:
-          type: string
-        status:
-          type: string
-          enum:
-          - active
-          - inactive
-        currency:
-          $ref: '#/components/schemas/Currency'
-    Currency:
-      type: object
-      properties:
-        id:
-          type: integer
-        title:
-          type: string
-        kind:
-          type: string
-          enum:
-          - crypto
-          - fiat
-        symbol:
-          type: string
-    SendRequest:
-      type: object
-      properties:
-        id:
-          type: integer
-        status:
-          type: string
-        purpose:
-          type: string
-        callback_url:
-          type: string
-        created_at:
-          type: string
-          format: date-time
-        external_id:
-          type: string
-        ledger_account:
-          $ref: '#/components/schemas/LedgerAccount'
-        input_amount:
-          type: string
-        input_currency:
-          $ref: '#/components/schemas/Currency'
-        sending_amount:
-          type: string
-        sending_currency:
-          $ref: '#/components/schemas/Currency'
-        input_to_sending_rate:
-          type: string
-        sending_to_balance_debit_rate:
-          type: string
-        balance_debit_amount:
-          type: string
-        balance_debit_currency:
-          $ref: '#/components/schemas/Currency'
-        fees:
-          type: object
-        blockchain_transactions:
-          type: array
-          items: {}
-        actions_required:
-          type: object
-          properties:
-            confirm:
-              type: string
-            cancel:
-              type: string
-        requires_2fa_confirmation:
-          type: boolean
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      description: API Token authentication. Obtain your API token from the CoinGate merchant dashboard.
-externalDocs:
-  description: CoinGate Developer Documentation
-  url: https://developer.coingate.com/docs/api-overview
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Send request not found
+                  reason:
+                    type: string
+                    example: SendRequestNotFound
+      deprecated: false
+      tags:
+      - Send Requests
+  /send_requests/:id/confirm:
+    patch:
+      summary: Send Request Exchange Confirm
+      description: ''
+      operationId: send-request-exchange-confirm
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"id\": 11,\n  \"status\": \"draft\",\n  \"purpose\": \"Sending 100 EUR Value\",\n  \"callback_url\": \"https://example.com/callback_url\",\n  \"created_at\": \"2025-03-13T00:45:17.250Z\",\n  \"requestable_id\": 7,\n  \"requestable_type\": \"batch_payout\",\n  \"ledger_account\": {\n    \"id\": \"01JNQWKKJ6WXN8BZT1Y66B6G9H\",\n    \"balance\": \"1.0\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 1,\n      \"title\": \"Bitcoin\",\n      \"symbol\": \"BTC\"\n    }\n  },\n  \"input_amount\": \"100.0\",\n  \"input_currency\": {\n    \"id\": 2,\n    \"title\": \"Euro\",\n    \"kind\": \"fiat\",\n    \"symbol\": \"EUR\"\n  },\n  \"sending_amount\": \"0.049422\",\n  \"sending_currency\": {\n    \"id\": 5,\n    \"title\": \"Ethereum\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"ETH\"\n  },\n  \"input_to_sending_rate\": \"0.00049422\",\n  \"sending_to_balance_debit_rate\": \"40.3258\",\n  \"balance_debit_amount\": \"0.00122557\",\n  \"balance_debit_currency\": {\n    \"id\": 1,\n    \"title\": \"Bitcoin\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"BTC\"\n  },\n  \"beneficiary_payout_setting\": {\n    \"id\": 2,\n    \"created_at\": \"2025-03-07T10:39:33.152Z\",\n    \"beneficiary_id\": 1,\n    \"platform\": {\n      \"id\": 2,\n      \"title\": \"Ethereum\",\n      \"id_name\": \"ethereum\"\n    },\n    \"crypto_address\": \"tb1qcq670zweall6zz4f96flfrefhr8myfxz9ll9l2\",\n    \"crypto_address_metadata\": null,\n    \"currency\": {\n      \"id\": 5,\n      \"title\": \"Ethereum\",\n      \"kind\": \"crypto\",\n      \"symbol\": \"ETH\"\n    }\n  },\n  \"fees\": {\n    \"service_fee\": {\n      \"amount\": \"0.00001226\",\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n      }\n    },\n    \"conversion_fee\": {\n      \"amount\": \"0.00001226\",\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n      }\n    }\n  },\n  \"blockchain_transactions\": [],\n  \"actions_required\": {\n    \"confirm\": \"https://api.coingate.com/api/v2/send_requests/11/confirm\",\n    \"cancel\": \"https://api.coingate.com/api/v2/send_requests/11/cancel\"\n  },\n  \"requires_2fa_confirmation\": true\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 11
+                    default: 0
+                  status:
+                    type: string
+                    example: draft
+                  purpose:
+                    type: string
+                    example: Sending 100 EUR Value
+                  callback_url:
+                    type: string
+                    example: https://example.com/callback_url
+                  created_at:
+                    type: string
+                    example: '2025-03-13T00:45:17.250Z'
+                  requestable_id:
+                    type: integer
+                    description: null when the send request was not created from a batch payout or payout link.
+                    example: 7
+                  requestable_type:
+                    type: string
+                    description: null when the send request was not created from a batch payout or payout link.
+                    enum:
+                    - batch_payout
+                    - payout_link
+                    example: batch_payout
+                  ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01JNQWKKJ6WXN8BZT1Y66B6G9H
+                      balance:
+                        type: string
+                        example: '1.0'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                            default: 0
+                          title:
+                            type: string
+                            example: Bitcoin
+                          symbol:
+                            type: string
+                            example: BTC
+                  input_amount:
+                    type: string
+                    example: '100.0'
+                  input_currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                        default: 0
+                      title:
+                        type: string
+                        example: Euro
+                      kind:
+                        type: string
+                        example: fiat
+                      symbol:
+                        type: string
+                        example: EUR
+                  sending_amount:
+                    type: string
+                    example: '0.049422'
+                  sending_currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 5
+                        default: 0
+                      title:
+                        type: string
+                        example: Ethereum
+                      kind:
+                        type: string
+                        example: crypto
+                      symbol:
+                        type: string
+                        example: ETH
+                  input_to_sending_rate:
+                    type: string
+                    example: '0.00049422'
+                  sending_to_balance_debit_rate:
+                    type: string
+                    example: '40.3258'
+                  balance_debit_amount:
+                    type: string
+                    example: '0.00122557'
+                  balance_debit_currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                        default: 0
+                      title:
+                        type: string
+                        example: Bitcoin
+                      kind:
+                        type: string
+                        example: crypto
+                      symbol:
+                        type: string
+                        example: BTC
+                  beneficiary_payout_setting:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                        default: 0
+                      created_at:
+                        type: string
+                        example: '2025-03-07T10:39:33.152Z'
+                      beneficiary_id:
+                        type: integer
+                        example: 1
+                        default: 0
+                      platform:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 2
+                            default: 0
+                          title:
+                            type: string
+                            example: Ethereum
+                          id_name:
+                            type: string
+                            example: ethereum
+                      crypto_address:
+                        type: string
+                        example: tb1qcq670zweall6zz4f96flfrefhr8myfxz9ll9l2
+                      crypto_address_metadata: {}
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 5
+                            default: 0
+                          title:
+                            type: string
+                            example: Ethereum
+                          kind:
+                            type: string
+                            example: crypto
+                          symbol:
+                            type: string
+                            example: ETH
+                  fees:
+                    type: object
+                    properties:
+                      service_fee:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            example: '0.00001226'
+                          currency:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                                default: 0
+                              title:
+                                type: string
+                                example: Bitcoin
+                              kind:
+                                type: string
+                                example: crypto
+                              symbol:
+                                type: string
+                                example: BTC
+                      conversion_fee:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            example: '0.00001226'
+                          currency:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                                default: 0
+                              title:
+                                type: string
+                                example: Bitcoin
+                              kind:
+                                type: string
+                                example: crypto
+                              symbol:
+                                type: string
+                                example: BTC
+                  blockchain_transactions:
+                    type: array
+                  actions_required:
+                    type: object
+                    properties:
+                      confirm:
+                        type: string
+                        example: https://api.coingate.com/api/v2/send_requests/11/confirm
+                      cancel:
+                        type: string
+                        example: https://api.coingate.com/api/v2/send_requests/11/cancel
+                  requires_2fa_confirmation:
+                    type: boolean
+                    example: true
+                    default: true
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"message\": \"Send request not found\",\n  \"reason\": \"SendRequestNotFound\"\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Send request not found
+                  reason:
+                    type: string
+                    example: SendRequestNotFound
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"message\": \"SendRequest is not valid\",\n  \"reason\": \"SendRequestIsNotValid\",\n  \"errors\": [\n    \"Transaction expired.\"\n  ]\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: SendRequest is not valid
+                  reason:
+                    type: string
+                    example: SendRequestIsNotValid
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Transaction expired.
+      deprecated: false
+      tags:
+      - Send Requests
+  /send_requests/:id/cancel:
+    patch:
+      summary: Send Request Exchange Cancel
+      description: ''
+      operationId: send-request-exchange-cancel
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"id\": 11,\n  \"status\": \"canceled\",\n  \"purpose\": \"Sending 100 EUR Value\",\n  \"callback_url\": \"https://example.com/callback_url\",\n  \"created_at\": \"2025-03-13T00:45:17.250Z\",\n  \"requestable_id\": 7,\n  \"requestable_type\": \"batch_payout\",\n  \"ledger_account\": {\n    \"id\": \"01JNQWKKJ6WXN8BZT1Y66B6G9H\",\n    \"balance\": \"1.0\",\n    \"status\": \"active\",\n    \"currency\": {\n      \"id\": 1,\n      \"title\": \"Bitcoin\",\n      \"symbol\": \"BTC\"\n    }\n  },\n  \"input_amount\": \"100.0\",\n  \"input_currency\": {\n    \"id\": 2,\n    \"title\": \"Euro\",\n    \"kind\": \"fiat\",\n    \"symbol\": \"EUR\"\n  },\n  \"sending_amount\": \"0.049422\",\n  \"sending_currency\": {\n    \"id\": 5,\n    \"title\": \"Ethereum\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"ETH\"\n  },\n  \"input_to_sending_rate\": \"0.00049422\",\n  \"sending_to_balance_debit_rate\": \"40.3258\",\n  \"balance_debit_amount\": \"0.00122557\",\n  \"balance_debit_currency\": {\n    \"id\": 1,\n    \"title\": \"Bitcoin\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"BTC\"\n  },\n  \"beneficiary_payout_setting\": {\n    \"id\": 2,\n    \"created_at\": \"2025-03-07T10:39:33.152Z\",\n    \"beneficiary_id\": 1,\n    \"platform\": {\n      \"id\": 2,\n      \"title\": \"Ethereum\",\n      \"id_name\": \"ethereum\"\n    },\n    \"crypto_address\": \"tb1qcq670zweall6zz4f96flfrefhr8myfxz9ll9l2\",\n    \"crypto_address_metadata\": null,\n    \"currency\": {\n      \"id\": 5,\n      \"title\": \"Ethereum\",\n      \"kind\": \"crypto\",\n      \"symbol\": \"ETH\"\n    }\n  },\n  \"fees\": {\n    \"service_fee\": {\n      \"amount\": \"0.00001226\",\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n      }\n    },\n    \"conversion_fee\": {\n      \"amount\": \"0.00001226\",\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n      }\n    }\n  },\n  \"blockchain_transactions\": [],\n  \"actions_required\": {\n    \"confirm\": \"https://api.coingate.com/api/v2/send_requests/11/confirm\",\n    \"cancel\": \"https://api.coingate.com/api/v2/send_requests/11/cancel\"\n  },\n  \"requires_2fa_confirmation\": true\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 11
+                    default: 0
+                  status:
+                    type: string
+                    example: canceled
+                  purpose:
+                    type: string
+                    example: Sending 100 EUR Value
+                  callback_url:
+                    type: string
+                    example: https://example.com/callback_url
+                  created_at:
+                    type: string
+                    example: '2025-03-13T00:45:17.250Z'
+                  requestable_id:
+                    type: integer
+                    description: null when the send request was not created from a batch payout or payout link.
+                    example: 7
+                  requestable_type:
+                    type: string
+                    description: null when the send request was not created from a batch payout or payout link.
+                    enum:
+                    - batch_payout
+                    - payout_link
+                    example: batch_payout
+                  ledger_account:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 01JNQWKKJ6WXN8BZT1Y66B6G9H
+                      balance:
+                        type: string
+                        example: '1.0'
+                      status:
+                        type: string
+                        example: active
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                            default: 0
+                          title:
+                            type: string
+                            example: Bitcoin
+                          symbol:
+                            type: string
+                            example: BTC
+                  input_amount:
+                    type: string
+                    example: '100.0'
+                  input_currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                        default: 0
+                      title:
+                        type: string
+                        example: Euro
+                      kind:
+                        type: string
+                        example: fiat
+                      symbol:
+                        type: string
+                        example: EUR
+                  sending_amount:
+                    type: string
+                    example: '0.049422'
+                  sending_currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 5
+                        default: 0
+                      title:
+                        type: string
+                        example: Ethereum
+                      kind:
+                        type: string
+                        example: crypto
+                      symbol:
+                        type: string
+                        example: ETH
+                  input_to_sending_rate:
+                    type: string
+                    example: '0.00049422'
+                  sending_to_balance_debit_rate:
+                    type: string
+                    example: '40.3258'
+                  balance_debit_amount:
+                    type: string
+                    example: '0.00122557'
+                  balance_debit_currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                        default: 0
+                      title:
+                        type: string
+                        example: Bitcoin
+                      kind:
+                        type: string
+                        example: crypto
+                      symbol:
+                        type: string
+                        example: BTC
+                  beneficiary_payout_setting:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                        default: 0
+                      created_at:
+                        type: string
+                        example: '2025-03-07T10:39:33.152Z'
+                      beneficiary_id:
+                        type: integer
+                        example: 1
+                        default: 0
+                      platform:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 2
+                            default: 0
+                          title:
+                            type: string
+                            example: Ethereum
+                          id_name:
+                            type: string
+                            example: ethereum
+                      crypto_address:
+                        type: string
+                        example: tb1qcq670zweall6zz4f96flfrefhr8myfxz9ll9l2
+                      crypto_address_metadata: {}
+                      currency:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 5
+                            default: 0
+                          title:
+                            type: string
+                            example: Ethereum
+                          kind:
+                            type: string
+                            example: crypto
+                          symbol:
+                            type: string
+                            example: ETH
+                  fees:
+                    type: object
+                    properties:
+                      service_fee:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            example: '0.00001226'
+                          currency:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                                default: 0
+                              title:
+                                type: string
+                                example: Bitcoin
+                              kind:
+                                type: string
+                                example: crypto
+                              symbol:
+                                type: string
+                                example: BTC
+                      conversion_fee:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            example: '0.00001226'
+                          currency:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                                default: 0
+                              title:
+                                type: string
+                                example: Bitcoin
+                              kind:
+                                type: string
+                                example: crypto
+                              symbol:
+                                type: string
+                                example: BTC
+                  blockchain_transactions:
+                    type: array
+                  actions_required:
+                    type: object
+                    properties:
+                      confirm:
+                        type: string
+                        example: https://api.coingate.com/api/v2/send_requests/11/confirm
+                      cancel:
+                        type: string
+                        example: https://api.coingate.com/api/v2/send_requests/11/cancel
+                  requires_2fa_confirmation:
+                    type: boolean
+                    example: true
+                    default: true
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"message\": \"Send request not found\",\n  \"reason\": \"SendRequestNotFound\"\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Send request not found
+                  reason:
+                    type: string
+                    example: SendRequestNotFound
+      deprecated: false
+      tags:
+      - Send Requests
+  /send_requests/supported-currencies:
+    get:
+      summary: Supported Currencies
+      description: List Supported Payout Currencies and Crypto Platforms
+      operationId: supported-payout-currencies-and-crypto-platforms
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "[\n   {\n      \"id\":50,\n      \"title\":\"Ethereum\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"ETH\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":40,\n            \"id_name\":\"arbitrum\",\n            \"title\":\"Arbitrum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":42,\n            \"id_name\":\"base\",\n            \"title\":\"Base\",\n            \"enabled\":true\n         },\n         {\n            \"id\":44,\n            \"id_name\":\"optimism\",\n            \"title\":\"Optimism\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":61,\n      \"title\":\"Dai\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"DAI\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         },\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":97,\n      \"title\":\"USDT\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"USDT\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         },\n         {\n            \"id\":4,\n            \"id_name\":\"tron\",\n            \"title\":\"Tron\",\n            \"enabled\":true\n         },\n         {\n            \"id\":20,\n            \"id_name\":\"solana\",\n            \"title\":\"Solana\",\n            \"enabled\":true\n         },\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         },\n         {\n            \"id\":40,\n            \"id_name\":\"arbitrum\",\n            \"title\":\"Arbitrum\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":113,\n      \"title\":\"USDC\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"USDC\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         },\n         {\n            \"id\":20,\n            \"id_name\":\"solana\",\n            \"title\":\"Solana\",\n            \"enabled\":true\n         },\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         },\n         {\n            \"id\":40,\n            \"id_name\":\"arbitrum\",\n            \"title\":\"Arbitrum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":42,\n            \"id_name\":\"base\",\n            \"title\":\"Base\",\n            \"enabled\":true\n         },\n         {\n            \"id\":44,\n            \"id_name\":\"optimism\",\n            \"title\":\"Optimism\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":165,\n      \"title\":\"SHIBA INU\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"SHIB\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":1,\n            \"id_name\":\"ethereum\",\n            \"title\":\"Ethereum\",\n            \"enabled\":true\n         },\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         },\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":91,\n      \"title\":\"Binance Coin\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"BNB\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":3,\n            \"id_name\":\"binance_smart_chain\",\n            \"title\":\"Binance Smart Chain\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":60,\n      \"title\":\"TRON\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"TRX\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":4,\n            \"id_name\":\"tron\",\n            \"title\":\"Tron\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":8,\n      \"title\":\"Bitcoin\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"BTC\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":5,\n            \"id_name\":\"bitcoin\",\n            \"title\":\"Bitcoin\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":49,\n      \"title\":\"Litecoin\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"LTC\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":6,\n            \"id_name\":\"litecoin\",\n            \"title\":\"Litecoin\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":117,\n      \"title\":\"Solana\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"SOL\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":20,\n            \"id_name\":\"solana\",\n            \"title\":\"Solana\",\n            \"enabled\":true\n         }\n      ]\n   },\n   {\n      \"id\":112,\n      \"title\":\"Polygon\",\n      \"kind\":\"crypto\",\n      \"symbol\":\"POL\",\n      \"enabled\":true,\n      \"disabled_message\":null,\n      \"platforms\":[\n         {\n            \"id\":39,\n            \"id_name\":\"polygon\",\n            \"title\":\"Polygon\",\n            \"enabled\":true\n         }\n      ]\n   }\n]"
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 50
+                      default: 0
+                    title:
+                      type: string
+                      example: Ethereum
+                    kind:
+                      type: string
+                      example: crypto
+                    symbol:
+                      type: string
+                      example: ETH
+                    enabled:
+                      type: boolean
+                      example: true
+                      default: true
+                    disabled_message: {}
+                    platforms:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                            default: 0
+                          id_name:
+                            type: string
+                            example: ethereum
+                          title:
+                            type: string
+                            example: Ethereum
+                          enabled:
+                            type: boolean
+                            example: true
+                            default: true
+      deprecated: false
+      security: []
+      tags:
+      - Send Requests
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

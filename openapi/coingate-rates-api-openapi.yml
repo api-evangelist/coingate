@@ -1,0 +1,152 @@
+openapi: 3.2.0
+info:
+  title: v2 Rates API
+  version: '2'
+servers:
+- url: https://api.coingate.com/api/v2
+security:
+- {}
+tags:
+- name: Rates
+paths:
+  /rates/merchant/{from}/{to}:
+    get:
+      summary: Get Exchange Rate
+      description: Current exchange rate for any two currencies, fiat or crypto. This endpoint is public, authentication is not required.
+      operationId: get-rate
+      parameters:
+      - name: from
+        in: path
+        description: 'ISO Symbol. Example: EUR, USD, BTC, ETH, [etc](https://coingate.com/currencies).'
+        schema:
+          type: string
+        required: true
+      - name: to
+        in: path
+        description: 'ISO Symbol. Example: EUR, USD, BTC, ETH, [etc](https://coingate.com/currencies).'
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: '7469.5'
+              schema:
+                type: number
+                example: 7469.5
+                default: 0
+      deprecated: false
+      tags:
+      - Rates
+  /rates:
+    get:
+      summary: List Exchange Rates
+      description: Current CoinGate exchange rates for Merchants and Traders. This endpoint is public, authentication is not required.
+      operationId: list-rates
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"merchant\": {\n    \"BTC\": {\n      \"EUR\": \"7449.99\",\n      \"USD\": \"9139.34\",\n      \"ETH\": \"13.18044023\"\n    },\n    \"EUR\": {\n      \"BTC\": \"0.00013351\",\n      \"USD\": \"1.2317\",\n      \"ETH\": \"0.00175954\"\n    }\n  },\n  \"trader\": {\n    \"buy\": {\n      \"BTC\": {\n        \"EUR\": \"7449.99\",\n        \"USD\": \"9139.34\",\n        \"ETH\": \"13.18044023\"\n      },\n      \"EUR\": {\n        \"BTC\": \"0.00013351\",\n        \"USD\": \"1.2317\",\n        \"ETH\": \"0.00175954\"\n      }\n    },\n    \"sell\": {\n      \"BTC\": {\n        \"EUR\": \"7449.99\",\n        \"USD\": \"9139.34\",\n        \"ETH\": \"13.18044023\"\n      },\n      \"EUR\": {\n        \"BTC\": \"0.00013351\",\n        \"USD\": \"1.2317\",\n        \"ETH\": \"0.00175954\"\n      }\n    }\n  }\n}"
+              schema:
+                type: object
+                properties:
+                  merchant:
+                    type: object
+                    properties:
+                      BTC:
+                        type: object
+                        properties:
+                          EUR:
+                            type: string
+                            example: '7449.99'
+                          USD:
+                            type: string
+                            example: '9139.34'
+                          ETH:
+                            type: string
+                            example: '13.18044023'
+                      EUR:
+                        type: object
+                        properties:
+                          BTC:
+                            type: string
+                            example: '0.00013351'
+                          USD:
+                            type: string
+                            example: '1.2317'
+                          ETH:
+                            type: string
+                            example: '0.00175954'
+                  trader:
+                    type: object
+                    properties:
+                      buy:
+                        type: object
+                        properties:
+                          BTC:
+                            type: object
+                            properties:
+                              EUR:
+                                type: string
+                                example: '7449.99'
+                              USD:
+                                type: string
+                                example: '9139.34'
+                              ETH:
+                                type: string
+                                example: '13.18044023'
+                          EUR:
+                            type: object
+                            properties:
+                              BTC:
+                                type: string
+                                example: '0.00013351'
+                              USD:
+                                type: string
+                                example: '1.2317'
+                              ETH:
+                                type: string
+                                example: '0.00175954'
+                      sell:
+                        type: object
+                        properties:
+                          BTC:
+                            type: object
+                            properties:
+                              EUR:
+                                type: string
+                                example: '7449.99'
+                              USD:
+                                type: string
+                                example: '9139.34'
+                              ETH:
+                                type: string
+                                example: '13.18044023'
+                          EUR:
+                            type: object
+                            properties:
+                              BTC:
+                                type: string
+                                example: '0.00013351'
+                              USD:
+                                type: string
+                                example: '1.2317'
+                              ETH:
+                                type: string
+                                example: '0.00175954'
+      deprecated: false
+      tags:
+      - Rates
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

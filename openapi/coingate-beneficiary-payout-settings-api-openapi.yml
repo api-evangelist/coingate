@@ -1,0 +1,135 @@
+openapi: 3.2.0
+info:
+  title: v2 Beneficiary Payout Settings API
+  version: '2'
+servers:
+- url: https://api.coingate.com/api/v2
+security:
+- {}
+tags:
+- name: Beneficiary Payout Settings
+paths:
+  /beneficiary_payout_settings:
+    post:
+      summary: Create Payout Setting
+      description: Add a New Payout Setting for a Specific Beneficiary
+      operationId: create-beneficiary-payout-setting
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - beneficiary_id
+              - currency_id
+              - platform_id
+              - crypto_address
+              properties:
+                beneficiary_id:
+                  type: integer
+                  description: 'Beneficiary ID: Obtain this value from a newly created beneficiary or retrieve an existing one using the following API endpoints: [Create Beneficiary](https://developer.coingate.com/reference/create-beneficiary) or [List Beneficiaries](https://developer.coingate.com/reference/list-beneficiaries)'
+                  format: int32
+                currency_id:
+                  type: integer
+                  description: 'Retrieve the currency_id by making a request to the following API endpoint: https://developer.coingate.com/reference/currencies. The values for currency_id and platform_id differ between the live and sandbox environments. Make sure to retrieve these values according to your integration environment from either api.coingate.com for production or api-sandbox.coingate.com for sandbox testing.'
+                  format: int32
+                platform_id:
+                  type: integer
+                  description: 'Retrieve the platform_id and supported currencies by making a request to the following API endpoint: https://developer.coingate.com/reference/platforms. The values for currency_id and platform_id differ between the live and sandbox environments. Make sure to retrieve these values according to your integration environment from either api.coingate.com for production or api-sandbox.coingate.com for sandbox testing.'
+                  format: int32
+                crypto_address:
+                  type: string
+                  description: Crypto address
+                crypto_address_metadata:
+                  type: string
+                  description: 'Optional. Destination tag for XRP. Not used on other networks we currently support. Example: 12345'
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"id\": 29,\n  \"created_at\": \"2025-02-26T15:11:55.317Z\",\n  \"beneficiary_id\": 216,\n  \"platform\": {\n    \"id\": 6,\n    \"title\": \"Bitcoin\",\n    \"id_name\": \"bitcoin\"\n  },\n  \"crypto_address\": \"mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn\",\n  \"crypto_address_metadata\": null,\n  \"currency\": {\n    \"id\": 1,\n    \"title\": \"Bitcoin\",\n    \"kind\": \"crypto\",\n    \"symbol\": \"BTC\"\n  }\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 29
+                    default: 0
+                  created_at:
+                    type: string
+                    example: '2025-02-26T15:11:55.317Z'
+                  beneficiary_id:
+                    type: integer
+                    example: 216
+                    default: 0
+                  platform:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 6
+                        default: 0
+                      title:
+                        type: string
+                        example: Bitcoin
+                      id_name:
+                        type: string
+                        example: bitcoin
+                  crypto_address:
+                    type: string
+                    example: mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn
+                  crypto_address_metadata: {}
+                  currency:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                        default: 0
+                      title:
+                        type: string
+                        example: Bitcoin
+                      kind:
+                        type: string
+                        example: crypto
+                      symbol:
+                        type: string
+                        example: BTC
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n\t\"message\": \"Beneficiary Payout Setting is not valid\",\n\t\"reason\": \"BeneficiaryPayoutSettingIsNotValid\",\n\t\"errors\": [\n\t\t\"Beneficiary not found\"\n\t]\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Beneficiary Payout Setting is not valid
+                  reason:
+                    type: string
+                    example: BeneficiaryPayoutSettingIsNotValid
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: Beneficiary not found
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: curl
+          code: "## Create Payout Setting\ncurl -X \"POST\" \"https://api-sandbox.coingate.com/v2/beneficiary_payout_settings\" \\\n     -H 'Authorization: Token YOUR_API_TOKEN' \\\n     -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' \\\n     --data-urlencode \"beneficiary_id=216\" \\\n     --data-urlencode \"currency_id=1\" \\\n     --data-urlencode \"platform_id=6\" \\\n     --data-urlencode \"crypto_address=mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn\"\n"
+        samples-languages:
+        - curl
+      tags:
+      - Beneficiary Payout Settings
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

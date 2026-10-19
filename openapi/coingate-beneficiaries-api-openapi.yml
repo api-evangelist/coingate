@@ -1,0 +1,225 @@
+openapi: 3.2.0
+info:
+  title: v2 Beneficiaries API
+  version: '2'
+servers:
+- url: https://api.coingate.com/api/v2
+security:
+- {}
+tags:
+- name: Beneficiaries
+paths:
+  /beneficiaries:
+    post:
+      summary: Create Beneficiary
+      description: ''
+      operationId: create-beneficiary
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - beneficiary_type
+              - email
+              - country
+              - currency_id
+              - platform_id
+              - crypto_address
+              properties:
+                beneficiary_type:
+                  type: string
+                  description: Beneficiary type decides if first name surname email and date of birth or company_name and company code fields will be required
+                  enum:
+                  - '"person"'
+                  - '"business"'
+                person:
+                  type: object
+                  description: Required only if beneficiary_type is "person"
+                  required:
+                  - first_name
+                  - surname
+                  properties:
+                    first_name:
+                      type: string
+                    surname:
+                      type: string
+                    date_of_birth:
+                      type: string
+                      description: (YYYY-MM-DD or MM/DD/YYYY) Date of birth
+                business:
+                  type: object
+                  description: Required only if beneficiary_type is "business"
+                  required:
+                  - company_name
+                  - company_code
+                  properties:
+                    company_name:
+                      type: string
+                      description: Company's legal name
+                    company_code:
+                      type: string
+                      description: Company or LEI code
+                email:
+                  type: string
+                country:
+                  type: string
+                  description: Country alpha3 code
+                country_state:
+                  type: string
+                  description: Required when the country includes states. Use the state's alpha-2 code.
+                currency_id:
+                  type: integer
+                  description: 'Retrieve the currency_id by making a request to the following API endpoint: https://developer.coingate.com/reference/currencies. The values for currency_id and platform_id differ between the live and sandbox environments. Make sure to retrieve these values according to your integration environment from either api.coingate.com for production or api-sandbox.coingate.com for sandbox testing.'
+                  format: int32
+                platform_id:
+                  type: integer
+                  description: 'Retrieve the platform_id and supported currencies by making a request to the following API endpoint: https://developer.coingate.com/reference/platforms. The values for currency_id and platform_id differ between the live and sandbox environments. Make sure to retrieve these values according to your integration environment from either api.coingate.com for production or api-sandbox.coingate.com for sandbox testing.'
+                  format: int32
+                crypto_address:
+                  type: string
+                  description: Crypto address
+                crypto_address_metadata:
+                  type: string
+                  description: 'Optional. Destination tag for XRP. Not used on other networks we currently support. Example: 12345'
+                street_name:
+                  type: string
+                  description: Street name
+                building_number:
+                  type: string
+                  description: Building number
+                town_name:
+                  type: string
+                  description: Town name
+                post_code:
+                  type: string
+                  description: Postcode
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"id\": 1,\n  \"beneficiary_type\": \"person\",\n  \"first_name\": \"Joes\",\n  \"surname\": \"Doehs\",\n  \"email\": \"joes@doehs.com\",\n  \"country\": \"LAV\",\n  \"country_state\": \"Riga\",\n  \"street_name\": \"Brīvības iela\",\n  \"building_number\": \"21\",\n  \"town_name\": \"Riga\",\n  \"post_code\": \"LV-1010\"\n  \"created_at\": \"2024-01-01T00:00:00.691Z\",\n  \"beneficiary_payout_settings\": [\n    {\n      \"id\": 1,\n  \t\t\"crypto_address\": \"tb1q8twk9pftcyywlctnhf5xtgx037h4qwwrqt20hs\",\n      \"crypto_address_metadata\": null,\n      \"created_at\": \"2024-01-01T00:00:00.691Z\",\n      \"platform\": {\n        \"id\": 6,\n        \"title\": \"Bitcoin\",\n        \"id_name\": \"bitcoin\"\n      },\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n      }\n    }\n  ]\n}"
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"message\": \"Beneficiary is not valid\",\n  \"reason\": \"BeneficiaryIsNotValid\",\n  \"errors\": {\n    \"beneficiary_type\": [\n      \"can't be blank\"\n    ]\n  }\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Beneficiary is not valid
+                  reason:
+                    type: string
+                    example: BeneficiaryIsNotValid
+                  errors:
+                    type: object
+                    properties:
+                      beneficiary_type:
+                        type: array
+                        items:
+                          type: string
+                          example: can't be blank
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: curl
+          code: "\ncurl -X \"POST\" \"https://api-sandbox.coingate.com/v2/beneficiaries\" \\\n     -H 'Authorization: Token YOUR_API_TOKEN' \\\n     -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' \\\n     --data-urlencode \"beneficiary_type=person\" \\\n     --data-urlencode \"person[first_name]=Joe\" \\\n     --data-urlencode \"person[surname]=Doe\" \\\n     --data-urlencode \"email=test@example.com\" \\\n     --data-urlencode \"country=LTU\" \\\n     --data-urlencode \"currency_id=1\" \\\n     --data-urlencode \"platform_id=6\" \\\n     --data-urlencode \"crypto_address=tb1qz63xn75h604p4mdkemmje909ysnmjgxrj2xx2v\"\n"
+        samples-languages:
+        - curl
+      tags:
+      - Beneficiaries
+    get:
+      summary: List Beneficiaries
+      description: ''
+      operationId: list-beneficiaries
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                per_page:
+                  type: integer
+                  description: Records per page
+                  default: 100
+                  format: int32
+                page:
+                  type: integer
+                  description: Current page number
+                  default: 1
+                  format: int32
+                beneficiary_id:
+                  type: integer
+                  description: Filter By Beneficiary ID
+                  format: int32
+                beneficiary_type:
+                  type: string
+                  description: Filter By Beneficiary type (person, business)
+                email:
+                  type: string
+                  description: Filter By Email
+                search_name:
+                  type: string
+                  description: Search by (first_name, surname, company_name) Fields
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"current_page\": 1,\n  \"per_page\": 100,\n  \"total_records\": 1,\n  \"total_pages\": 1,\n  \"beneficiaries\": [\n    {\n      \"id\": 1,\n      \"beneficiary_type\": \"person\",\n      \"first_name\": \"Joes\",\n      \"surname\": \"Doehs\",\n      \"email\": \"joes@doehs.com\",\n      \"country\": \"LAV\",\n      \"country_state\": \"Riga\",\n      \"street_name\": \"Brīvības iela\",\n      \"building_number\": \"21\",\n      \"town_name\": \"Riga\",\n      \"post_code\": \"LV-1010\"\n      \"created_at\": \"2024-01-01T00:00:00.691Z\",\n      \"beneficiary_payout_settings\": [\n        {\n          \"id\": 1,\n          \"crypto_address\": \"tb1q8twk9pftcyywlctnhf5xtgx037h4qwwrqt20hs\",\n      \t\t\"crypto_address_metadata\": null,\n          \"created_at\": \"2024-01-01T00:00:00.691Z\",\n          \"platform\": {\n            \"id\": 6,\n            \"title\": \"Bitcoin\",\n            \"id_name\": \"bitcoin\"\n          },\n          \"currency\": {\n            \"id\": 1,\n            \"title\": \"Bitcoin\",\n            \"kind\": \"crypto\",\n            \"symbol\": \"BTC\"\n          }\n        }\n      ]\n    }\n  ]\n}"
+      deprecated: false
+      tags:
+      - Beneficiaries
+  /beneficiaries/{id}:
+    get:
+      summary: Get Beneficiary
+      description: ''
+      operationId: get-beneficiary
+      parameters:
+      - name: id
+        in: path
+        description: Beneficiary ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"id\": 1,\n  \"beneficiary_type\": \"person\",\n  \"first_name\": \"Joes\",\n  \"surname\": \"Doehs\",\n  \"email\": \"joes@doehs.com\",\n  \"country\": \"LAV\",\n  \"country_state\": \"Riga\",\n  \"street_name\": \"Brīvības iela\",\n  \"building_number\": \"21\",\n  \"town_name\": \"Riga\",\n  \"post_code\": \"LV-1010\"\n  \"created_at\": \"2024-01-01T00:00:00.691Z\",\n  \"beneficiary_payout_settings\": [\n    {\n      \"id\": 1,\n  \t\t\"crypto_address\": \"tb1q8twk9pftcyywlctnhf5xtgx037h4qwwrqt20hs\",\n      \"crypto_address_metadata\": null,\n      \"created_at\": \"2024-01-01T00:00:00.691Z\",\n      \"platform\": {\n        \"id\": 6,\n        \"title\": \"Bitcoin\",\n        \"id_name\": \"bitcoin\"\n      },\n      \"currency\": {\n        \"id\": 1,\n        \"title\": \"Bitcoin\",\n        \"kind\": \"crypto\",\n        \"symbol\": \"BTC\"\n      }\n    }\n  ]\n}"
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"message\": \"Beneficiary not found\",\n  \"reason\": \"BeneficiaryNotFound\"\n}"
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Beneficiary not found
+                  reason:
+                    type: string
+                    example: BeneficiaryNotFound
+      deprecated: false
+      tags:
+      - Beneficiaries
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true
