@@ -64,64 +64,133 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-CoinGate is a cryptocurrency payment gateway providing REST APIs for creating and
-managing payment orders, processing crypto-to-fiat conversions, automating payouts,
-managing merchant ledger accounts, and accessing billing and reporting data. Merchants
-can accept 70+ cryptocurrencies and settle in fiat (EUR, USD, GBP) or crypto, with
-integrations available via hosted checkout, plugins, and direct API.
+CoinGate is a cryptocurrency payment gateway providing REST APIs for creating and managing payment orders, processing crypto-to-fiat conversions, automating payouts, managing merchant ledger accounts, and accessing billing and reporting data. Merchants can accept 70+ cryptocurrencies and settle in fiat or crypto, with integrations available via hosted checkout, plugins, and direct API.
 
-## API
+**Areas:** Cryptocurrency · Payments · Payment Gateway · Fintech · Bitcoin · Ethereum · Merchant Services
 
-- **Base URL (Production):** https://api.coingate.com/v2
-- **Base URL (Sandbox):** https://api-sandbox.coingate.com/v2
-- **API Version:** v2
-- **Developer Portal:** https://developer.coingate.com
-- **API Reference:** https://developer.coingate.com/reference/cryptocurrency-payment-api
-- **Changelog:** https://developer.coingate.com/changelog
+## CoinGate on APIs.io
 
-## Authentication
+Everything profiled for CoinGate is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/coingate/](https://apis.io/providers/coingate/)** — or go straight to one of the APIs or properties below.
 
-All private API endpoints require a Bearer Token. Tokens are generated from the
-CoinGate merchant dashboard at https://coingate.com. Sandbox environments require
-separate credentials generated at https://sandbox.coingate.com.
+### APIs (5)
 
-Public endpoints (exchange rates, currencies, ping, IP addresses, platforms, supported
-countries) do not require authentication.
+- [CoinGate Conversions API](https://apis.io/apis/coingate/coingate-conversions-api/) — Convert between currencies in ledger accounts
+- [CoinGate Currencies API](https://apis.io/apis/coingate/coingate-currencies-api/) — Retrieve supported currencies and platforms
+- [CoinGate Orders API](https://apis.io/apis/coingate/coingate-orders-api/) — Create and manage payment orders
+- [CoinGate Refunds API](https://apis.io/apis/coingate/coingate-refunds-api/) — Process order refunds
+- [CoinGate Send Requests API](https://apis.io/apis/coingate/coingate-send-requests-api/) — Send cryptocurrency payouts to beneficiaries
 
-## Key API Areas
+### Published properties
 
-- **Orders:** Create, retrieve, list, and checkout payment orders
-- **Refunds:** Create and manage order refunds
-- **Conversions:** Convert currencies directly from ledger accounts
-- **Payouts / Send Requests:** Automate outbound fund transfers
-- **Ledger:** Access merchant account and transaction history
-- **Withdrawals:** Manage withdrawals to bank or crypto wallets
-- **Billing:** Recurring billing, products, contacts
-- **Payment Channels:** Crypto address management
-- **Public:** Exchange rates, currencies, platform info
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## SDKs
+#### Agentic access (1)
 
-| Language | Repository |
-|----------|-----------|
-| Python   | https://github.com/coingate/coingate-python |
-| PHP      | https://github.com/coingate/coingate-php |
-| Node.js  | https://github.com/coingate/coingate-node |
-| Ruby     | https://github.com/coingate/coingate-ruby |
+Which operations an agent can call, which act, and which need a human in the loop.
 
-## Pricing
+- [Coingate Agentic Access](https://apis.io/agentic-access/coingate/coingate-agentic-access/)
 
-- **Standard:** 1% per transaction, no monthly fee
-- **Enterprise:** Custom volume-based rates
+#### Collections (5)
 
-Full pricing details: https://coingate.com/pricing
+Postman and Open Collection request collections.
 
-## Links
+- [CoinGate Payment Gateway Conversions API](https://apis.io/collections/coingate/open-coingate-conversions-api/)
+- [CoinGate Payment Gateway Conversions Currencies API](https://apis.io/collections/coingate/open-coingate-currencies-api/)
+- [CoinGate Payment Gateway Conversions Orders API](https://apis.io/collections/coingate/open-coingate-orders-api/)
+- [CoinGate Payment Gateway Conversions Refunds API](https://apis.io/collections/coingate/open-coingate-refunds-api/)
+- [CoinGate Payment Gateway Conversions Send Requests API](https://apis.io/collections/coingate/open-coingate-send-requests-api/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Coingate Authentication](https://apis.io/security/coingate/coingate-authentication/)
+- [Coingate Domain Security](https://apis.io/security/coingate/coingate-domain-security/)
+- [Coingate Vulnerability Disclosure](https://apis.io/security/coingate/coingate-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Plans](https://apis.io/plans/coingate/plans/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Rate Limits](https://apis.io/rate-limits/coingate/rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Finops](https://apis.io/finops/coingate/finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://coingate.com)
-- [Developer Portal](https://developer.coingate.com)
+- [Documentation](https://developer.coingate.com/docs/api-overview)
+- [API reference](https://developer.coingate.com/reference/cryptocurrency-payment-api)
 - [Pricing](https://coingate.com/pricing)
+- [Support](https://coingate.com/contact)
 - [Blog](https://coingate.com/blog)
-- [GitHub](https://github.com/coingate)
-- [Help Center](https://support.coingate.com)
-- [Sign Up](https://coingate.com/register)
+- [Terms of service](https://coingate.com/terms)
+- [Privacy policy](https://coingate.com/privacy)
+- [Status](https://status.coingate.com)
+
+## API Evangelist rating
+
+**Kin Score 41.7** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 50.8 |
+| Contract governance | 0.0 |
+| Operational transparency | 39.5 |
+| Developer ergonomics | 42.9 |
+| Access clarity | 32.9 |
+
+**Agent readiness 26.0** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 19.6** — Payments
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/coingate/](https://apis.io/providers/coingate/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for CoinGate: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/coingate/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
